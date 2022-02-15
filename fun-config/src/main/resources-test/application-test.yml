@@ -1,0 +1,5 @@
+#spring:
+#  profiles:
+#    include:
+#      - log
+#      - mysql

@@ -6,11 +6,11 @@
 
     <groupId>io.github.whywhathow</groupId>
     <artifactId>fun-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>fun-common</module>
-        <module>fun-common-web</module>
         <module>fun-services</module>
+        <module>fun-config</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -33,7 +33,6 @@
         <basic.version>1.0</basic.version>
         <servlet.version>2.5</servlet.version>
         <!--       log4j2避免 jrm:远程调用版本  -->
-        <log4j2.version>2.17.1</log4j2.version>
         <spring-boot-log4j.version>2.6.3</spring-boot-log4j.version>
 
     </properties>
@@ -57,7 +56,6 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-
 
 
             <!--        spring-boot 依赖管理-->
@@ -95,7 +93,7 @@
                 <artifactId>fun-common-web</artifactId>
                 <version>${basic.version}</version>
             </dependency>
-            <!--         fun-config 配置管理-->
+            <!--                     fun-config 配置管理-->
             <dependency>
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-config</artifactId>
@@ -139,10 +137,19 @@
     </profiles>
 
 
-
-
-
     <build>
+        <!-- 配置环境占位符 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--②-->
+                <filtering>true</filtering>
+                <includes>
+                    <include>application.yml</include>
+                    <include>application-${profile.active}.yml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!--            maven 编译插件-->
             <plugin>
@@ -162,5 +169,6 @@
                 <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
+
     </build>
 </project>

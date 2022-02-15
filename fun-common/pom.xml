@@ -5,13 +5,13 @@
     <parent>
         <artifactId>fun-project</artifactId>
         <groupId>io.github.whywhathow</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <!-- 公共模块 架构层 -->
     <artifactId>fun-common</artifactId>
     <packaging>pom</packaging>
-    <dependencies>
-
-    </dependencies>
+   <modules>
+       <module>fun-common-web</module>
+   </modules>
 </project>
