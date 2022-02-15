@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.whywhathow</groupId>
+    <artifactId>fun-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>fun-common</module>
+        <module>fun-common-web</module>
+        <module>fun-services</module>
+    </modules>
+    <packaging>pom</packaging>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+
+        <!--         项目的版本号-->
+        <maven-plugin.version>3.6.0</maven-plugin.version>
+        <jdk.version>1.8</jdk.version>
+        <!--        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>-->
+        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-cloud-ablibaba.version>2.2.6.RELEASE</spring-cloud-ablibaba.version>
+        <mybatis.version>2.0.6</mybatis.version>
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <mysql-driver.version>8.0.26</mysql-driver.version>
+
+        <ken-page.version>1.2.5</ken-page.version>
+
+        <basic.version>1.0</basic.version>
+        <servlet.version>2.5</servlet.version>
+        <!--       log4j2避免 jrm:远程调用版本  -->
+        <log4j2.version>2.17.1</log4j2.version>
+        <spring-boot-log4j.version>2.6.3</spring-boot-log4j.version>
+
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--            管理 spring cloud-Alibaba 的依赖-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-ablibaba.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!--             管理 spring-boot 依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+
+
+            <!--        spring-boot 依赖管理-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-autoconfigure</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <!--             mysql 相关依赖-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-driver.version}</version>
+            </dependency>
+
+            <!--            log4j2 依赖-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${spring-boot-log4j.version}</version>
+            </dependency>
+            <!--            自己的包模块版本管理-->
+            <dependency>
+                <groupId>io.github.whywhathow</groupId>
+                <artifactId>fun-common-web</artifactId>
+                <version>${basic.version}</version>
+            </dependency>
+            <!--         fun-config 配置管理-->
+            <dependency>
+                <groupId>io.github.whywhathow</groupId>
+                <artifactId>fun-config</artifactId>
+                <version>${basic.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!--     配置maven 占位符-->
+    <profiles>
+        <profile>
+            <!--不同环境的唯一id-->
+            <id>dev</id>
+            <activation>
+                <!--默认激活开发环境-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!--profile.active对应application.yml中的@profile.active@-->
+                <profile.active>dev</profile.active>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+
+        <!--测试环境-->
+        <profile>
+            <id>test</id>
+            <properties>
+                <profile.active>test</profile.active>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profile.active>prod</profile.active>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
+
+
+    <build>
+        <plugins>
+            <!--            maven 编译插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-plugin.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+            <!--             spring-boot 编译插件-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
