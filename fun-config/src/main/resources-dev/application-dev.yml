@@ -1,2 +1,7 @@
-com:
-  name: devs
+spring:
+  profiles:
+    include:
+      - log
+      - demo
+#  config:
+#    use-legacy-processing: true

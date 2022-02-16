@@ -139,15 +139,21 @@
 
     <build>
         <!-- 配置环境占位符 -->
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>application.yml</include>-->
+<!--                    <include>application-${profile.active}.yml</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
+<!--        </resources>-->
+        <!-- 配置resources下的所有配置文件，都会占位符生效 -->
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
-                <!--②-->
                 <filtering>true</filtering>
-                <includes>
-                    <include>application.yml</include>
-                    <include>application-${profile.active}.yml</include>
-                </includes>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
         <plugins>

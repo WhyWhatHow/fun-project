@@ -1,0 +1,7 @@
+# log4j日志监听器
+org.springframework.context.ApplicationListener=\
+  io.github.whywhathow.log.LogListener
+
+# springmvc 默认配置文件
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.whywhathow.config.WebAutoConfiguration

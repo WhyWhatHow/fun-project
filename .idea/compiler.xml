@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="fun-common-web" />
         <module name="fun-service-demo" />
+        <module name="fun-config" />
       </profile>
     </annotationProcessing>
   </component>

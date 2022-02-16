@@ -1,5 +1,4 @@
-#spring:
-#  profiles:
-#    include:
-#      - log
-#      - mysql
+spring:
+  profiles:
+    include:
+      - log

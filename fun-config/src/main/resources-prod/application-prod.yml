@@ -1,2 +1,5 @@
-com:
-  name: prod
+spring:
+  profiles:
+    include:
+      - log
+      - demo

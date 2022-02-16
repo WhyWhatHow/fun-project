@@ -1,0 +1,2 @@
+com:
+  name: services-demo-'@profile.active@'

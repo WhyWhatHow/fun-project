@@ -1,7 +1,12 @@
-spring:
-  profiles:
-    active: '@profile.active@'
-
-
 server:
-  port: 8081
+  port: 8000
+spring:
+  application:
+    name: service-demo
+  profiles:
+    active: @profile.active@
+  config: # springboot_2.4 use different control logic in this.
+    use-legacy-processing: true
+logging:
+  file:
+    name: service-demo
