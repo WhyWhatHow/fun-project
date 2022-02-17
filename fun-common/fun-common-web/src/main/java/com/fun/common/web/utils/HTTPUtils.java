@@ -1,4 +1,4 @@
-package io.github.whywhathow.utils;
+package com.fun.common.web.utils;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

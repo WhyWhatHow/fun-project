@@ -1,7 +1,7 @@
-package io.github.whywhathow.utils;
+package com.fun.common.core.utils;
 
-import io.github.whywhathow.domain.R;
-import io.github.whywhathow.domain.RCode;
+import com.fun.common.core.domain.RCode;
+import com.fun.common.core.domain.R;
 
 /**
  * @program: fun-project

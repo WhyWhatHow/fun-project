@@ -1,4 +1,4 @@
-package io.github.whywhathow.domain;
+package com.fun.common.core.domain;
 
 /**
  * @program: fun-project

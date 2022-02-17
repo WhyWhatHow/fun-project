@@ -1,6 +1,6 @@
-package io.github.whywhathow.config;
+package com.fun.common.web.config;
 
-import io.github.whywhathow.exception.GlobalExceptionHandler;
+import com.fun.common.web.exception.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

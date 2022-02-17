@@ -1,4 +1,4 @@
-package io.github.whywhathow.log;
+package com.fun.common.web.log;
 
 import org.slf4j.MDC;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;

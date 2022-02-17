@@ -1,9 +1,9 @@
-package io.github.whywhathow.exception;
+package com.fun.common.web.exception;
 
-import io.github.whywhathow.domain.R;
-import io.github.whywhathow.domain.RCode;
-import io.github.whywhathow.utils.HTTPUtils;
-import io.github.whywhathow.utils.RUtils;
+import com.fun.common.core.domain.R;
+import com.fun.common.core.domain.RCode;
+import com.fun.common.core.utils.RUtils;
+import com.fun.common.web.utils.HTTPUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -39,9 +39,9 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理业务校验过程中碰到的非法参数异常 该异常基本由{@link org.springframework.util.Assert}抛出
      * // TODO: 2022/2/17  R: code, msg = ex.getmsg()  ,思考一下,当前的code 应该怎么给
-     *
+     *      * consider: 是不是可以参考 {@link HttpStatus}
+     * 处理业务校验过程中碰到的非法参数异常 该异常基本由{@link org.springframework.util.Assert}抛出
      * @param ex 参数校验异常
      * @return API返回结果对象包装后的错误输出结果
      * @see Assert#hasLength(String, String)
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.OK)
     public R handleIllegalArgumentException(IllegalArgumentException ex) {
-        log.error("非法参数,ex = {}", ex.getMessage(), ex);
+        log.error("[Service-Exception]--非法参数,ex = {}", ex.getMessage(), ex);
         return RUtils.createFail(RCode.SERVER_EXCEPTION.code, ex.getMessage());
     }
 

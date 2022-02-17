@@ -1,6 +1,6 @@
-package io.github.whywhathow.exception;
+package com.fun.common.web.exception;
 
-import io.github.whywhathow.domain.RCode;
+import com.fun.common.core.domain.RCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

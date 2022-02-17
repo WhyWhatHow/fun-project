@@ -1,9 +1,9 @@
-package io.github.whywhathow.controller;
+package com.fun.demo.controller;
 
-import io.github.whywhathow.domain.R;
-import io.github.whywhathow.domain.RCode;
-import io.github.whywhathow.exception.ServiceException;
-import io.github.whywhathow.utils.RUtils;
+import com.fun.common.core.domain.R;
+import com.fun.common.core.domain.RCode;
+import com.fun.common.web.exception.ServiceException;
+import com.fun.common.core.utils.RUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
@@ -42,7 +42,7 @@ public class DemoController {
 //        System.out.println(1/0);
         String user = null;
 //        2. 测试 assert 断言异常请求
-//        Assert.isNull(name, "参数不能为空");
+        Assert.notNull(user, "参数不能为空");
 // 3. 测试 业务异常信息
         if (user == null) {
 //            throw  new ServiceException(RCode.SERVER_EXCEPTION.code,RCode.SERVER_EXCEPTION.msg);
