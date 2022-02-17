@@ -48,6 +48,11 @@
             <groupId>io.github.whywhathow</groupId>
             <artifactId>fun-config</artifactId>
         </dependency>
+<!--         fun-common-core 配置 -->
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-common-core</artifactId>
+        </dependency>
     </dependencies>
 
 

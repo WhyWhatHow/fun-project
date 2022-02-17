@@ -9,6 +9,7 @@
         <module name="fun-common-web" />
         <module name="fun-service-demo" />
         <module name="fun-config" />
+        <module name="fun-common-core" />
       </profile>
     </annotationProcessing>
   </component>
