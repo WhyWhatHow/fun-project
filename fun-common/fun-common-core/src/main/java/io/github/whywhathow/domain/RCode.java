@@ -1,7 +1,8 @@
 package io.github.whywhathow.domain;
 
 /**
- * 响应码 枚举
+ * 响应码 枚举,
+ * 参考 {link org.springframework.http.HttpStatus}
  */
 public enum RCode {
 
