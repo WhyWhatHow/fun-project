@@ -63,4 +63,6 @@ spring: # every serice needed
 
 ​	 按照springboot 的启动顺序, 在 **application.yml 加载完成-> xxx.xml 未加载** 过程之间 实现对 xml文件内容填充即可. 
 
- 
+###  参数校验
+
+* 引入spring-boot-starter-validation

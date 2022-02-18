@@ -48,12 +48,17 @@
             <groupId>io.github.whywhathow</groupId>
             <artifactId>fun-config</artifactId>
         </dependency>
-<!--         fun-common-core 配置 -->
+        <!--         fun-common-core 配置 -->
         <dependency>
             <groupId>io.github.whywhathow</groupId>
             <artifactId>fun-common-core</artifactId>
         </dependency>
-
+        <!--      spring  boot 参数验证模块 连接-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
     </dependencies>
 
 

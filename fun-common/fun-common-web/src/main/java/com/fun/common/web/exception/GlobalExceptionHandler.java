@@ -7,27 +7,46 @@ import com.fun.common.web.utils.HTTPUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @program: fun-project
- * @description: 全局异常处理器
+ * @description: SpringMVC 全局异常处理器
  * @author: WhyWhatHow
  * @create: 2022-02-17 15:42
  **/
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+    /**
+     * 处理 spring boot 参数校验失败
+     * 1. 将校验失败的参数信息 组装成 data 返回给 client
+     * 2. 日志记录 ( 级别, 不应该是error,应该是warning,info
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(BindException.class)
+    public R handleBindException(BindException e) {
+        log.debug("[BindException]- 捕获到参数校验异常信息 ->{}", e);
+        List<String> list = e.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
+        return RUtils.createFail(RCode.PARAMENT_ERROR, list);
+    }
 
     /**
      * 业务模块异常处理机制
      * 处理业务代码抛出来的异常
-     * // TODO: 2022/2/17  异常信息思考 
+     * // TODO: 2022/2/17  异常信息思考
+     *
      * @param e 业务模块的异常类
      * @return 请求调用失败的返回结果
      */
@@ -40,8 +59,9 @@ public class GlobalExceptionHandler {
 
     /**
      * // TODO: 2022/2/17  R: code, msg = ex.getmsg()  ,思考一下,当前的code 应该怎么给
-     *      * consider: 是不是可以参考 {@link HttpStatus}
+     * * consider: 是不是可以参考 {@link HttpStatus}
      * 处理业务校验过程中碰到的非法参数异常 该异常基本由{@link org.springframework.util.Assert}抛出
+     *
      * @param ex 参数校验异常
      * @return API返回结果对象包装后的错误输出结果
      * @see Assert#hasLength(String, String)

@@ -13,5 +13,8 @@
         <module name="fun-common-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="fun-data" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -56,4 +56,17 @@ public class RUtils<T> {
     public static <T> R createFail(RCode code) {
         return new R(code, null);
     }
+
+    /**
+     * 利用ResultCode , 携带响应数据 构建失败 响应
+     * @param code
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> R createFail(RCode code,T data) {
+        return new R(code, data);
+    }
+
+
 }

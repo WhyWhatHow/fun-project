@@ -2,13 +2,17 @@ package com.fun.demo.controller;
 
 import com.fun.common.core.domain.R;
 import com.fun.common.core.domain.RCode;
-import com.fun.common.web.exception.ServiceException;
 import com.fun.common.core.utils.RUtils;
+import com.fun.common.web.exception.ServiceException;
+import com.fun.demo.domain.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * @program: fun-project
@@ -49,5 +53,11 @@ public class DemoController {
             throw new ServiceException(RCode.SERVER_EXCEPTION);
         }
         return RUtils.createSucc(name);
+    }
+
+    @PostMapping("/test/add/")
+    public R testValidate(@Validated Student student) {
+        System.out.println(student);
+        return RUtils.createSucc(student);
     }
 }

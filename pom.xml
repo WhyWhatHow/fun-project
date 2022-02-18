@@ -22,7 +22,7 @@
         <jdk.version>1.8</jdk.version>
         <!--        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>-->
         <spring-boot.version>2.6.3</spring-boot.version>
-        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+<!--        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>-->
         <spring-cloud-ablibaba.version>2.2.6.RELEASE</spring-cloud-ablibaba.version>
         <mybatis.version>2.0.6</mybatis.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
@@ -69,6 +69,13 @@
                 <artifactId>spring-boot-autoconfigure</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+
+            <!--             spring-boot-参数校验-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
             <!--             mysql 相关依赖-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -99,7 +106,7 @@
                 <artifactId>fun-config</artifactId>
                 <version>${basic.version}</version>
             </dependency>
-<!--             fun-common-core -->
+            <!--             fun-common-core -->
             <dependency>
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-common-core</artifactId>
@@ -145,16 +152,16 @@
 
     <build>
         <!-- 配置环境占位符 -->
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <directory>src/main/resources</directory>-->
-<!--                <filtering>true</filtering>-->
-<!--                <includes>-->
-<!--                    <include>application.yml</include>-->
-<!--                    <include>application-${profile.active}.yml</include>-->
-<!--                </includes>-->
-<!--            </resource>-->
-<!--        </resources>-->
+        <!--        <resources>-->
+        <!--            <resource>-->
+        <!--                <directory>src/main/resources</directory>-->
+        <!--                <filtering>true</filtering>-->
+        <!--                <includes>-->
+        <!--                    <include>application.yml</include>-->
+        <!--                    <include>application-${profile.active}.yml</include>-->
+        <!--                </includes>-->
+        <!--            </resource>-->
+        <!--        </resources>-->
         <!-- 配置resources下的所有配置文件，都会占位符生效 -->
         <resources>
             <resource>
