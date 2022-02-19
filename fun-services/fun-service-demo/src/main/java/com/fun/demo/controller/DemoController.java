@@ -6,12 +6,16 @@ import com.fun.common.core.utils.RUtils;
 import com.fun.common.web.exception.ServiceException;
 import com.fun.demo.domain.Student;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController
 @Slf4j
+@Validated
 public class DemoController {
     @GetMapping("/test")
     public R test(String name) {
@@ -54,10 +59,24 @@ public class DemoController {
         }
         return RUtils.createSucc(name);
     }
-
+    /**
+     *  post请求, 查看参数校验异常
+     * @param student
+     * @return
+     */
     @PostMapping("/test/add/")
-    public R testValidate(@Validated Student student) {
+    public R testValidate(@RequestBody@Validated Student student) {
         System.out.println(student);
         return RUtils.createSucc(student);
+    }
+
+    /**
+     * 测试 get reqeust 请求, 参数校验 , 处理
+     * @param account
+     * @return
+     */
+    @GetMapping("/test/get")
+    public R testGetReqVal(@Length(min = 6,max=20)@NotNull String account){
+        return RUtils.createSucc(account);
     }
 }

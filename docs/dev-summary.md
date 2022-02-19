@@ -1,6 +1,21 @@
 ### 日志切换
 
 springboot logback -> log4j2 
+
+日志等级: 
+
+```
+- fatal（致命）
+- error（错误）
+- warn（警告）
+- info (the default)（信息（默认值））
+- debug（调试）
+- trace（跟踪）
+
+```
+
+
+
 - reason:
   ![img.png](img.png)
 
@@ -63,6 +78,73 @@ spring: # every serice needed
 
 ​	 按照springboot 的启动顺序, 在 **application.yml 加载完成-> xxx.xml 未加载** 过程之间 实现对 xml文件内容填充即可. 
 
-###  参数校验
+###  Controller层参数校验
 
-* 引入spring-boot-starter-validation
+> https://segmentfault.com/a/1190000023471742
+
+1. `POST`、`PUT`请求，使用`requestBody`传递参数；
+2. `GET`请求，使用`requestParam/PathVariable`传递参数。
+
+####  RequestBody 参数校验
+
+触发条件:
+
+* DTO(**Data Transfer Object**) 对象 声明约束条件
+
+```java
+@Data
+@Accessors(chain = true)
+public class Student {
+    @NotNull(message = "name 不能为空")
+    @Length(min = 2, max = 10)
+    String name;
+    @NotNull(message = "age 不能为空")
+    @Min(1) @Max(90)
+    Integer age;
+    @NotNull(message = "email 不能为空 ")
+    @Email(message = "email 格式不正确")
+    String email;
+
+
+}
+```
+
+* **Post , put** 请求,只需要在方法 的 请求头添加 @ReqeustBody  @Valid , @Validated
+
+```java
+  @PostMapping("/test/add/")
+    public R testValidate(@RequestBody@Validated Student student) {
+        System.out.println(student);
+        return RUtils.createSucc(student);
+    }
+```
+
+* 报错 :**MethodArgumentNotValidException** extends BindException
+
+####  requestParam/PathVariable参数校验
+
+处理get请求
+
+触发条件: 
+
+* Controller 类上 添加 @validated 注解
+
+* Controller 中method 添加 约束条件
+
+  ```java
+  @RestController
+  @Validated
+  public class DemoController{
+         /**
+       * 测试 get reqeust 请求, 参数校验
+       * @param account
+       * @return
+       */
+      @GetMapping("/test/get")
+      public R testGetReqVal(@Length(min = 6,max=20)@NotNull String account){
+          return RUtils.createSucc(account);
+      }
+  }
+  ```
+
+* 处理 ConstraintViolationException.class 异常 

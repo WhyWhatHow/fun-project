@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +30,35 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GlobalExceptionHandler {
     /**
+     * validation exception
+     * 处理request  get 请求
+     * 触发条件, Controller 类上添加@validated注解, 以及method  parameter 中添加 约束
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public R handleConstraintViolationException(ConstraintViolationException ex) {
+        log.warn("[ConstraintViolationException ]- 异常信息{}", ex);
+        return RUtils.createFail(RCode.PARAMENT_ERROR);
+    }
+
+    /**
+     * 参数校验异常处理
+     * post ,put  request 异常处理
+     * 触发条件:  post method  中parameter 添加 @validated||@valid 注解 并对DTO对象添加约束条件
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public R handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.warn("[Method Argument Not Valid Exception] - 捕获到异常信息{}", ex);
+        List<String> list = ex.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
+        return RUtils.createFail(RCode.PARAMENT_ERROR, list);
+    }
+
+    /**
      * 处理 spring boot 参数校验失败
+     * // TODO: 2022/2/18  需要是全部的参数校验失败的信息么,是不是可以只返回第一个失败的参数校验信息?
      * 1. 将校验失败的参数信息 组装成 data 返回给 client
      * 2. 日志记录 ( 级别, 不应该是error,应该是warning,info
      * @param e
@@ -37,7 +66,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public R handleBindException(BindException e) {
-        log.debug("[BindException]- 捕获到参数校验异常信息 ->{}", e);
+        log.info("[BindException]- 捕获到参数校验异常信息 ->{}", e);
         List<String> list = e.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
         return RUtils.createFail(RCode.PARAMENT_ERROR, list);
     }
@@ -79,7 +108,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 异常默认处理器
-     *
+     * 处理所有的异常信息,maybe , 把runtimeException, 以及一般的runtimeException区分开会好一点
      * @param ex 异常
      * @return
      */
@@ -93,7 +122,7 @@ public class GlobalExceptionHandler {
         log.error("[Global-Exception]--捕获到异常信息");
         log.error("[Global-Exception]-- 请求URL为 {}", url);
         log.error("[Global-Exception]-- 请求参数为{}", parameterMap);
-        log.error("[Global-Exception]-- 异常信息", ex);
+        log.error("[Global-Exception]-- 异常信息->{}", ex);
         return RUtils.createFail(RCode.SERVER_EXCEPTION);
     }
 
