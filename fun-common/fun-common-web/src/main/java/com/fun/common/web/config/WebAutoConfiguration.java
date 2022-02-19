@@ -2,6 +2,7 @@ package com.fun.common.web.config;
 
 import com.fun.common.web.exception.GlobalExceptionHandler;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @author: WhyWhatHow
  * @create: 2022-02-16 21:56
  **/
+@ComponentScan("com.fun")
 @Configuration
 public class WebAutoConfiguration {
     @Bean

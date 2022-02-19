@@ -16,7 +16,7 @@ import java.lang.annotation.*;
  * {@link NotNull}
  */
 @Documented
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD,ElementType.PARAMETER})
+@Target({ElementType.TYPE, ElementType.FIELD,ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EncryptIdValidator.class)// 校验规则
 public @interface EncryptId {
@@ -25,4 +25,6 @@ public @interface EncryptId {
     Class<?>[] groups() default { };
     // 负载
     Class<? extends Payload>[] payload() default { };
+
+    Class<?> handler();
 }

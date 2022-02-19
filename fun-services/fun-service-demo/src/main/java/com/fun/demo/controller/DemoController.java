@@ -59,24 +59,33 @@ public class DemoController {
         }
         return RUtils.createSucc(name);
     }
+
     /**
-     *  post请求, 查看参数校验异常
+     * post请求, 查看参数校验异常
+     *
      * @param student
      * @return
      */
     @PostMapping("/test/add/")
-    public R testValidate(@RequestBody@Validated Student student) {
+    public R testValidate(@RequestBody @Validated Student student) {
         System.out.println(student);
         return RUtils.createSucc(student);
     }
 
     /**
      * 测试 get reqeust 请求, 参数校验 , 处理
+     *
      * @param account
      * @return
      */
     @GetMapping("/test/get")
-    public R testGetReqVal(@Length(min = 6,max=20)@NotNull String account){
+    public R testGetReqVal(@Length(min = 6, max = 20) @NotNull String account) {
         return RUtils.createSucc(account);
     }
+
+    @PostMapping("/valid")
+    public R testBAValid(@RequestBody @Validated Student stu) {
+        return RUtils.createSucc(stu);
+    }
+
 }
