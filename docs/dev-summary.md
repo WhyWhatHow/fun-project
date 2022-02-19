@@ -148,3 +148,21 @@ public class Student {
   ```
 
 * 处理 ConstraintViolationException.class 异常 
+
+
+
+#### 分组校验
+
+user{
+
+​	uid; // 创建user对象不一定要有, update user 时一定要有
+
+​	name; // 创建时要有, update 可以有
+
+​	age;// 创建时可以没有, update 可以有,也可以没有
+
+​	//......
+
+} 
+
+可以根据不同的情况创建 实现不同的校验规则.
