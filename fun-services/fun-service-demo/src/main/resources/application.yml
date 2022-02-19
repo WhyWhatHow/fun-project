@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 8080
 spring:
   application:
     name: service-demo
@@ -7,8 +7,6 @@ spring:
     active: @profile.active@
   config: # springboot_2.4 use different control logic in this.
     use-legacy-processing: true
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.driver
 logging:
   file:
     name: service-demo

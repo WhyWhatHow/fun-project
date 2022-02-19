@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,6 +32,7 @@ public class GlobalExceptionHandler {
      * validation exception
      * 处理request  get 请求
      * 触发条件, Controller 类上添加@validated注解, 以及method  parameter 中添加 约束
+     *
      * @param ex
      * @return
      */
@@ -61,12 +61,13 @@ public class GlobalExceptionHandler {
      * // TODO: 2022/2/18  需要是全部的参数校验失败的信息么,是不是可以只返回第一个失败的参数校验信息?
      * 1. 将校验失败的参数信息 组装成 data 返回给 client
      * 2. 日志记录 ( 级别, 不应该是error,应该是warning,info
+     *
      * @param e
      * @return
      */
     @ExceptionHandler(BindException.class)
     public R handleBindException(BindException e) {
-        log.info("[BindException]- 捕获到参数校验异常信息 ->{}", e);
+        log.warn("[BindException]- 捕获到参数校验异常信息 ->{}", e);
         List<String> list = e.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
         return RUtils.createFail(RCode.PARAMENT_ERROR, list);
     }
@@ -109,6 +110,7 @@ public class GlobalExceptionHandler {
     /**
      * 异常默认处理器
      * 处理所有的异常信息,maybe , 把runtimeException, 以及一般的runtimeException区分开会好一点
+     *
      * @param ex 异常
      * @return
      */
