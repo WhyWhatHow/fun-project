@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public R handleServiceException(ServiceException e) {
         log.error("[Service-Exception]-- 捕获到业务模块异常信息!");
-        log.error("[service-exception]-- 异常信息{}", e.getStackTrace());
+        log.error("[service-exception]-- 异常信息{}", e);
         return RUtils.createFail(e.getCode(), e.getMsg());
     }
 
