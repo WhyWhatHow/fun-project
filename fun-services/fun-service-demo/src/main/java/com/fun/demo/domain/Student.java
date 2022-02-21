@@ -1,9 +1,11 @@
 package com.fun.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fun.common.core.domain.BaseEntity;
 import com.fun.common.web.valid.annotation.FunValid;
 import com.fun.demo.valid.handler.BirthdayAndAgeValidHandler;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,9 +23,10 @@ import java.util.Date;
  * @create: 2022-02-17 22:10
  **/
 @Data
+@ToString(callSuper = true)
 @FunValid(handler = BirthdayAndAgeValidHandler.class,message = "生日与日期不匹配")
 @Accessors(chain = true)
-public class Student {
+public class Student extends BaseEntity {
     @NotNull(message = "name 不能为空")
     @Length(min = 2, max = 10, message = " name 长度应在2-10之间")
     String name;

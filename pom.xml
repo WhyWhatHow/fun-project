@@ -22,18 +22,19 @@
         <jdk.version>1.8</jdk.version>
         <!--        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>-->
         <spring-boot.version>2.6.3</spring-boot.version>
-<!--        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>-->
+        <!--        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>-->
         <spring-cloud-ablibaba.version>2.2.6.RELEASE</spring-cloud-ablibaba.version>
         <mybatis.version>2.0.6</mybatis.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <mysql-driver.version>8.0.26</mysql-driver.version>
 
-        <ken-page.version>1.2.5</ken-page.version>
-
         <basic.version>1.0</basic.version>
         <servlet.version>2.5</servlet.version>
         <!--       log4j2避免 jrm:远程调用版本  -->
         <spring-boot-log4j.version>2.6.3</spring-boot-log4j.version>
+        <!--                 swagger-ui 版本-->
+        <swagger.version>3.0.0</swagger.version>
+        <!--        -->
 
     </properties>
 
@@ -87,6 +88,11 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-driver.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-annotation</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
 
             <!--            log4j2 依赖-->
             <dependency>
@@ -100,7 +106,7 @@
                 <artifactId>fun-common-web</artifactId>
                 <version>${basic.version}</version>
             </dependency>
-            <!--                     fun-config 配置管理-->
+            <!--           fun-config 配置管理-->
             <dependency>
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-config</artifactId>
@@ -111,6 +117,18 @@
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-common-core</artifactId>
                 <version>${basic.version}</version>
+            </dependency>
+            <!--      swagger 配置项      -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

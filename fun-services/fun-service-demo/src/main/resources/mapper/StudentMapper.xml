@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fun.demo.mapper.StudentMapper">
+
+    <resultMap type="com.fun.demo.entity.Student" id="StudentMap">
+        <result property="sid" column="sid" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="stats" column="stats" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="sid" useGeneratedKeys="true">
+        insert into fun_demo.student(name, gender, email, create_time, update_time, stats, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.createTime}, #{entity.updateTime}, #{entity.stats}, #{entity.delFlag})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="sid" useGeneratedKeys="true">
+        insert into fun_demo.student(name, gender, email, create_time, update_time, stats, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.createTime}, #{entity.updateTime}, #{entity.stats}, #{entity.delFlag})
+        </foreach>
+        on duplicate key update
+         name = values(name) , gender = values(gender) , email = values(email) , create_time = values(create_time) , update_time = values(update_time) , stats = values(stats) , del_flag = values(del_flag)     </insert>
+
+</mapper>
+

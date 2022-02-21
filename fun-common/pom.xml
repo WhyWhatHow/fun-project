@@ -14,5 +14,6 @@
    <modules>
        <module>fun-common-web</module>
        <module>fun-common-core</module>
+       <module>fun-common-swagger</module>
    </modules>
 </project>
