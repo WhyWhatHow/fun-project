@@ -518,3 +518,219 @@ public @interface FunValid {
       }
   }
   
+
+### Spring 线程池优化
+
+* 如何开启 Spring线程池? 
+
+​	启动类 添加 @EnableAsync, 需要异步的方法中添加@Async
+
+#### Spring 线程池优化方案
+
+核心线程数= 你电脑的核心 线程数
+
+最大线程数 = 核心线程数 * 2
+
+<!-- 
+
+todo :  阻塞队列 容量:   数据查找
+
+-->
+
+缺点:不能修改拒绝策略 :  rejection-policy:  abort ,默认抛异常
+
+```yaml
+spring:
+  task:
+    execution:
+      pool: # settings for core-thread timeout. true == core-thread can gc
+        allow-core-thread-timeout: false
+        core-size: 4 # core-threads num 
+        max-size: 8 # max-threads num
+        queue-capacity: 1000
+      thread-name-prefix: "Fun-Executor-"
+    scheduling:
+      pool:
+        size: 2  #定时任务线程池大小,默认为1 
+```
+
+
+
+#### Spring 自定义线程池方案
+
+思路: 利用autoconfiguration 实现自动注入.
+
+* AsyncAutoConfiguration -- Spring自定义线程池实现
+
+```java
+package com.fun.common.web.async;
+
+import com.fun.common.web.async.config.AsyncExecutionProperties;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+/**
+ * @program: fun-project
+ * @description: 自定义线程池配置类
+ * @author: WhyWhatHow
+ * @create: 2022-02-22 15:22
+ * @see TaskExecutionAutoConfiguration
+ **/
+@Configuration
+@Slf4j
+@EnableConfigurationProperties(AsyncExecutionProperties.class)
+public class AsyncAutoConfiguration {
+    /***
+     *  todo 思考是否其他的executor配置需要自定义,是否需要开放到yaml文档中,还是自己给默认值
+     *  自定义线程池实现 ,只有在开启@EnableAsync 时创建
+     * @param properties 线程池的自定义配置
+     * @return 线程池executor
+     */
+    @Bean
+    @Primary
+    @ConditionalOnBean(annotation = EnableAsync.class)
+    public ThreadPoolTaskExecutor getThreadPoolTaskExecutor(AsyncExecutionProperties properties) {
+        log.warn(" [fun-task-executor] init");
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+//  coreThreadSize, maxThreadSize, KeepAliveTime ,Queue, Timeunit,rejectHandler, Factory
+        executor.setCorePoolSize(properties.getCoreSize()); // 核心线程数
+        executor.setMaxPoolSize(properties.getMaxSize()); // 最大线程数
+        executor.setKeepAliveSeconds(properties.getKeepAlive()); // 最大存活时间
+        executor.setQueueCapacity(properties.getQueueCapacity()); // 阻塞队列容量
+        executor.setThreadNamePrefix(properties.getThreadNamePrefix()); // 设置名称前缀
+        executor.setRejectedExecutionHandler(properties.getRejectedHandler().getHandler());// 设置拒绝策略
+        executor.setAllowCoreThreadTimeOut(properties.isAllowCoreThreadTimeout());// 是否允许核心线程超时
+        executor.setPrestartAllCoreThreads(properties.isPrestartAllCoreThreads());// 是否启动所有核心线程,使其空闲等待工作
+        executor.initialize();
+        log.warn(" [fun-task-executor] end ");
+
+        return executor;
+    }
+}
+
+```
+
+* AsyncExecutionProperties -- yaml 文件对应的配置类
+
+  ```java
+  package com.fun.common.web.async.config;
+  
+  import lombok.Data;
+  import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
+  import org.springframework.boot.context.properties.ConfigurationProperties;
+  
+  import javax.annotation.PostConstruct;
+  import java.util.concurrent.RejectedExecutionHandler;
+  import java.util.concurrent.ThreadPoolExecutor;
+  
+  /**
+   * @program: fun-project
+   * @description: 自定义线程池配置类, yaml配置
+   * @author: WhyWhatHow
+   * @create: 2022-02-22 15:46
+   * @see TaskExecutionProperties
+   **/
+  @ConfigurationProperties("fun.async.task")
+  @Data
+  public class AsyncExecutionProperties {
+      /**
+       * 核心线程数
+       */
+      int coreSize;
+      /**
+       * 最大线程数
+       */
+      int maxSize;
+      /**
+       * 线程名前缀 eg: "task-"
+       */
+      private String threadNamePrefix = "task-";
+  
+      /**
+       * queue capacity
+       */
+      private int queueCapacity = 1000;
+  
+      /**
+       * 线程最大存活时间,单位s
+       */
+      private int keepAlive = 60;
+  
+      /**
+       * 是否允许核心线程超时
+       */
+      private boolean allowCoreThreadTimeout = false;
+  
+      /**
+       * 拒绝策略
+       */
+      private RejectedEnum rejectedHandler = RejectedEnum.CALLRUNSPOLICY;
+      /**
+       * 是否启动所有核心线程,使其空闲等待工作 ,默认为false
+       */
+      private boolean prestartAllCoreThreads = false;
+  
+  
+      /**
+       * 初始化 核心线程数, 最大线程数, 以用户配置为主
+       */
+      @PostConstruct
+      void init() {
+          if (coreSize <= 0) {
+              this.coreSize = Runtime.getRuntime().availableProcessors();
+          }
+          if (maxSize <= 0) {
+              this.maxSize = coreSize << 1;
+          }
+      }
+  
+      /**
+       * 拒绝策略枚举
+       */
+      public enum RejectedEnum {
+          ABORTPOLICY(new ThreadPoolExecutor.AbortPolicy()),
+          CALLRUNSPOLICY(new ThreadPoolExecutor.CallerRunsPolicy()),
+          DISCARDPOLICY(new ThreadPoolExecutor.DiscardPolicy()),
+          DISCARDOLDESTPOLICY(new ThreadPoolExecutor.DiscardOldestPolicy());
+          private RejectedExecutionHandler handler;
+  
+          RejectedEnum(RejectedExecutionHandler handler) {
+              this.handler = handler;
+          }
+  
+  
+          public RejectedExecutionHandler getHandler() {
+              return handler;
+          }
+  
+          public void setHandler(RejectedExecutionHandler handler) {
+              this.handler = handler;
+          }
+      }
+  }
+  
+  ```
+
+  
+
+### API多版本切换
+
+
+
+### swagger添加
+
+
+
+### nacos 引入
+
+
+
+### fun-porject配置文件读取顺序问题
