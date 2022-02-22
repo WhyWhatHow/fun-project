@@ -16,7 +16,6 @@ import java.util.Date;
  * @create: 2022-02-21 16:16
  **/
 @Data
-
 public class BaseEntity implements Serializable {
     /**
      * 创建时间
@@ -24,7 +23,7 @@ public class BaseEntity implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @TableField(fill = FieldFill.INSERT)
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
-    private Date createTime = new Date();
+    private Date createTime;
     /**
      * 更新时间, insert and update 时自动更新
      */
