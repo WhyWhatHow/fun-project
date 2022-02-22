@@ -200,3 +200,321 @@ user{
 可以根据不同的情况创建 实现不同的校验规则.
 
 **用途: 可以用于校验多个数据** 
+
+#### 自定义校验
+
+* 目的: 实现统一类中多个属性 交叉校验 
+
+* example : 校验学生信息 年龄与生日是否相匹配
+
+*  Spring 方案:
+
+  *  为每一个需要多属性校验的类(Student)添加一个自定义注解(此例中是@BirthAndAgeValid), 以及此校验的校验规则 (此例中为BirthAndAgeValidator)
+
+  		* 每一次开发需要的类数量为2 
+		
+  		* 缺点: 随着需要此类校验类的数量增多,  **注解@XXXValid**, 以及校验规则**XXXValidator** 也同时增加,后期维护成本高. 
+
+* 基于Spring的扩展方案:
+  *  在Spring原来的基础上,开辟一个接口,让此接口处理需要 **自定义校验** 需求. 
+
+* 学生信息 Student
+
+  ```java
+  package com.fun.demo.entity;
+  
+  
+  import com.baomidou.mybatisplus.annotation.TableId;
+  import com.fun.common.core.domain.BaseEntity;
+  import io.swagger.annotations.ApiModel;
+  import io.swagger.annotations.ApiModelProperty;
+  import lombok.Data;
+  import lombok.EqualsAndHashCode;
+  
+  /**
+   * 学生表(Student)表实体类
+   *
+   * @author whywhathow
+   * @since 2022-02-21 22:52:16
+   */
+  @EqualsAndHashCode(callSuper = true)
+  @Data
+  @ApiModel(description = "Student实体类")
+  @SuppressWarnings("serial")
+  public class Student extends BaseEntity {
+  
+      /**
+       * 学生id
+       */
+      @TableId
+      @ApiModelProperty("学生id")
+      private Long sid;
+      /**
+       * 学生姓名
+       */
+      @ApiModelProperty("学生姓名")
+      private String name;
+      /**
+       * 性别
+       */
+      @ApiModelProperty("性别")
+      private Integer gender;
+      /**
+       * 邮箱
+       */
+      @ApiModelProperty("邮箱")
+      private String email;
+  }
+  
+  ```
+
+* 
+
+##### Spring 原始方案:
+
+*  注解类:BirthAndAgeValid
+
+```java
+package com.fun.demo.valid.annotation;
+
+import com.fun.demo.valid.validator.BirthAndAgeValidator;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.*;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = BirthAndAgeValidator.class)
+public @interface BirthAndAgeValid {
+
+    String message() default "生日与年龄不匹配";
+
+    /**
+     * 分组信息
+     */
+    Class<?>[] groups() default {};
+
+    // 负载
+    Class<? extends Payload>[] payload() default {};
+
+}
+
+```
+
+* 校验类  BirthAndAgeValidator
+
+```java
+package com.fun.demo.valid.validator;
+
+import com.fun.demo.domain.Student;
+import com.fun.demo.valid.annotation.BirthAndAgeValid;
+import lombok.extern.slf4j.Slf4j;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * @program: fun-project
+ * @description: 生日和年龄的校验规则
+ * ConstraintValidator<EncryptId, String> , 第一个字段: 注解类型, 第二个字段: 注解修饰的字段
+ * @author: WhyWhatHow
+ * @create: 2022-02-19 16:26
+ **/
+@Slf4j
+public class BirthAndAgeValidator implements ConstraintValidator<BirthAndAgeValid, Student> {
+    private BirthAndAgeValid valid;
+
+    @Override
+    public void initialize(BirthAndAgeValid valid) {
+        this.valid = valid;
+    }
+
+    @Override
+    public boolean isValid(Student value, ConstraintValidatorContext context) {
+        // birthday And Age 匹配校验
+        if (value != null) {
+            Date birthday = value.getBirthday();
+            Integer age = value.getAge();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(birthday);
+            int birthYear = cal.get(Calendar.YEAR);
+            cal.setTime(new Date());
+            int nowYear = cal.get(Calendar.YEAR);
+            if (nowYear - birthYear == age) {
+                return true;
+            }
+            return false;
+        }
+        // @NotNull 校验
+        return true;
+    }
+}
+```
+
+
+
+##### Spring 扩展接口方案:
+
+Spring的传统方案中, 存在后期**注解@XXXValid** ,规则校验器**XXXValidator** 类文件过多,维护复杂问题, 所以给出一个优化方案. 
+
+![img_1.png](img_1.png)* @FunValid
+
+```java
+package com.fun.common.web.valid.annotation;
+
+import com.fun.common.web.valid.FunValidConstraint;
+import com.fun.common.web.valid.handler.FunValidHandler;
+
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import javax.validation.constraints.NotNull;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 自定义数据校验注解, 可以用在 class, method
+ *
+ * @author whywhathow
+ */
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Constraint(validatedBy = {FunValidConstraint.class}) // 数据校验的实体类
+public @interface FunValid {
+    @NotNull
+    String message() default "参数校验失败";
+
+    /**
+     * 分组校验
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * 负载
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     * FunValid 的 validator 数据校验类,
+     * Eg: @FunValid(handler = XXXHandler.class), 就会按照XXXHandler定义的规则进行参数校验
+     * Ps: 如果想要进行多数据间校验, 将@FunValid注解放于类中.
+     */
+    Class<? extends FunValidHandler> handler() ;
+}
+
+```
+
+* FunValidHandler
+
+  ```java
+  package com.fun.common.web.valid.handler;
+  
+  import com.fun.common.web.valid.annotation.FunValid;
+  
+  public interface FunValidHandler<T> {
+      /**
+       * 基于spring validation 的二次开发, 实现参数校验,
+       * 类,method, parameter 参数校验的核心逻辑.
+       * Ps: 你只需要实现此方法,就可以实现 自定义参数校验
+       * 与SpringValidation 对比: 省略了自定义注解的过程.
+       *
+       * @param value
+       * @param funValid
+       * @return
+       */
+      boolean valid(T value, FunValid funValid);
+  
+  }
+  
+  ```
+
+* FunValidConstraint
+
+  ```java
+  package com.fun.common.web.valid;
+  
+  import com.fun.common.web.utils.ApplicationContextUtils;
+  import com.fun.common.web.valid.annotation.FunValid;
+  import com.fun.common.web.valid.handler.FunValidHandler;
+  
+  import javax.validation.ConstraintValidator;
+  import javax.validation.ConstraintValidatorContext;
+  import java.util.Optional;
+  
+  /**
+   * @program: fun-project
+   * @description: FunValid 的约束条件
+   * @author: WhyWhatHow
+   * @create: 2022-02-19 21:22
+   **/
+  public class FunValidConstraint implements ConstraintValidator<FunValid, Object> {
+      private FunValid funValid;
+  
+      @Override
+      public void initialize(FunValid valid) {
+          this.funValid = valid;
+      }
+  
+      @Override
+      public boolean isValid(Object value, ConstraintValidatorContext context) {
+          // 1. 校验逻辑
+          if (value != null) {
+              FunValidHandler handler = ApplicationContextUtils.getBean(funValid.handler());
+              return  Optional.ofNullable(handler).
+                      map(obj->{
+                        return  handler.valid(value,funValid);
+                      }).
+                      orElse( false);
+  
+          }
+          //2.交给@NotNull处理
+          return true;
+      }
+  }
+  
+  ```
+
+  * BirthdayAndAgeValidHandler
+
+  ```java
+  package com.fun.demo.valid.handler;
+  
+  import com.fun.common.web.valid.annotation.FunValid;
+  import com.fun.common.web.valid.handler.FunValidHandler;
+  import com.fun.demo.domain.Student;
+  import org.springframework.stereotype.Component;
+  
+  import java.util.Calendar;
+  import java.util.Date;
+  
+  /**
+   * @program: fun-project
+   * @description: 年龄生日校验器
+   * @author: WhyWhatHow
+   * @create: 2022-02-19 22:57
+   **/
+  @Component
+  public class BirthdayAndAgeValidHandler implements FunValidHandler<Student> {
+  
+      @Override
+      public boolean valid(Student stu, FunValid funValid) {
+          Integer age = stu.getAge();
+          Date birthday = stu.getBirthday();
+          Date now = new Date();
+          Calendar calendar = Calendar.getInstance();
+          calendar.setTime(now);
+          int nowYear = calendar.get(Calendar.YEAR);
+          calendar.setTime(birthday);
+          int birhYear = calendar.get(Calendar.YEAR);
+          if (age == nowYear - birhYear) {
+              return true;
+          }
+          return false;
+      }
+  }
+  
