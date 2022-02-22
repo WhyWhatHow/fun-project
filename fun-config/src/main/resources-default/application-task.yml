@@ -6,6 +6,7 @@ spring:
         core-size: 4 # core-threads num
         max-size: 8 # max-threads num
         queue-capacity: 1000
+        keep-alive: 60
       thread-name-prefix: "Fun-Executor-"
     scheduling:
       pool:

@@ -44,12 +44,31 @@ public class AsyncExecutionProperties {
     /**
      * 是否允许核心线程超时
      */
-    private boolean allowCoreThreadTimeout = true;
+    private boolean allowCoreThreadTimeout = false;
 
     /**
      * 拒绝策略
      */
     private RejectedEnum rejectedHandler = RejectedEnum.CALLRUNSPOLICY;
+    /**
+     * 是否启动所有核心线程,使其空闲等待工作 ,默认为false
+     */
+    private boolean prestartAllCoreThreads = false;
+
+
+    /**
+     * 初始化 核心线程数, 最大线程数, 以用户配置为主
+     */
+    @PostConstruct
+    void init() {
+        if (coreSize <= 0) {
+            this.coreSize = Runtime.getRuntime().availableProcessors();
+        }
+        if (maxSize <= 0) {
+            this.maxSize = coreSize << 1;
+        }
+    }
+
     /**
      * 拒绝策略枚举
      */
@@ -71,18 +90,6 @@ public class AsyncExecutionProperties {
 
         public void setHandler(RejectedExecutionHandler handler) {
             this.handler = handler;
-        }
-    }
-    /**
-     * 初始化 核心线程数, 最大线程数, 以用户配置为主
-     */
-    @PostConstruct
-    void init() {
-        if (coreSize <= 0) {
-            this.coreSize = Runtime.getRuntime().availableProcessors();
-        }
-        if (maxSize <= 0) {
-            this.maxSize = coreSize >> 1;
         }
     }
 }

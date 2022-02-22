@@ -4,5 +4,5 @@ org.springframework.context.ApplicationListener=\
 
 # springmvc 默认配置文件
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.fun.common.web.config.WebAutoConfiguration\
-  ,com.fun.common.web.async.config.AsyncAutoConfiguration
+  com.fun.common.web.config.WebAutoConfiguration,\
+  com.fun.common.web.async.AsyncAutoConfiguration
