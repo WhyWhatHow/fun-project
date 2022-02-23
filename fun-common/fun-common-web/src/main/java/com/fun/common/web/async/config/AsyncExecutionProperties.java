@@ -73,10 +73,25 @@ public class AsyncExecutionProperties {
      * 拒绝策略枚举
      */
     public enum RejectedEnum {
+        /**
+         * 直接抛出异常
+         */
         ABORTPOLICY(new ThreadPoolExecutor.AbortPolicy()),
+        /**
+         * 交个当前run_thread 运行
+         */
         CALLRUNSPOLICY(new ThreadPoolExecutor.CallerRunsPolicy()),
+        /***
+         * 直接丢掉
+         */
         DISCARDPOLICY(new ThreadPoolExecutor.DiscardPolicy()),
+        /**
+         * 丢掉队列中排队时间最久的任务
+         */
         DISCARDOLDESTPOLICY(new ThreadPoolExecutor.DiscardOldestPolicy());
+        /**
+         * 线程池默认拒绝策略
+         */
         private RejectedExecutionHandler handler;
 
         RejectedEnum(RejectedExecutionHandler handler) {
