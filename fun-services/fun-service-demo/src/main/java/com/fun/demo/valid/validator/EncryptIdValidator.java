@@ -1,4 +1,4 @@
-package com.fun.demo.valid;
+package com.fun.demo.valid.validator;
 
 import com.fun.demo.valid.annotation.EncryptId;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 /**
  * @program: fun-project
- * @description: 生日和年龄的校验规则
+ * @description: id 加密校验
  * ConstraintValidator<EncryptId, String> , 第一个字段: 注解类型, 第二个字段: 注解修饰的字段
  * @author: WhyWhatHow
  * @create: 2022-02-19 16:26

@@ -1,6 +1,6 @@
 package com.fun.demo.valid.annotation;
 
-import com.fun.demo.valid.EncryptIdValidator;
+import com.fun.demo.valid.validator.EncryptIdValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
