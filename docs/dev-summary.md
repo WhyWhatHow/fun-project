@@ -212,7 +212,7 @@ user{
   *  为每一个需要多属性校验的类(Student)添加一个自定义注解(此例中是@BirthAndAgeValid), 以及此校验的校验规则 (此例中为BirthAndAgeValidator)
 
   		* 每一次开发需要的类数量为2 
-		
+			
   		* 缺点: 随着需要此类校验类的数量增多,  **注解@XXXValid**, 以及校验规则**XXXValidator** 也同时增加,后期维护成本高. 
 
 * 基于Spring的扩展方案:
