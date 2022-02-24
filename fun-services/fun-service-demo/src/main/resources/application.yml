@@ -11,6 +11,17 @@ spring:
     username: root
     password: aa12321.
     url: jdbc:mysql://centos-product:3306/fun_demo?serverTimezone=GMT%2B8
+
 logging:
   file:
     name: service-demo
+fun:
+  async:
+    task:
+      core-size: 4
+      max-size: -2
+      thread-name-prefix: "fun-task-"
+      keep-alive: 60
+      queue-capacity: 1000
+      rejected-handler: callrunspolicy
+      allow-core-thread-time-out: false
