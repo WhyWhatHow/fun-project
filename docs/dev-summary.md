@@ -723,6 +723,56 @@ public class AsyncAutoConfiguration {
 
 ### API多版本切换
 
+* 需求:
+
+  *  应用升级后, 需要区分网页端,以及手机app 访问的不同的api, 比如有些手机用户需要访问api_1.0, 网页端用户需要访问api_2.0.
+  * 后端系统升级后,可能会删除远古版本的api,如何保证这部分用户请求合理到后端系统.  
+
+* 解决思路: 
+
+  * 创建一个annotation @ApiVersion, 可以用于方法以及类中, 将controller 中每一个方法 赋予一个默认的版本号,不设置采用controller 的版本号,controller也未设置的话采用默认版本1.0. 
+  * springmvc 拦截器拦截reqeust 请求,将会从http header 以及 http parameter 中获取api-version,找不到的话,会默认api-version为1.0 
+
+* 源码实现分析:
+
+  * 想要实现同一个类中 /test 请求多个method method, 思路就是 在controller 层添加唯一标记, 保证/test请求的唯一性.
+
+  * 调用栈信息: 
+
+    * DispatcherServlet.doDispatch() 
+
+      *  mappedHandler = getHandler(processedRequest);
+
+        ```java
+        HandlerExecutionChain handler = mapping.getHandler(request);
+        ```
+
+#### 自定义enableXXX组件标准:
+
+```java
+package com.fun.common.web.apiversion.annotation;
+
+import com.fun.common.web.apiversion.config.ApiVersionRegistrations;
+import org.springframework.context.annotation.Import;
+
+import java.lang.annotation.*;
+
+/**
+ * api 多版本管理的启动标签 , 一定要开启哦
+ *
+ * @see org.springframework.scheduling.annotation.EnableAsync
+ */
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Import(ApiVersionRegistrations.class)//导入配置类-> 将ApiVersionHandlerMapping注册到spring 容器中. 
+public @interface EnableApiVersion {
+
+}
+```
+
+
+
 
 
 ### swagger添加
@@ -734,3 +784,18 @@ public class AsyncAutoConfiguration {
 
 
 ### fun-porject配置文件读取顺序问题
+
+
+
+### Q&A
+
+@configuration ,@Bean ,@Repository, @Component,@Service 之间的区别
+
+* 都是用来在spring容器中进行组件注册的. 
+
+@MapperScan : 配置默认扫描的包扫描,不需要在添加 @Mapper注解.
+
+* MapperScannerRegistrar.class 生成BeanDefinition
+
+
+
