@@ -3,6 +3,7 @@ package com.fun.demo.controller;
 import com.fun.common.core.domain.R;
 import com.fun.common.core.domain.RCode;
 import com.fun.common.core.utils.RUtils;
+import com.fun.common.web.apiversion.annotation.ApiVersion;
 import com.fun.common.web.exception.ServiceException;
 import com.fun.demo.domain.Student;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +28,32 @@ import javax.validation.constraints.NotNull;
 @RestController
 @Slf4j
 @Validated
+@ApiVersion(2.0)
 public class DemoController {
+    @Value("${com.name}")
+    String name;
+
+    @ApiVersion(1.9)
+    @GetMapping("/test")
+    public R test1(String name) {
+        name = " hello, fun_project" + name;
+        log.info("[/test/ 1111111111.9]" + name);
+        return RUtils.createSucc(name);
+    }
+    @ApiVersion(1.0)
     @GetMapping("/test")
     public R test(String name) {
         name = " hello, fun_project" + name;
-        log.info("[/test/]" + name);
+        log.info("[/test/1.000000000000]" + name);
         return RUtils.createSucc(name);
     }
-
-    @Value("${com.name}")
-    String name;
+    @ApiVersion(2.0)
+    @GetMapping("/test")
+    public R test2(String name) {
+        name = " hello, fun_project" + name;
+        log.info("[/test/ 22222222222222]" + name);
+        return RUtils.createSucc(name);
+    }
 
     @GetMapping("/mult/env")
     public R testMultEnv() {

@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @create: 2022-02-15 20:12
  **/
 @MapperScan("com.fun.demo.mapper")
-//@EnableAsync
+@EnableAsync
 @SpringBootApplication
 public class DemoApplication {
     public static void main(String[] args) {
