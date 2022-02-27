@@ -787,6 +787,16 @@ public @interface EnableApiVersion {
 
 
 
+### oauth2认证与授权
+
+
+
+### 消息通知
+
+
+
+
+
 ### Q&A
 
 @configuration ,@Bean ,@Repository, @Component,@Service 之间的区别

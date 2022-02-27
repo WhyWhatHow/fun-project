@@ -1,9 +1,9 @@
-version: "3.0"
+version: '3.0'
 services:
-#  需要自行配置nacos- mysql的配置
+#  需要自行配置nacos-mysql的配置
   nacos:
     image: nacos/nacos-server
-    container_name: nacos
+    container_name: fun-nacos
     environment:
       MODE: standalone
       SPRING_DATASOURCE_PLATFORM: mysql
@@ -16,6 +16,9 @@ services:
       NACOS_SERVER_PORT: 8848
       JVM_XMS: 256m
       JVM_XMX: 512m
+    volumes:
+      - ./nacos/logs/:/home/nacos/logs
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
     ports:
       - "8848:8848"
       - "9848:9848"
