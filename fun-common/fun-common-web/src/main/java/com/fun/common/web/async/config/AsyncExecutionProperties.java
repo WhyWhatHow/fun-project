@@ -19,11 +19,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Data
 public class AsyncExecutionProperties {
     /**
-     * 核心线程数
+     * 核心线程数,默认数量当前cpu核心线程数
      */
     int coreSize;
     /**
-     * 最大线程数
+     * 最大线程数 ,默认coreSize*2
      */
     int maxSize;
     /**
@@ -54,6 +54,15 @@ public class AsyncExecutionProperties {
      * 是否启动所有核心线程,使其空闲等待工作 ,默认为false
      */
     private boolean prestartAllCoreThreads = false;
+    /**
+     * 是否在关机时等待任务完成 ,默认为true
+     */
+    private boolean waitForTasksToCompleteOnShutDown = true;
+
+    /**
+     * 组织关机的最大秒数 ,默认10s
+     */
+    private int awaitTerminationSeconds = 10;
 
 
     /**

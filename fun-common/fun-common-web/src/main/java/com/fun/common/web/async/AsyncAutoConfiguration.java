@@ -44,6 +44,8 @@ public class AsyncAutoConfiguration {
         executor.setRejectedExecutionHandler(properties.getRejectedHandler().getHandler());// 设置拒绝策略
         executor.setAllowCoreThreadTimeOut(properties.isAllowCoreThreadTimeout());// 是否允许核心线程超时
         executor.setPrestartAllCoreThreads(properties.isPrestartAllCoreThreads());// 是否启动所有核心线程,使其空闲等待工作
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(10);
         executor.initialize();
         log.warn(" [fun-task-executor] end ");
 
