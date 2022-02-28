@@ -3,7 +3,7 @@ package com.fun.demo.controller;
 import com.fun.common.core.domain.R;
 import com.fun.common.core.utils.RUtils;
 import com.fun.demo.domain.User;
-import com.fun.demo.valid.EncryptIdValidator;
+import com.fun.demo.valid.validator.EncryptIdValidator;
 import com.fun.demo.valid.annotation.EncryptId;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

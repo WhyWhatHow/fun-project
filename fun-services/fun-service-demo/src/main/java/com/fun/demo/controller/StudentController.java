@@ -1,7 +1,6 @@
 package com.fun.demo.controller;
 
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -29,12 +28,13 @@ public class StudentController extends ApiController {
      * 服务对象
      */
     @Resource
+
     private StudentService studentService;
 
     /**
      * 分页查询所有数据
      *
-     * @param page 分页对象
+     * @param page    分页对象
      * @param student 查询实体
      * @return 所有数据
      */
@@ -51,6 +51,7 @@ public class StudentController extends ApiController {
      */
     @GetMapping("{id}")
     public R selectOne(@PathVariable Serializable id) {
+        log.info("当前线程,->{}", Thread.currentThread().getName());
         return success(this.studentService.getById(id));
     }
 

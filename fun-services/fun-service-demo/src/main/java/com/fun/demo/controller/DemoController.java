@@ -9,6 +9,7 @@ import com.fun.demo.domain.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,17 +30,26 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @Validated
 @ApiVersion(2.0)
+@RefreshScope  // 配置文件更新同步刷新
 public class DemoController {
     @Value("${com.name}")
-    String name;
+    String comName;
+
+    @GetMapping("/hello")
+    public R hello() {
+        return RUtils.createSucc(comName);
+
+    }
 
     @ApiVersion(1.9)
     @GetMapping("/test")
     public R test1(String name) {
+        log.warn("com.name : {}", this.comName);
         name = " hello, fun_project" + name;
         log.info("[/test/ 1111111111.9]" + name);
         return RUtils.createSucc(name);
     }
+
     @ApiVersion(1.0)
     @GetMapping("/test")
     public R test(String name) {
@@ -47,6 +57,7 @@ public class DemoController {
         log.info("[/test/1.000000000000]" + name);
         return RUtils.createSucc(name);
     }
+
     @ApiVersion(2.0)
     @GetMapping("/test")
     public R test2(String name) {
@@ -55,11 +66,6 @@ public class DemoController {
         return RUtils.createSucc(name);
     }
 
-    @GetMapping("/mult/env")
-    public R testMultEnv() {
-        name = " now in " + name;
-        return RUtils.createSucc(name);
-    }
 
     @GetMapping("/testEx")
     public R testException(String name) {
