@@ -19,7 +19,7 @@ import org.springframework.util.ObjectUtils;
  * @create: 2022-02-16 14:32
  **/
 public class LogListener implements GenericApplicationListener {
-    static String LOG_NAME = "logging.file.name";
+    static String LOG_NAME = "fun.log.file.name";
     static String LOG_PATH = "spring.application.name";
     //  获取 propertySource  的配置名, CONFIG_PROPERTIES, 以及APPLICATION_CONFIG 都可以获得
     static String CONFIG_PROPERTIES = "configurationProperties";
@@ -46,6 +46,7 @@ public class LogListener implements GenericApplicationListener {
      */
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
+        // spring容器启动过程的加载
         if (event instanceof ApplicationEnvironmentPreparedEvent) {
             //1. 获取environment
             ConfigurableEnvironment environment = ((ApplicationEnvironmentPreparedEvent) event).getEnvironment();
