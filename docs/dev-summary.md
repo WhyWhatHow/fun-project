@@ -781,19 +781,48 @@ public @interface EnableApiVersion {
 
 ### nacos 引入
 
+HINT:
 
+*  bootstrap.yml ,与 application.yml 配置文件 不要有内容的重复.重复的话, controller映射关系都会发生错误
+* 
 
 ### fun-porject配置文件读取顺序问题
 
+读取顺序: 
 
+ * bootstrap.yml :  配置 端口, 服务名,nacos地址, log日志
 
+ * 根据 Spring.Profile.active 激活对应 application-${spring.profile.active}.yml 配置文件
+
+    PS: 本文件可以 用 spring.profile.include: 标签-> 用来扩充 yaml配置文件
+
+ * nacos 订阅的配置文件 , 默认格式为
+
+   ```
+   
+   ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.file-extension}
+   
+   ${spring.application.name}-include[0].${spring.cloud.nacos.file-extension}
+   
+   ${spring.application.name}-include[1].${spring.cloud.nacos.file-extension}
+   
+   ${spring.application.name}.${spring.cloud.nacos.file-extension}
+   
+   ```
+   ![img_4.png](img_4.png)
 ### oauth2认证与授权
 
 
 
 ### 消息通知
 
+- [ ] email: 
 
+- [ ] 微信公众号: 
+
+
+
+### mysql 线程池优化 druid
 
 
 
@@ -807,5 +836,8 @@ public @interface EnableApiVersion {
 
 * MapperScannerRegistrar.class 生成BeanDefinition
 
+Nacos 报 **no datasource set** error?
 
+* mysql配置连接出错, ip 地址 应该是内网地址,不该是localhost
+* mysql没有初始化 nacos-mysql.sql 表 
 

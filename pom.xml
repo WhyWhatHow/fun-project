@@ -17,17 +17,17 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
 
-        <!--         项目的版本号-->
+
         <maven-plugin.version>3.6.0</maven-plugin.version>
         <jdk.version>1.8</jdk.version>
         <!--        <spring-boot.version>2.3.0.RELEASE</spring-boot.version>-->
         <spring-boot.version>2.6.3</spring-boot.version>
-        <!--        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>-->
-        <spring-cloud-ablibaba.version>2.2.6.RELEASE</spring-cloud-ablibaba.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-ablibaba.version>2021.1</spring-cloud-ablibaba.version>
         <mybatis.version>2.0.6</mybatis.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <mysql-driver.version>8.0.26</mysql-driver.version>
-
+        <!--         项目的版本号-->
         <basic.version>1.0</basic.version>
         <servlet.version>2.5</servlet.version>
         <!--       log4j2避免 jrm:远程调用版本  -->
@@ -40,7 +40,16 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--            管理 spring cloud-Alibaba 的依赖-->
+            <!--             导入spring cloud 依赖-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
+            <!--            管理 spring-cloud-Alibaba 的依赖-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -144,6 +153,7 @@
             <properties>
                 <!--profile.active对应application.yml中的@profile.active@-->
                 <profile.active>dev</profile.active>
+                <nacos.ip>centos-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
@@ -153,6 +163,7 @@
             <id>test</id>
             <properties>
                 <profile.active>test</profile.active>
+                <nacos.ip>centos-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
@@ -162,6 +173,7 @@
             <id>prod</id>
             <properties>
                 <profile.active>prod</profile.active>
+                <nacos.ip>centos-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
