@@ -47,7 +47,7 @@ public class AsyncAutoConfiguration {
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(10);
         executor.initialize();
-        log.warn(" [fun-task-executor] end ");
+        log.warn(" [fun-task-executor] end {}",executor.getThreadNamePrefix());
 
         return executor;
     }

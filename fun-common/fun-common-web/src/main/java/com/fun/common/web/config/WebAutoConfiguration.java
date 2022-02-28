@@ -1,11 +1,7 @@
 package com.fun.common.web.config;
 
-import com.fun.common.web.apiversion.ApiVersionHandlerMapping;
 import com.fun.common.web.apiversion.annotation.EnableApiVersion;
-import com.fun.common.web.apiversion.config.ApiVersionRegistrations;
-import com.fun.common.web.exception.GlobalExceptionHandler;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.fun")
 @Configuration
 @EnableApiVersion
+@EnableDiscoveryClient // 开启服务注册
 public class WebAutoConfiguration {
 
 }

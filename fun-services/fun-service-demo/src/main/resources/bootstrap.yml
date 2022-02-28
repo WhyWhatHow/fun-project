@@ -1,0 +1,28 @@
+NACOS_HOST: @nacos.ip@
+server:
+  port: 8000
+spring:
+  application:
+    name: fun-services-demo
+  profiles:
+    active: @profile.active@
+    use-legacy-processing: true # 配置是有使用传统的配置方案 即是否需要导入application-dev.yml||application-prod.yml
+  config: # springboot_2.4 use different control logic in this.
+    use-legacy-processing: true
+  cloud:
+    nacos:
+      server-addr: ${NACOS_HOST}:${NACOS_PORT:8848}
+      config:
+        server-addr: ${spring.cloud.nacos.server-addr}
+        file-extension: yaml # 文件配置格式
+        # 可以被订阅的配置类 application-active.yml文档 ,当前配置下不支持refresh ,不过可以改...
+        shared-configs: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+      discovery:
+        server-addr: ${spring.cloud.nacos.server-addr}
+# 自定义字段, 配置日志文件名 ,默认日志路径: spring.application.name/ 下
+fun:
+  logging:
+    file:
+#    TODO [whywhathow] [2022/2/28] [opt] log 日志默认是spring.application.name,可以不填这个属性
+      name: fun-demo # 不可以用spring占位符处理
