@@ -6,14 +6,6 @@ services:
     container_name: fun-nacos
     environment:
       MODE: standalone
-      SPRING_DATASOURCE_PLATFORM: mysql
-      MYSQL_MASTER_SERVICE_HOST: zero-product
-      MYSQL_MASTER_SERVICE_PORT: 3306
-      MYSQL_MASTER_SERVICE_DB_NAME: nacos_config
-      MYSQL_MASTER_SERVICE_USER: root
-      MYSQL_MASTER_SERVICE_PASSWORD: aa12321.
-      MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
-      NACOS_SERVER_PORT: 8848
       JVM_XMS: 256m
       JVM_XMX: 512m
     volumes:
