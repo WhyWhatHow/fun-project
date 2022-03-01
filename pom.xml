@@ -29,13 +29,14 @@
         <mysql-driver.version>8.0.26</mysql-driver.version>
         <!--         项目的版本号-->
         <basic.version>1.0</basic.version>
+
         <servlet.version>2.5</servlet.version>
         <!--       log4j2避免 jrm:远程调用版本  -->
         <spring-boot-log4j.version>2.6.3</spring-boot-log4j.version>
         <!--                 swagger-ui 版本-->
         <swagger.version>3.0.0</swagger.version>
-        <!--        -->
-
+        <!--      druid version  -->
+        <druid.version>1.2.8</druid.version>
     </properties>
 
     <dependencyManagement>
@@ -103,6 +104,12 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
+            <!--       引入  druid-spring-boot-starter-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
             <!--            log4j2 依赖-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

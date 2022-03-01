@@ -3,5 +3,7 @@ spring:
     include:
       - log
       - demo
+      - druid
+
 #  config:
 #    use-legacy-processing: true

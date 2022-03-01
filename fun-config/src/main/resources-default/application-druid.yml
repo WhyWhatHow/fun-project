@@ -1,0 +1,108 @@
+spring:
+  datasource:
+    druid:
+      ##############druid 连接池配置###############
+      #初始化连接数
+      initial-size: 5
+      #最小连接池数量
+      min-idle: 5
+      #获取连接时最大等待时间，单位毫秒
+      max-wait: 10000
+      #连接池最大连接数
+      max-active: 20
+      #是否缓存preparedStatement,mysql5.5+建议开启
+      pool-prepared-statements: true
+      #缓存的ps最大数量，配置大于0时，pool-prepared-statements属性会自动设置为true
+      max-pool-prepared-statement-per-connection-size: 20
+      #用来检测连接是否有效的sql 必须是一个查询语句
+      validation-query: select 'x'
+      #检测连接的超时时间
+      validation-query-timeout: 1000
+      #申请连接时会执行validation-query检测连接是否有效，开启会降低性能，默认为true
+      test-on-borrow: false
+      #归还连接时会执行validation-query检测连接是否有效，开启会降低信息，默认为true
+      test-on-return: false
+      #      web-stat-filter:
+      #        enabled: true
+      #TODO [whywhathow] [2022/3/1] [opt] 监控配置方案
+      #配置后台监控系统
+      stat-view-servlet:
+        #是否开启，默认false
+        enabled: true
+        #后台监控系统用户名，默认不需要
+        login-username: druid
+        #后台监控系统密码，默认不需要
+        login-password: druid
+        #允许访问 - 白名单ip(只能是ip地址)（逗号分隔）不可以是:  centos-product(x)->192.168.132.150(✔)
+        allow: 127.0.0.1,192.168.132.150
+        #不允许访问 - 黑名单ip（逗号分隔）
+        #deny:
+      #开启web端监控
+      web-stat-filter:
+        #开启web监控
+        enabled: true
+        #开启session监控
+        session-stat-enable: true
+        #session监控的最大数量 - 默认1000
+        session-stat-max-count: 100
+        #开启profile-enbale，能够监控单个url的sql列表
+        profile-enable: true
+        #排除一些不必要的url
+        exclusions: /druid/*
+        #配置session中标识session身份的属性值，用于告诉druid，session的拥有者姓名
+        #principal-session-name:
+        #如果用户信息保存在cookie中，则可以通过这个属性配置，告诉druid当前用户是谁
+        #principal-cookie-name:
+      filter:
+        stat:
+          #开启SQL相关统计监控
+          enabled: true
+          #数据类型
+          db-type: mysql
+          #是否开启慢sql监控
+          log-slow-sql: true
+          #慢sql的阈值
+          slow-sql-millis: 1000
+          #是否合并sql统计（将不同参数的同一条sql语句合并在一起统计）
+          merge-sql: off
+          #统计连接的堆栈追踪数据
+          connection-stack-trace-enable: true
+        wall:
+          #开启防火墙相关配置
+          enabled: true
+          #数据库类型
+          db-type: mysql
+          config:
+            #是否允许执行select *这种sql语句
+            select-all-column-allow: true
+            #是否检查SQL语句中where的第一个条件是否永真
+            select-where-alway-true-check: true
+            #是否检查SQL语句中having的第一个条件是否永真
+            select-having-alway-true-check: true
+            #配置最大返回行数，如果select语句没有指定最大返回行数，会自动修改select添加返回限制
+            select-limit: 2
+            #是否允许执行insert语句
+            insert-allow: true
+            #限制insert values的大小
+            insert-values-check-size: 100
+            #是否检查insert values语法
+            complete-insert-values-check: true
+            #是否允许delete语句
+            delete-allow: false
+            #是否检查没有where条件的delete语句
+            delete-where-none-check: true
+            #是否允许update语句
+            update-allow: true
+            #是否检查没有where条件的update语句
+            update-where-none-check: true
+        slf4j:
+          enabled: true
+          connection-log-enabled: true
+          connection-connect-before-log-enabled: true
+          connection-connect-after-log-enabled: true
+          connection-commit-after-log-enabled: true
+          connection-rollback-after-log-enabled: true
+          statement-executable-sql-log-enable: true
+          statement-log-enabled: true
+
+
