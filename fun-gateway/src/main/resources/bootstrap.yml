@@ -1,0 +1,36 @@
+# 定义nacos_ip
+NACOS_IP: @nacos.ip@
+server:
+  port: 9000
+spring:
+  application:
+    name: fun-gateway
+  profiles:
+    active: @profile.active@
+  cloud:
+#    nacos 配置
+    nacos: #   配置nacos 地址
+      server-addr: ${NACOS_IP}:${NACOS_PORT:8848}
+
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true #服务小写名称匹配
+          enabled: true  # 开启注册中心
+          url-expression: "uri"
+      routes:
+        - id: test-baidu
+          uri: https://baidu.com
+          predicates:
+            - Path=/bd # https://www.baidu.com/bd
+        - id: fun-services-demo # route ID ,唯一标记, 建议与spring.application.name 匹配
+#          uri: lb://fun-services-demo # 路由地址, lb:表示负载均衡
+
+          uri: lb://fun-services-demo
+          predicates:
+            - Path=/**
+
+
+
+
+
