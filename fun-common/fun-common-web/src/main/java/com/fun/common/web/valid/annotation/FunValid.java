@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 
 /**
  * 自定义数据校验注解, 可以用在 class, method
- *
+ * JSR303
  * @author whywhathow
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
