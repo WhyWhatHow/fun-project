@@ -3,19 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>fun-project</artifactId>
+        <artifactId>fun-common</artifactId>
         <groupId>io.github.whywhathow</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <!-- 公共模块 架构层 -->
-    <artifactId>fun-common</artifactId>
-    <packaging>pom</packaging>
-   <modules>
-       <module>fun-common-web</module>
-       <module>fun-common-core</module>
-       <module>fun-common-swagger</module>
-       <module>fun-common-cache</module>
-       <module>fun-common-log</module>
-   </modules>
+
+    <artifactId>fun-common-cache</artifactId>
+
+    <dependencies>
+        <!--         cache  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+    </dependencies>
 </project>

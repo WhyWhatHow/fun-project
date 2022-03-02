@@ -1,6 +1,6 @@
 # log4j日志监听器
-org.springframework.context.ApplicationListener=\
-  com.fun.common.web.log.LogListener
+#org.springframework.context.ApplicationListener=\
+#  com.fun.common.web.log.LogListener
 
 # springmvc 默认配置文件
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\

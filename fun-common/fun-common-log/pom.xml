@@ -3,13 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>fun-project</artifactId>
+        <artifactId>fun-common</artifactId>
         <groupId>io.github.whywhathow</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fun-config</artifactId>
+    <artifactId>fun-common-log</artifactId>
+    <description>
+        fun project log 的统一配置模块
+    </description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -20,8 +23,21 @@
                     <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
             </exclusions>
-            <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <!--       添加  lombok         -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>io.github.whywhathow</groupId>-->
+        <!--            <artifactId>fun-config</artifactId>-->
+        <!--        </dependency>-->
+
     </dependencies>
 
 </project>
