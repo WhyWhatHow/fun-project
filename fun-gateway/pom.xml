@@ -11,10 +11,6 @@
 
     <artifactId>fun-gateway</artifactId>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
         <!--         添加 spring nacos 依赖-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -24,6 +20,17 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
+        <!--    引入log4j2     -->
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-common-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+
+
         <!--        spring nacos serviceName -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -34,9 +41,28 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
+
+        <!--       添加  lombok
+         TODO [whywhathow] [2022/3/2] [opt] lombok 移动到 common-core
+              -->
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-common-core</artifactId>
+        </dependency>
+        <!--        添加 actuator 监控-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

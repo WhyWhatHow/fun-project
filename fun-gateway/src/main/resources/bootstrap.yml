@@ -7,30 +7,38 @@ spring:
     name: fun-gateway
   profiles:
     active: @profile.active@
+  config:
+    use-legacy-processing: true
   cloud:
 #    nacos 配置
     nacos: #   配置nacos 地址
       server-addr: ${NACOS_IP}:${NACOS_PORT:8848}
-
-    gateway:
-      discovery:
-        locator:
-          lower-case-service-id: true #服务小写名称匹配
-          enabled: true  # 开启注册中心
-          url-expression: "uri"
-      routes:
-        - id: test-baidu
-          uri: https://baidu.com
-          predicates:
-            - Path=/bd # https://www.baidu.com/bd
-        - id: fun-services-demo # route ID ,唯一标记, 建议与spring.application.name 匹配
-#          uri: lb://fun-services-demo # 路由地址, lb:表示负载均衡
-
-          uri: lb://fun-services-demo
-          predicates:
-            - Path=/**
-
-
-
-
-
+      config:
+        file-extension: yaml # 文件配置格式
+        # 可以被订阅的配置类 application-active.yml文档 ,当前配置下不支持refresh ,不过可以改...
+        shared-configs: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+#    gateway:
+#      discovery:
+#        locator:
+#          lower-case-service-id: true #服务小写名称匹配
+#          enabled: true  # 开启注册中心
+#          url-expression: "uri"
+#      routes:
+#        - id: test-baidu
+#          uri: https://baidu.com
+#          predicates:
+#            - Path=/bd # https://www.baidu.com/bd
+#        - id: fun-services-demo # route ID ,唯一标记, 建议与spring.application.name 匹配
+##          uri: lb://fun-services-demo # 路由地址, lb:表示负载均衡
+#
+#          uri: lb://fun-services-demo
+#          predicates:
+#            - Path=/**
+#spring boot actuator
+#  management.endpoint.gateway.enabled=true # default value
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "gateway"
+#  management.endpoints.web.exposure.include=gateway
