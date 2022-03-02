@@ -49,7 +49,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
         if (ObjectUtils.isEmpty(apiVersion)) {
             apiVersion = request.getParameter(API_VERSION);
         }
-        double reqVersion = 1.0d;
+        double reqVersion = this.value;
         //2. 赋值
         if (!ObjectUtils.isEmpty(apiVersion)) {
             reqVersion = Double.parseDouble(apiVersion);
@@ -58,7 +58,7 @@ public class ApiVersionRequestCondition implements RequestCondition<ApiVersionRe
         if (this.value <= reqVersion) {
 //             this.value =3.0 , request=4 -> 3.0
 //             this.value =3.0 , request=2 -> null
-            return this ;
+            return this;
         }
         return null;
 

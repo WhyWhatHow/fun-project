@@ -34,7 +34,6 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-
         </dependency>
         <!--         引入log4j2-->
         <!--         设置 log4j2日志-->
@@ -73,7 +72,7 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <!--        解决serviceName 问题-->
+        <!--        解决spring-cloud-nacos serviceName 问题-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
