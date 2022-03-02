@@ -783,8 +783,7 @@ public @interface EnableApiVersion {
 
 HINT:
 
-*  bootstrap.yml ,与 application.yml 配置文件 不要有内容的重复.重复的话, controller映射关系都会发生错误
-* 
+*  bootstrap.yml ,与 application.yml 配置文件 不要有内容的重复.重复的话, controller映射关系都会发生未知错误
 
 ### fun-porject配置文件读取顺序问题
 
@@ -810,11 +809,168 @@ HINT:
    
    ```
    ![img_4.png](img_4.png)
+   
+
+### Spring Gateway 引入
+
+Spring Gateway: -> webflux-> netty 
+
+* 路由转发
+* 熔断限流
+* 日志记录
+* 安全认证
+
+**实现用户的验证登录，解决跨域，日志拦截，权限控制，限流，熔断，负载均衡，黑名单和白名单机制等。是微服务架构不二的选择**；
+
+#### SpringGateway+Nacos实现静态路由,负载均衡:
+
+[参考链接](https://blog.csdn.net/qq_24598601/article/details/121184691?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_title~default-1.pc_relevant_default&spm=1001.2101.3001.4242.2&utm_relevant_index=4)
+
+[官方文档
+
+[](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#reactive-loadbalancer-client-filter)
+
+fun-gatway中bootstrap.yml 主要配置如下:
+
+
+
+ ```yaml
+ # 定义nacos_ip
+ NACOS_IP: @nacos.ip@
+ server:
+   port: 9000
+ spring:
+   application:
+     name: fun-gateway
+   profiles:
+     active: @profile.active@
+   cloud:
+     nacos: #   配置nacos 地址
+       discovery:
+         server-addr: ${NACOS_IP}:${NACOS_PORT:8848}
+     gateway:
+       discovery:
+         locator:
+           lower-case-service-id: true #服务小写名称匹配
+           enabled: true  # 开启注册中心
+           url-expression: "uri"
+       routes:
+         - id: test-baidu
+           uri: https://baidu.com
+           predicates:
+             - Path=/bd # https://www.baidu.com/bd
+         - id: fun-services-demo # route ID ,唯一标记, 建议与spring.application.name 匹配
+ #          uri: lb://fun-services-demo # 路由地址, lb:表示负载均衡
+           uri: lb://fun-services-demo
+           predicates:
+             - Path=/**
+ 
+ ```
+
+1. 将 fun-gateway 服务注册到 nacos 中
+
+   1.  简单 , 导入 spring-cloud-nacos-discovery 包就好
+
+2. 配置route 路由规则, 配置**负载均衡 即 uri:lb://fun-services-demo(有坑, 有大坑)**
+
+- ​	result: lb: 不成功,fun-gateway 不能成功路由到 具体的微服务中. 报 503 错误.  
+
+- ​	**reason:** spring-cloud-starter-gateway 这个包没有 loadbalancer 这个包需要自己导入.
+
+  ​		核心类: GatewayReactiveLoadBalancerClientAutoConfiguration 
+
+  
+
+####    Spring Gateway与 Nacos 实现 动态路由
+
+动态路由: 即将gateway 的配置文件 交给 nacos 管理, 使用nacos更新 gateway 配置文件, 实现 gateway 路由的动态配置.
+
+**主要方法: 可观测-> spring-boot-starter-actuator {包一定要引对}**
+
+bootstrap.yml配置内容如下:
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "gateway"
+```
+
+请求: http://localhost:9000/actuator/gateway/routes/
+
+
+
+核心思路:
+
+	1. nacos 管理 配置gateway route 配置文件-> gateway-route.json.
+	1. gateway 加载路由信息 -> 动态监听 
+
+>  Spring Cloud Gateway 中加载路由信息分别由以下几个类负责	
+>
+> 1、PropertiesRouteDefinitionLocator：从配置文件中读取路由信息(如YML、Properties等)
+> 2、**RouteDefinitionRepository：从存储器中读取路由信息(如内存、配置中心、Redis、MySQL等)**
+> 3、DiscoveryClientRouteDefinitionLocator：从注册中心中读取路由信息(如Nacos、Eurka、Zookeeper等)
+
+step: 
+
+* nacos 管理 路由配置信息(gateway-routes.json)并更新,
+
+Hint: 
+
+​	[不会就看官方文档](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#gateway-request-predicates-factories), 	[或者这篇文档](https://jishuin.proginn.com/p/763bfbd73353)
+
+```json
+[
+    {
+     "filters": [],
+    "id": "baidu",
+    "order": 2,
+    "predicates": [{
+        "args": {
+            "pattern": "/bd/**"
+        },
+        "name": "Path"
+    }],
+    "uri": "https://baidu.com"
+},
+]
+```
+
+PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
+
+​	 **http://{spring.application.name}/{controller}/{method}**
+
+![img_5.png](img_5.png)
+
+* gateway 接收配置信息 , 转化成路由信息,并发布更新
+
+  * 生成路由信息 **json-> routeDefinition**
+  * 发布路由信息  **ApplicationEventPublisher.publishEvent(new RefreshRoutesEvent())**
+  * gateway 更新路由信息
+* 通过 actuator/gateway/routes 查询, 判断是否生效
+![img_6.png](img_6.png)
+
+
+#### Spring Gateway 限流
+
+
+
 ### oauth2认证与授权
 
 
 
 ### 消息通知
+
+
+
+
+
+#### 架构模式:
+
+ 
+
+ 
 
 - [ ] email: 
 
@@ -824,7 +980,7 @@ HINT:
 
 ### mysql 线程池优化 druid
 
-
+**参考 fun-config/src/resources-default/application-druid.yml 文件**
 
 ### Q&A
 
