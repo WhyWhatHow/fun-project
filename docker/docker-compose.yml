@@ -1,7 +1,8 @@
 version: '3.0'
 services:
 #  需要自行配置nacos-mysql的配置
-  nacos:
+#  TODO [whywhathow] [2022/3/3] [must]  [nacos,sentinel] 源码配置方案
+  fun-nacos:
     image: nacos/nacos-server
     container_name: fun-nacos
     environment:
@@ -15,6 +16,16 @@ services:
       - "8848:8848"
       - "9848:9848"
       - "9555:9555"
+  fun-sentinel:
+    build: sentinel-dashboard
+    container_name: fun-sentinel
+    ports:
+      - "9527:9527"
+    environment:
+      SERVER_PORT: 9527
+
+#    image: fun-sentinel
+
 
 
 
