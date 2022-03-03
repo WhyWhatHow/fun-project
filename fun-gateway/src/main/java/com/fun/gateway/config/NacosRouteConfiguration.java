@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @create: 2022-03-02 15:39
  **/
 @Configuration
-public class NacosRouteAutoConfiguration {
+public class NacosRouteConfiguration {
     /**
      * nacos + gateway 实现动态路由配置类
      * @return

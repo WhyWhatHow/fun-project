@@ -9,14 +9,18 @@ spring:
     active: @profile.active@
   config:
     use-legacy-processing: true
-  cloud:
-#    nacos 配置
+  cloud:    #    nacos 配置
     nacos: #   配置nacos 地址
       server-addr: ${NACOS_IP}:${NACOS_PORT:8848}
       config:
         file-extension: yaml # 文件配置格式
         # 可以被订阅的配置类 application-active.yml文档 ,当前配置下不支持refresh ,不过可以改...
         shared-configs: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+#TODO [whywhathow] [2022/3/3] [must] 将profiles.active= namespace , 实现版本切换.
+#        namespace: ${spring.profiles.active}
+#      discovery:
+#        namespace:
+################gateway 网关配置#######
 #    gateway:
 #      discovery:
 #        locator:
