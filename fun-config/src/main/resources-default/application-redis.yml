@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: ${REDIS_HOST:centos-product}
+    port: ${REDIS_PORT:6379}
+    password:
+    database: 0
