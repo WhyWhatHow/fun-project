@@ -779,11 +779,12 @@ public @interface EnableApiVersion {
 
 
 
-### nacos 引入
+### 	Nacos
 
 HINT:
 
-*  bootstrap.yml ,与 application.yml 配置文件 不要有内容的重复.重复的话, controller映射关系都会发生未知错误
+*  bootstrap.yml ,与 application.yml 配置文件 **不要有内容的重复.重复的话, controller映射关系都会发生未知错误**
+*  @RefreshScope 可以根据当前**微服务独有配置文件属性变化 动态更新到 controller 中**
 
 ### fun-porject配置文件读取顺序问题
 
@@ -951,10 +952,24 @@ PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
 * 通过 actuator/gateway/routes 查询, 判断是否生效
 ![img_6.png](img_6.png)
 
+#### Spring Gateway +Sentinel
 
-#### Spring Gateway 限流
 
 
+
+
+#### 过滤器Filter
+
+**order 越大，优先级越低**
+
+* pre: 参数校验, 权限校验, 流量监控,日志输出, 协议转换-> 处理request
+* post: 响应内容,响应头修改,日志输出, 流量监控
+
+
+
+###  Sentinel 引入
+
+[官方文档](https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel)
 
 ### oauth2认证与授权
 
