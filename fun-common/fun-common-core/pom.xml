@@ -8,7 +8,10 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>fun-common-core 核心模块</description>
+    <description>fun-common-core 核心模块
+        工具包
+        <!--        TODO [whywhathow] [2022/3/2]   [opt] 依赖整理-->
+    </description>
     <artifactId>fun-common-core</artifactId>
     <dependencies>
         <dependency>
@@ -24,6 +27,11 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
+        </dependency>
+        <!--        fastjson 工具包-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 </project>

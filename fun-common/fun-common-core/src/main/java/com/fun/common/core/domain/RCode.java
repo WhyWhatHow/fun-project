@@ -21,6 +21,10 @@ public enum RCode {
     PARAMENT_ERROR(400, "参数校验未通过"),
 
     SERVER_EXCEPTION(500, "服务器异常，请稍后再试！"),
+    /**
+     * 熔断
+     */
+    FALLBACK(500, "当前服务不可用,请过段时间在尝试!"),
 
     /**
      * 登录相关的错误提示
