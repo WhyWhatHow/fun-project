@@ -22,7 +22,7 @@
 - X509AuthenticationFilter
 - AbstractPreAuthenticatedProcessingFilter
 - CasAuthenticationFilter
-- OAuth2LoginAuthenticationFilter
+-  
 - Saml2WebSsoAuthenticationFilter
 - **[`UsernamePasswordAuthenticationFilter`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html#servlet-authentication-usernamepasswordauthenticationfilter)**-> 表单登录
 - OpenIDAuthenticationFilter
@@ -115,15 +115,70 @@
 
 ![abstractauthenticationprocessingfilter](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/architecture/abstractauthenticationprocessingfilter.png)
 
-## Form Login-> 表单登录
+### 用户名密码方式用户身份认证
 
-### 重定向到 /login 页面 流程. 
+#### Form Login 表单登录
+
+未授权用户重定向到 /login 页面 流程.
 
 ![loginurlauthenticationentrypoint](../../../MyInfo/BlogV2/source/images/loginurlauthenticationentrypoint.png)
 
-### 用户身份认证流程
+**Filter 执行具体流程**
 
 <img src="https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/usernamepasswordauthenticationfilter.png" alt="usernamepasswordauthenticationfilter" style="zoom:150%;" />
+
+#### Basic Authentication
+
+HTTP Basic 认证流程
+
+![basicauthenticationentrypoint](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/basicauthenticationentrypoint.png)
+
+1. user 发起一条未授权的reqeust,  /private 
+2. SpringSecurity 的 FilterSecurityInterceptor 拦截到用户请求,   拒绝, 跑错 AccessDeniedExcepton
+3. 由于用户 没有权限, ExceptionTranslationFIlter  指向授权流程,  返回WWW-Authenticate 报文
+4. 用户收到 WWW-Authenticate 报文后, user 就知道自己需要返回用户名 ,密码给 SpringSecurity ,  下图为用户名密码模式的用户认证->filter 执行 流程.
+
+![basicauthenticationfilter](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/basicauthenticationfilter.png)
+
+
+
+WWW-Authenticate : 401 状态码 
+
+```
+ WWW-Authenticate: Newauth realm="apps", type=1,
+                       title="Login to \"apps\"", Basic realm="simple"
+```
+
+### Password Storage
+
+UserDetails : 用户认证 信息, 即权限信息 
+
+> [`UserDetails`](https://docs.spring.io/spring-security/site/docs/5.6.2/api/org/springframework/security/core/userdetails/UserDetails.html) is returned by the [`UserDetailsService`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/user-details-service.html#servlet-authentication-userdetailsservice). The [`DaoAuthenticationProvider`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/dao-authentication-provider.html#servlet-authentication-daoauthenticationprovider) validates the `UserDetails` and then returns an [`Authentication`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authentication) that has a principal that is the `UserDetails` returned by the configured `UserDetailsService`.
+
+**`UserDetailsService`**    -  > DaoAuthenticationProvider
+
+> Spring Security provides [in-memory](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/in-memory.html#servlet-authentication-inmemory) and [JDBC](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/jdbc.html#servlet-authentication-jdbc) implementations of `UserDetailsService`.
+
+```java
+@Bean
+CustomUserDetailsService customUserDetailsService() {
+	return new CustomUserDetailsService();
+}
+```
+
+**`PasswordEncoder`**  :  加密密码, 用户密码校验 
+
+**`DaoAuthenticationProvider`**
+
+![daoauthenticationprovider](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/daoauthenticationprovider.png)
+
+认证成功, 返回 `Authentication` 
+
+## Authorization Architecture
+
+
+
+
 
 ## 个人认知
 
@@ -145,7 +200,7 @@ Filter :
 
 ​	SpringMVC, 能拿到 request 和 response，还能拿到 handler （Controller 的处理器）
 
-```java
+```
    // 控制器(controller)方法处理前调用
 preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) 
     // 控制器(controller)方法处理后调用
@@ -239,6 +294,33 @@ Q: 验证码 怎么传输的 ?
 
 ![image-20210519120117924](../../../MyInfo/BlogV2/source/images/nPs9DNFuUB52AOV.png)
 
+### SecurityOauth Client 2  filter
+
+```
+ OAuth2AuthorizationRequestRedirectFilter
+ 
+ OAuth2LoginAuthenticationFilter
+ 
+ DefaultLoginPageGeneratingFilter
+ 
+ OAuth2LoginAuthenticationProvider
+ 
+```
+
+## 尚硅谷 -Spring Security
+
+FilterSecurityInterceptor：是一个方法级的权限过滤器, 基本位于过滤链的最底部。
+
+ExceptionTranslationFilter
+
+### 过滤器是如何加载的? 
+
+* DelegatingFilterProxy -> doFilter()  -> this.initDelegate(wac) 
+
+* FilterChainProxy :  -> List ->filters
+
+  
+
 
 
 ## Q&&A
@@ -251,13 +333,27 @@ Q: 验证码 怎么传输的 ?
 
 答: UserDetailsService.loadusername() 指定 用户名的校验方案. 
 
+Spring-Boot-autoconfiguration 配置类
+
 UserDetailServices 加载时间?
 
+-> 用户自定义加载 
 
+### Spring Security 什么时候注入的filter,自定义filter 要如何注入?
 
 
 
 ### There is no PasswordEncoder mapped for the id "null"
+
+需要注册一个PasswordEncoder.
+
+```java
+@Bean 
+public PasswordEncoder  passwordEncoder(){
+ return new BCryptPasswordEncoder();
+}
+
+```
 
 
 

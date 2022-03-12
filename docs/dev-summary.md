@@ -85,6 +85,8 @@ spring: # every serice needed
 1. `POST`、`PUT`请求，使用`requestBody`传递参数；
 2. `GET`请求，使用`requestParam/PathVariable`传递参数。
 
+> [官方文档](https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-defineconstraints-spec)
+
 Bean Validation 中内置的 constraint
 
 | @Valid                      | 被注释的元素是一个对象，需要检查此对象的所有字段值       |
@@ -972,6 +974,38 @@ PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
 [官方文档](https://github.com/alibaba/spring-cloud-alibaba/wiki/Sentinel)
 
 ### oauth2认证与授权
+
+Gitee 接入: 
+
+1. 需要创建在gitee 创建 oauth应用, 然后按如下进行配置
+2.  需要修改rediectUri 到正确的位置.
+
+```yaml
+  security:
+    oauth2:
+      client:
+        #     参考链接 https://python.iitter.com/other/183305.html
+        #  https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-boot-property-mappings
+        registration:
+          #           需要自定义配置 -> provider 参考 CommonAOauth2Provider
+          gitee:
+            client-id: e56f3755436ef17e16df17461456a3c5cbb795db54dc4b20a785760e515ae44d
+            client-secret: ab982c1d94515f6d96a309dc6135043a7a9cec75995d549976e37d6d7d1815c1
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://localhost:8080/hello'
+            scope: user_info
+            client-name: Gitee
+            client-alias: gitee
+        provider:
+          gitee:
+            authorization-uri: https://gitee.com/oauth/authorize
+            token-uri: https://gitee.com/oauth/token
+            user-name-attribute: id
+            user-info-uri: https://gitee.com/api/v5/user
+
+```
+
+<!--todo [must ] -> 用户信息保存-->
 
 
 
