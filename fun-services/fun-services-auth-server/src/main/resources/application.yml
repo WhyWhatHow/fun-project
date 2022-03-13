@@ -1,0 +1,17 @@
+server:
+  port: 9999
+spring:
+  application:
+    name: fun-services-auth-server
+  profiles:
+    active: simple
+  #    include:
+#      - minimal
+  config: # springboot_2.4 use different control logic in this.
+    use-legacy-processing: true
+
+  datasource:
+    username: root
+    password: aa12321.
+    url: jdbc:mysql://centos-product:3306/fun_demo?serverTimezone=GMT%2B8
+#TODO [whywhathow] [2022/3/13] [must] 时间问题, fastjson

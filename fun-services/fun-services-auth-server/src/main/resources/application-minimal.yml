@@ -1,0 +1,8 @@
+security:
+  oauth2:
+    client:
+#     curl 测试, 返回access_token , oauth2只能是客户端模式
+#      curl test:test@localhost:9999/oauth/token -dgrant_type=client_credentials -dscope=any
+#      {"access_token":"7f6d814c-37f5-4bbb-acf5-dba832fcbe35","token_type":"bearer","expires_in":43199,"scope":"any"}
+      client-id: test
+      client-secret:  test
