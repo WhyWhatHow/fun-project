@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
  **/
 public class Test {
     public static void main(String[] args) {
-        List<String> list = new ArrayList<String>();
-        list.add("I am a boy");
-        list.add("I love the girl");
-        list.add("But the girl loves another girl");
-        List<String[]> res = list.stream().map(val -> val.split(" ")).collect(Collectors.toList());
-//                map(Arrays::stream);
-        System.out.println("end");
+//        List<String> list = new ArrayList<String>();
+//        list.add("I am a boy");
+//        list.add("I love the girl");
+//        list.add("But the girl loves another girl");
+//        List<String[]> res = list.stream().map(val -> val.split(" ")).collect(Collectors.toList());
+////                map(Arrays::stream);
+//        System.out.println("end");
+
     }
 }

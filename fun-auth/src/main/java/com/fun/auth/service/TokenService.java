@@ -1,6 +1,7 @@
 package com.fun.auth.service;
 
 import com.fun.common.core.domain.R;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,10 +11,16 @@ import org.springframework.stereotype.Service;
  * @create: 2022-03-14 22:37
  **/
 //@Service
-public interface TokenService {
-    public R login(String username, String password);
+public class TokenService extends DefaultTokenServices {
+    public R login(String username, String password) {
+        return null;
+    }
 
-    R register();
+    R register() {
+        return null;
+    }
 
-    R refreshToken();
+    R refreshToken() {
+        return null;
+    }
 }
