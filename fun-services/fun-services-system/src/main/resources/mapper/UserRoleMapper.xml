@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fun.system.mapper.UserRoleMapper">
+
+    <resultMap type="com.fun.system.entity.UserRole" id="UserRoleMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into fun_system.sys_user_role()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        ()
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into fun_system.sys_user_role()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            ()
+        </foreach>
+        on duplicate key update
+             </insert>
+
+</mapper>
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fun.system.mapper.UserMapper">
+
+    <resultMap type="com.fun.system.entity.User" id="UserMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="gitee" column="gitee" jdbcType="VARCHAR"/>
+        <result property="github" column="github" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into fun_system.sys_user(username, password, email, nickname, gitee, github, create_time, update_time, status, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.username}, #{entity.password}, #{entity.email}, #{entity.nickname}, #{entity.gitee}, #{entity.github}, #{entity.createTime}, #{entity.updateTime}, #{entity.status}, #{entity.delFlag})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into fun_system.sys_user(username, password, email, nickname, gitee, github, create_time, update_time, status, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.username}, #{entity.password}, #{entity.email}, #{entity.nickname}, #{entity.gitee}, #{entity.github}, #{entity.createTime}, #{entity.updateTime}, #{entity.status}, #{entity.delFlag})
+        </foreach>
+        on duplicate key update
+         username = values(username) , password = values(password) , email = values(email) , nickname = values(nickname) , gitee = values(gitee) , github = values(github) , create_time = values(create_time) , update_time = values(update_time) , status = values(status) , del_flag = values(del_flag)     </insert>
+
+</mapper>
+

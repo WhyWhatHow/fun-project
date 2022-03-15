@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: @profile.active@
+  config: # springboot_2.4 use different control logic in this.
+    use-legacy-processing: true
+  datasource:
+    username: root
+    password: aa12321.
+    url: jdbc:mysql://centos-product:3306/fun_system?serverTimezone=GMT%2B8

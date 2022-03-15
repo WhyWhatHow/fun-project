@@ -1,0 +1,27 @@
+NACOS_HOST: @nacos.ip@
+server:
+  port: 10000
+spring:
+  application:
+    name: fun-services-system
+  profiles:
+    active: @profile.active@
+  # 配置是有使用传统的配置方案 即是否需要导入application-dev.yml||application-prod.yml
+  config: # springboot_2.4 use different control logic in this.
+    use-legacy-processing: true
+  cloud:
+    nacos:
+      server-addr: ${NACOS_HOST}:${NACOS_PORT:8848}
+      config:
+        server-addr: ${spring.cloud.nacos.server-addr}
+        file-extension: yaml # 文件配置格式
+        # 可以被订阅的配置类 application-active.yml文档 ,当前配置下不支持refresh ,不过可以改...
+        shared-configs: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+      discovery:
+        server-addr: ${spring.cloud.nacos.server-addr}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
