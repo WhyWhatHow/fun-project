@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 /**
  * @program: fun-project
- * @description: Authorization-Server 默认配置类
+ * @description: Authorization-Server 默认配置类 ,参考默认配置类 , 不会就去抄
  * @author: WhyWhatHow
  * @create: 2022-03-14 22:44
  * @see
@@ -41,6 +41,8 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
     }
 
     /**
+     * 认证服务器的安全配置
+     *
      * @param security
      * @throws Exception
      */
@@ -61,13 +63,18 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
         clients.withClientDetails(funClientDetailServices());
     }
 
+    /**
+     *
+     * @param endpoints
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         // tokenController 放行的http.get ,http.post 方法
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
                 .tokenServices(tokenService())
                 .tokenStore(redisTokenStore)
-                .tokenEnhancer(tokenEnhancer())
+//                .tokenEnhancer(tokenEnhancer())
                 .authenticationManager(authenticationManager)
                 .reuseRefreshTokens(false) //允许使用refreshToken
                 // 转发 /oauth/confirm_access 的req 转发到 /token/confirm_access
@@ -81,6 +88,10 @@ public class AuthorizationConfiguration extends AuthorizationServerConfigurerAda
 
     }
 
+    /**
+     * token 生成接口输出增强
+     * @return
+     */
     @Bean
     TokenEnhancer tokenEnhancer() {
         return null;
