@@ -32,11 +32,27 @@
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
         </dependency>
+        <!--        引入mysql 配置-->
+        <!--         数据库依赖添加-->
         <dependency>
-            <groupId>io.github.whywhathow</groupId>
-            <artifactId>fun-services-system</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <!--       引入  druid starter-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--        引入redis 配置-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-redis</artifactId>
+            <version>1.4.7.RELEASE</version>
         </dependency>
     </dependencies>
 

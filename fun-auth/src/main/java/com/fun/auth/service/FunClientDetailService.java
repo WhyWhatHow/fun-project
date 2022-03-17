@@ -1,6 +1,7 @@
 package com.fun.auth.service;
 
 import com.fun.auth.entity.OauthClientDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
  * @author: WhyWhatHow
  * @create: 2022-03-15 22:00
  **/
+@Slf4j
 public class FunClientDetailService implements ClientDetailsService {
 
     @Autowired
@@ -32,6 +34,7 @@ public class FunClientDetailService implements ClientDetailsService {
      */
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
+        log.warn("[clientUserDetailsService -- ] doing->{}", clientId);
         OauthClientDetails clientDetails = service.getById(clientId);
         return (ClientDetails) clientDetails;
     }

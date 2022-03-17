@@ -1,6 +1,6 @@
 package com.fun.auth.controller;
 
-import com.fun.auth.service.TokenService;
+import com.fun.auth.service.FunTokenService;
 import com.fun.common.core.domain.R;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ import javax.validation.constraints.NotBlank;
 public class TokenController {
 
 //    @Autowired
-    TokenService tokenService;
+    FunTokenService tokenService;
 //    TODO [whywhathow] [2022/3/14] [must] 参数校验 ,@valid 实现
 
     /**

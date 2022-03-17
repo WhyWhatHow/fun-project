@@ -7,3 +7,4 @@ spring:
     username: root
     password: aa12321.
     url: jdbc:mysql://centos-product:3306/fun_system?serverTimezone=GMT%2B8
+
