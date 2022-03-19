@@ -4,6 +4,8 @@ spring:
       - log
       - demo
       - druid
+      - time
+
 
 #  config:
 #    use-legacy-processing: true

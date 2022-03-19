@@ -3,3 +3,5 @@ spring:
     include:
       - log
       - druid
+      - time
+      - demo
