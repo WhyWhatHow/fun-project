@@ -1,3 +1,21 @@
+### PO/POJO/VO/BO/QO/DAO/DTO
+
+> [参考链接](https://www.cnblogs.com/kancy/p/pojo.html)
+
+![img](https://pic4.zhimg.com/80/v2-5f90150d5e99a7dd5ef58e75ef9c9334_hd.jpg)
+
+* PO : Persistant Object  持久化对象,   数据库映射 的java 对象
+
+* BO: Business Object: 业务对象, 
+
+* **VO : Value Object: 表现对象, ->返回给前端的java对象**
+
+  Ps: 只需返回给前端需要显示的数据, 不需要返回整个PO 对象
+
+* **DTO: Data Transfer Object 数据传输对象**: ->  表示**不同服务** 或者**服务的不同分层间**的数据传输
+
+* **QO : Query Object: 查询对象**
+
 ### 日志切换
 
 springboot logback -> log4j2 
@@ -1033,7 +1051,7 @@ Gitee 接入:
 
 ### Q&A
 
-@configuration ,@Bean ,@Repository, @Component,@Service 之间的区别
+#### @configuration ,@Bean ,@Repository, @Component,@Service 之间的区别
 
 * 都是用来在spring容器中进行组件注册的. 
 
@@ -1041,8 +1059,68 @@ Gitee 接入:
 
 * MapperScannerRegistrar.class 生成BeanDefinition
 
-Nacos 报 **no datasource set** error?
+#### Nacos 报 **no datasource set** error?
 
 * mysql配置连接出错, ip 地址 应该是内网地址,不该是localhost
 * mysql没有初始化 nacos-mysql.sql 表 
+
+#### java -jar 运行项目成功, docker 部署项目失败? 
+
+与服务器内存有关系??  或者网络
+
+- [ ]  docker-compose 内存限制 配置
+- [x]  在服务器内存不足的情况下, 不要用docker 配置Springboot 项目, 
+  * Spring boot尽量选择 jar 运行, 节省内存.
+  * 中间件, redis ,mysql(强烈推荐) docker 部署.
+
+####  多表查询  与 多次查询怎么选择?
+
+**结论; 选择多次查询.** 
+
+```sql
+  EXPLAIN 
+     SELECT 
+		u.*,m.*
+        FROM 
+             sys_user u
+        LEFT JOIN sys_user_role  ur ON u.user_id = ur.user_id
+        LEFT JOIN sys_role_menu ru ON ur.role_id = ru.role_id
+        LEFT JOIN sys_menu  m ON ru.menu_id = m.menu_id
+        WHERE
+         u.username= 'admin'
+```
+
+>  [参考](https://blog.csdn.net/xhaimail/article/details/119888956)
+>
+> https://www.zhihu.com/question/68258877
+
+**思考角度: 读, 写,  维护, 扩展.**
+
+服务器中,  传输速度 : 网络< 磁盘<内存<cpu
+
+* 读 : 
+
+  join 连表查询 == 小表驱动大表,  多次sql 语句查询 目的也是为了减少结果集, 说白了就是在services 层做的多表查询,  两者读性能大致相当.
+
+  ​	services 端做的话, 意味着多条网络请求, 单同时也可以加缓存, 本地缓存coffine+redis 缓存,所以读性能丢失不严重. 
+
+  ​	Join 多表查询缓存  会在单表数据更新后失效.  
+
+* 写:  
+
+  Join 多表查询会锁表, 拒绝掉用户写操作, 影响MySQL性能.
+
+* 维护: 
+
+  单表情况, 表结构发生改变, 不影响业务层代码 , 最重要的是, 方便维护. 
+
+  Join 多表查询在表结构发生改变时 往往伴随着业务代码的修改
+
+* 扩展: 
+
+  mysql 有状态 扩容相对复杂,  服务层,由于无状态, 扩容简单方便. 
+
+**结论:  无论是多次查询,还是链联表查询, 核心都是小表驱动大表, **
+
+**多次查询在读性能可能会存在损耗,但胜在方便维护.扩展,不影响mysql写性能.  **
 
