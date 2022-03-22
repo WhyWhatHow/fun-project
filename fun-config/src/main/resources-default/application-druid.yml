@@ -80,7 +80,7 @@ spring:
             #是否检查SQL语句中having的第一个条件是否永真
             select-having-alway-true-check: true
             #配置最大返回行数，如果select语句没有指定最大返回行数，会自动修改select添加返回限制
-            select-limit: 2
+#            select-limit: 2
             #是否允许执行insert语句
             insert-allow: true
             #限制insert values的大小
@@ -98,11 +98,21 @@ spring:
         slf4j:
           enabled: true
           connection-log-enabled: true
-          connection-connect-before-log-enabled: true
-          connection-connect-after-log-enabled: true
-          connection-commit-after-log-enabled: true
-          connection-rollback-after-log-enabled: true
+#          connection-connect-before-log-enabled: true
+#          connection-connect-after-log-enabled: true
+#          connection-commit-after-log-enabled: true
+#          connection-rollback-after-log-enabled: true
           statement-executable-sql-log-enable: true
           statement-log-enabled: true
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          result-set-open-after-log-enabled: false
+          result-set-close-after-log-enabled: false
+      # 配置日志输出
+#      spring.datasource.druid.filter.slf4j.enabled=true
+#      spring.datasource.druid.filter.slf4j.statement-create-after-log-enabled=false
+#      spring.datasource.druid.filter.slf4j.statement-close-after-log-enabled=false
+#      spring.datasource.druid.filter.slf4j.result-set-open-after-log-enabled=false
+#      spring.datasource.druid.filter.slf4j.result-set-close-after-log-enabled=false
 
 

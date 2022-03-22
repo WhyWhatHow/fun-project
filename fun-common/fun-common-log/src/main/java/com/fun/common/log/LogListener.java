@@ -14,7 +14,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * @program: fun-project
- * @description: 监听日志文件, 动态配置日志文件
+ * @description: 监听日志文件, 动态配置日志文件 ,实现一份xml 配置, 多个微服务同时使用.
  * @author: WhyWhatHow
  * @create: 2022-02-16 14:32
  **/
@@ -29,7 +29,7 @@ public class LogListener implements GenericApplicationListener {
      * 通过 springApplicationlistener 监听器,监听日志文件
      * 参考 {@link LoggingApplicationListener #supportsEventType}  方法写出
      *
-     * @param eventType
+     * @param eventType ApplicationEnvironmentPreparedEvent.class
      * @return
      */
     @Override

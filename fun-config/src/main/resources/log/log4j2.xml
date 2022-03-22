@@ -16,10 +16,12 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
             %n是换行符-->
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <!--<property name="LOG_PATTERN" value="%date{yy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%X{X-B3-TraceId}, %X{X-B3-SpanId}, %X{X-B3-ParentSpanId}, %X{X-Span-Export}] - %msg%n" />-->
-        <property name="LOG_PATTERN" value="%date{yy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%traceId] - %msg%n" />
+        <property name="LOG_PATTERN"
+                  value="[%date{yy-MM-dd HH:mm:ss.SSS}] [%thread] %-5level %logger{36} [%traceId] - %msg%n"/>
+        <!--        <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %-5level %class{36} %L %M - %msg%xEx%n"/>-->
         <!-- 定义日志存储的路径，不要配置相对路径 -->
-        <property name="FILE_PATH" value="./logs/${ctx:logPath}" />
-        <property name="FILE_NAME" value="${ctx:logName}" />
+        <property name="FILE_PATH" value="./logs/${ctx:logPath}"/>
+        <property name="FILE_NAME" value="${ctx:logName}"/>
     </Properties>
 
     <!-- 定义输出器 -->
@@ -37,8 +39,9 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </File>
 
-        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileDebug" fileName="${FILE_PATH}/${FILE_NAME}_debug.log" filePattern="${FILE_PATH}/${FILE_NAME}-DEBUG-%d{yyyy-MM-dd}_%i.log.gz">
+        <!-- 这个会打印出所有的debug及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFileDebug" fileName="${FILE_PATH}/${FILE_NAME}_debug.log"
+                     filePattern="${FILE_PATH}/${FILE_NAME}-DEBUG-%d{yyyy-MM-dd}_%i.log.gz">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
             <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
@@ -52,7 +55,8 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
         </RollingFile>
 
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}/${FILE_NAME}_info.log" filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
+        <RollingFile name="RollingFileInfo" fileName="${FILE_PATH}/${FILE_NAME}_info.log"
+                     filePattern="${FILE_PATH}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
             <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
@@ -66,7 +70,8 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
         </RollingFile>
 
         <!-- 这个会打印出所有的warn及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileWarn" fileName="${FILE_PATH}/${FILE_NAME}_warn.log" filePattern="${FILE_PATH}/${FILE_NAME}-WARN-%d{yyyy-MM-dd}_%i.log.gz">
+        <RollingFile name="RollingFileWarn" fileName="${FILE_PATH}/${FILE_NAME}_warn.log"
+                     filePattern="${FILE_PATH}/${FILE_NAME}-WARN-%d{yyyy-MM-dd}_%i.log.gz">
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
             <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${LOG_PATTERN}"/>
@@ -108,6 +113,16 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
             <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖-->
             <DefaultRolloverStrategy max="15"/>
         </RollingFile>
+        <!--druid的日志记录追加器-->
+        <RollingFile name="druidSqlRollingFile" fileName="${FILE_PATH}/${FILE_NAME}_druid_sql.log"
+                     filePattern="${FILE_PATH}/${FILE_NAME}-druid-SQL-%d{yyyy-MM-dd}_%i.log.gz">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %L %M - %msg%xEx%n"/>
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour-->
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
     </appenders>
 
     <!--Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。-->
@@ -121,22 +136,21 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
             <appender-ref ref="RollingFileError"/>
         </root>
 
-        <!-- 记录ken-page的核心日志
+        <!--  日志记录在 spring.application.name/spring.application.name-druid_sql.log文件中
          additivity="false" 防止日志继承 解决日志打印两篇的问题
          -->
         <logger name="druid.sql.Statement" level="debug" additivity="false">
             <appender-ref ref="SQLInfoLog"/>
         </logger>
-
-        <!--    <logger name="druid.sql.Connection" level="debug" additivity="false">
-              <appender-ref ref="Console"/>
-            </logger>-->
-
-<!--        <logger name="com.ken" level="debug" additivity="false">-->
-<!--            <appender-ref ref="Console"/>-->
-<!--            <appender-ref ref="RollingFileDebug"/>-->
-<!--        </logger>-->
-
+        <!--     druid 日志记录 -->
+        <!--        <logger name="druid.sql.Statement" level="debug" additivity="false">-->
+        <!--            <appender-ref ref="Console"/>-->
+        <!--        </logger>-->
+        <!-- 自定义sql 日志记录 console 输出-->
+        <logger name="com.fun" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="RollingFileDebug"/>
+        </logger>
 
 
         <!-- 第三方日志系统 -->
@@ -144,6 +158,19 @@ monitorInterval log4j能够自动检测修改配置文件和重新配置本身�
         <!-- <logger name="org.springframework" level="INFO"></logger> -->
         <!-- <logger name="org.mybatis" level="INFO"></logger> -->
         <!-- <logger name="org.apache.http" level="warn" /> -->
+        <!--log4j2 自带过滤日志-->
+        <Logger name="org.apache.catalina.startup.DigesterFactory" level="error"/>
+        <Logger name="org.apache.catalina.util.LifecycleBase" level="error"/>
+        <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn"/>
+        <logger name="org.apache.sshd.common.util.SecurityUtils" level="warn"/>
+        <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn"/>
+        <Logger name="org.crsh.plugin" level="warn"/>
+        <logger name="org.crsh.ssh" level="warn"/>
+        <Logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="error"/>
+        <Logger name="org.hibernate.validator.internal.util.Version" level="warn"/>
+        <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="warn"/>
+        <logger name="org.springframework.boot.actuate.endpoint.jmx" level="warn"/>
+        <logger name="org.thymeleaf" level="warn"/>
     </loggers>
 
 </configuration>
