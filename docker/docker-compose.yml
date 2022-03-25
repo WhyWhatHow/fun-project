@@ -8,7 +8,7 @@ services:
     environment:
       MODE: standalone
       JVM_XMS: 256m
-      JVM_XMX: 512m
+      JVM_XMX: 256m
     volumes:
       - ./nacos/logs/:/home/nacos/logs
       - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
@@ -16,6 +16,13 @@ services:
       - "8848:8848"
       - "9848:9848"
       - "9555:9555"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500m
+
+
   fun-sentinel:
     build: sentinel-dashboard
     container_name: fun-sentinel
@@ -23,6 +30,11 @@ services:
       - "9527:9527"
     environment:
       SERVER_PORT: 9527
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 300m
 
 #    image: fun-sentinel
 
