@@ -1,6 +1,8 @@
 version: '3.0'
 services:
 #  需要自行配置nacos-mysql的配置
+#  DONE: service 内存空间限制, cmd:
+#  docker-compose --compatibility up -d
 #  TODO [whywhathow] [2022/3/3] [must]  [nacos,sentinel] 源码配置方案
   fun-nacos:
     image: nacos/nacos-server
