@@ -1,6 +1,6 @@
 package com.fun.gateway.config;
 
-import com.fun.gateway.route.NacosRouteDefinitionRegistry;
+import com.fun.gateway.support.NacosRouteDefinitionRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,4 +20,6 @@ public class NacosRouteConfiguration {
     public NacosRouteDefinitionRegistry nacosRouteDefinitionRegistry() {
         return new NacosRouteDefinitionRegistry();
     }
+
+
 }

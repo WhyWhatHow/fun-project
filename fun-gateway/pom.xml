@@ -42,9 +42,6 @@
             <artifactId>spring-cloud-loadbalancer</artifactId>
         </dependency>
 
-        <!--       添加  lombok
-         TODO [whywhathow] [2022/3/2] [opt] lombok 移动到 common-core
-              -->
         <dependency>
             <groupId>io.github.whywhathow</groupId>
             <artifactId>fun-config</artifactId>
@@ -82,6 +79,12 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <!--        open api -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webflux-ui</artifactId>
+            <version>1.6.6</version>
         </dependency>
     </dependencies>
 

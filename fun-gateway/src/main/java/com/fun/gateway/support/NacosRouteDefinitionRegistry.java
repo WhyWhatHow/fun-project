@@ -1,10 +1,11 @@
-package com.fun.gateway.route;
+package com.fun.gateway.support;
 
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.config.listener.AbstractListener;
 import com.alibaba.nacos.api.exception.NacosException;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
@@ -21,18 +22,18 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 /**
  * json 格式
- *
+ * <p>
  * [{
- *     "filters": [], // 每一个属性都不能丢
- *     "id": "baidu",
- *     "order": 2,
- *     "predicates": [{
- *         "args": {
- *             "pattern": "/bd/**"
- *         },
- *         "name": "Path"
- *     }],
- *     "uri": "https://baidu.com"
+ * "filters": [], // 每一个属性都不能丢
+ * "id": "baidu",
+ * "order": 2,
+ * "predicates": [{
+ * "args": {
+ * "pattern": "/bd/**"
+ * },
+ * "name": "Path"
+ * }],
+ * "uri": "https://baidu.com"
  * },
  * ]
  */
@@ -47,6 +48,7 @@ import java.util.List;
  * @create: 2022-03-02 09:34
  **/
 @Slf4j
+@Data
 public class NacosRouteDefinitionRegistry implements RouteDefinitionRepository, ApplicationEventPublisherAware {
 
     /**
@@ -72,24 +74,26 @@ public class NacosRouteDefinitionRegistry implements RouteDefinitionRepository, 
             log.warn("[nacos-route]-->config-service is null");
         }
         //   nacos 每隔多少毫秒去nacos 拉一次config
-        String configInfo = configService.getConfigAndSignListener(DATA_ID, GROUP_ID, 1000, new AbstractListener() {
-            /**
-             * 监听端口
-             * 接收到 nacos 配置信息改变 -> 格式转化, -> publish
-             * @param configInfo
-             */
-            @Override
-            public void receiveConfigInfo(String configInfo) {
-                // 每次收到消息去发送
-                if (!ObjectUtils.isEmpty(configInfo)) {
-                    log.info("[nacos-route-listener]->{}", configInfo);
-                    // 1. 更新 routeDefinition
-                    list = JSONArray.parseArray(configInfo, RouteDefinition.class);
-                    publisher.publishEvent(new RefreshRoutesEvent(NacosRouteDefinitionRegistry.this));
+        String configInfo = configService.getConfigAndSignListener(DATA_ID, GROUP_ID, 1000,
+                new AbstractListener() {
+                    /**
+                     * 监听端口
+                     * 接收到 nacos 配置信息改变 -> 格式转化, -> publish
+                     * @param configInfo
+                     */
+                    @Override
+                    public void receiveConfigInfo(String configInfo) {
+                        // 每次收到消息去发送
+                        if (!ObjectUtils.isEmpty(configInfo)) {
+                            log.info("[nacos-route-listener]->{}", configInfo);
+                            // 1. 更新 routeDefinition
+                            list = JSONArray.parseArray(configInfo, RouteDefinition.class);
+                            publisher.publishEvent(new RefreshRoutesEvent(NacosRouteDefinitionRegistry.this));
 
+                        }
+                    }
                 }
-            }
-        });
+        );
         log.info("[msg-> config-service pull ]->{}", configInfo);
         list = JSONArray.parseArray(configInfo, RouteDefinition.class);
 

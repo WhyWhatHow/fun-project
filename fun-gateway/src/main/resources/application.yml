@@ -1,30 +1,47 @@
-#spring:
-#  redis:
-#    host: ${REDIS_HOST:centos-product}
-#    port: ${REDIS_PORT:6379}
-#    password:
-#    database:
-
-# 引入sentinel 配置 , 避免sentinel处理uri级别的用户请求
+server:
+  port: 9000
 spring:
   cloud:
-    sentinel:
-      filter:
-        enabled: false
-      transport:
-        dashboard: ${SENTINEL_IP:centos-product}:${SENTINEL_PORT:9527}
-      log:
-        dir: /logs/sentinel/
-      #spring.cloud.sentinel.datasource.ds2.nacos.server-addr=localhost:8848
-      #spring.cloud.sentinel.datasource.ds2.nacos.data-id=sentinel
-      #spring.cloud.sentinel.datasource.ds2.nacos.group-id=DEFAULT_GROUP
-      #spring.cloud.sentinel.datasource.ds2.nacos.data-type=json
-      #spring.cloud.sentinel.datasource.ds2.nacos.rule-type=degrade
-      datasource:
-        d1:
-          nacos:
-            server-addr: ${NACOS_IP:centos-product}:${NACOS_PORT:8848}
-            data-id: sentinel-gateway
-            group-id: gateway
-            data-type: json
-            rule-type: degrade
+#            rule-type: gw-flow
+    #            Gateway 网关默认配置
+    gateway:
+      discovery:
+        locator:
+          lower-case-service-id: true #服务小写名称匹配
+          enabled: true  # 开启注册中心
+      routes:
+        - id: openapi  #  SpringDoc  route配置
+          order: -1
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs/
+        - id: fun-service-demo-mybatis
+          uri: lb://fun-service-demo-mybatis
+          predicates:
+            - Path=/api/demo-mybatis/**
+          filters:
+            - StripPrefix=2
+# TODO [whywhathow] [2022/3/25] [must]   测试 rewritePath 格式
+
+#    # 引入sentinel 配置 , 避免sentinel处理uri级别的用户请求
+#    sentinel:
+#      filter:
+#        enabled: false
+#      transport:
+#        dashboard: ${SENTINEL_IP:centos-product}:${SENTINEL_PORT:9527}
+#      log:
+#        dir: /logs/sentinel/
+#      #spring.cloud.sentinel.datasource.ds2.nacos.server-addr=localhost:8848
+#      #spring.cloud.sentinel.datasource.ds2.nacos.data-id=sentinel
+#      #spring.cloud.sentinel.datasource.ds2.nacos.group-id=DEFAULT_GROUP
+#      #spring.cloud.sentinel.datasource.ds2.nacos.data-type=json
+#      #spring.cloud.sentinel.datasource.ds2.nacos.rule-type=degrade
+#      datasource:
+#        d1:
+#          nacos:
+#            server-addr: ${NACOS_IP:centos-product}:${NACOS_PORT:8848}
+#            data-id: sentinel-gateway
+#            group-id: gateway
+#            data-type: json

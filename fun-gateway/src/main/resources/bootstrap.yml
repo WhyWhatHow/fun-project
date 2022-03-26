@@ -1,7 +1,6 @@
 # 定义nacos_ip
 NACOS_IP: @nacos.ip@
-server:
-  port: 9000
+
 spring:
   application:
     name: fun-gateway
@@ -16,6 +15,19 @@ spring:
         file-extension: yaml # 文件配置格式
         # 可以被订阅的配置类 application-active.yml文档 ,当前配置下不支持refresh ,不过可以改...
         shared-configs: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+
+#     配置跨域, 默认dev 环境
+#    TODO [whywhathow] [2022/3/4] [opt]  根据不同环境配置不同的网关跨域配置-> gateway处理
+#    gateway:
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOriginPatterns: "*"           #注意这个设置只对 spring boot 2.4+ 有效，低版本 使用  allowedOrigins: "*" 属性
+#            allowed-methods: "*"
+#            allowed-headers: "*"
+#            allow-credentials: true
+#            exposedHeaders: "Content-Disposition,Content-Type,Cache-Control"
 #TODO [whywhathow] [2022/3/3] [must] 将profiles.active= namespace , 实现版本切换.
 #        namespace: ${spring.profiles.active}
 #      discovery:
@@ -38,7 +50,10 @@ spring:
 #          uri: lb://fun-services-demo
 #          predicates:
 #            - Path=/**
-#spring boot actuator
+
+
+
+#############spring boot actuator
 #  management.endpoint.gateway.enabled=true # default value
 management:
   endpoints:
