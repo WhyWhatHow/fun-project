@@ -8,17 +8,20 @@ import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.ApplicationListener;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @program: fun-project
- * @description: Swagger 配置 的 routeRefreshListener
+ * @description: 使用discoveryClient 注册的ReactiveCompositeDiscoveryClient-servicesId 作为动态api 更新的依据
  * @author: WhyWhatHow
  * @create: 2022-03-25 14:02
  **/
 @Slf4j
-public class SpringDocRouteRefreshListener implements ApplicationListener<RefreshRoutesEvent> {
+@Deprecated
+public class SpringDocDiscoveryClientRouteRefreshListener implements ApplicationListener<RefreshRoutesEvent> {
     //    private String REACTIVE_PREFIX = "ReactiveCompositeDiscoveryClient_fun-service";
     /**
      * 微服务前缀
@@ -43,8 +46,11 @@ public class SpringDocRouteRefreshListener implements ApplicationListener<Refres
     /**
      * 上一次routeDefinitionLocator 中的list 数量判断
      */
-    private volatile Integer lastListSize = -1;
-
+    private Integer lastListSize = -1;
+    /**
+     * 上一次更新的时间
+     */
+    private LocalDateTime lastUpdated;
     /**
      * 统计更新次数
      */
@@ -54,32 +60,31 @@ public class SpringDocRouteRefreshListener implements ApplicationListener<Refres
      * 微服务swagger 缓存
      *  TODO [whywhathow] [2022/3/27] [opt] springCaching 配置
      */
-//    private ConcurrentHashMap<String, Object> serviceMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Object> serviceMap = new ConcurrentHashMap<>();
 
 
     /**
      * 监听 RefreshRoutesEvent,当 有新增微服务, 更新groupApi -> 向swaggerUiConfigParameters中添加groupApi
-     * </br>实现思路:
-     * <p>1.从nacos配置中心获取服务后自动注册的服务 -> 读取gateway-route.json 中定义的路由信息</p>
-     * 2. 根据路由信息的数量变化来进行 动态api 的变化-> 有点蠢,不过只需要在gateway-route.json中删除一组旧的就可以实现更新.</br>
-     * target: 减少 refreshRouteEvent(心跳连接)事件触发此函数的频率</br>
-     * 3. 注入swaggerUiConfigParameters ->写入openApi</br>
+     * 实现思路:
+     * 1.从nacos配置中心获取服务后自动注册的服务
+     * 2. 读取 ReactiveCompositeDiscoveryClient-servicesId -> 需要做一步跳转
+     * 3. 注入swaggerUiConfigParameters
+     * eg: "ReactiveCompositeDiscoveryClient_fun-gateway"
      *
      * @param event RefreshRoutesEvent
      */
     @Override
     public void onApplicationEvent(RefreshRoutesEvent event) {
 
+        // 统计 更新时间,以及次数
+        lastUpdated = LocalDateTime.now();
+        log.warn("[Fun-RefreshRoutesEvent] --- start ,count: {}", count.incrementAndGet());
         // 1. 获取刷新的routes 信息
         List<RouteDefinition> routeDefinitions = registry.getList();
-        int size = routeDefinitions.size();
-        if (size == lastListSize) {
+        if (routeDefinitions.size() == lastListSize) {
             return;
         }
-        // 统计 更新时间,以及次数
-        log.warn("[Fun-RefreshRoutesEvent] --- start ,count: {}", count.incrementAndGet());
-
-        lastListSize = size;
+        lastListSize = routeDefinitions.size();
         // 2. 清空 swagger urls  重新构建
         swaggerUiConfigParameters.getUrls().clear();
         routeDefinitions.forEach(routeDefinition -> {
@@ -90,6 +95,7 @@ public class SpringDocRouteRefreshListener implements ApplicationListener<Refres
                         swaggerUiConfigParameters.addGroup(name);
                         // /demo, /api/demo/v3/api-docs
 //                GroupedOpenApi build = GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build();
+
                     }
                 }
         );

@@ -1,6 +1,7 @@
 package com.fun.common.web.config;
 
 import com.fun.common.web.apiversion.annotation.EnableApiVersion;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.fun")
 @Configuration
 @EnableApiVersion
-//@EnableDiscoveryClient // 开启服务注册 TODO [whywhathow] [2022/3/9] [must]  放开
+@EnableDiscoveryClient // 开启服务注册 TODO [whywhathow] [2022/3/9] [must]  放开
 public class WebAutoConfiguration {
-
 }

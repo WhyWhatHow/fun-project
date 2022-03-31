@@ -106,7 +106,6 @@ public class NacosRouteDefinitionRegistry implements RouteDefinitionRepository, 
      */
     @Override
     public Flux<RouteDefinition> getRouteDefinitions() {
-
         return CollectionUtils.isEmpty(list) ? Flux.empty() : Flux.fromIterable(list);
     }
 
@@ -135,7 +134,7 @@ public class NacosRouteDefinitionRegistry implements RouteDefinitionRepository, 
     /**
      * 获取spring容器 中applicationEventPublisher
      *
-     * @param applicationEventPublisher
+     * @param applicationEventPublisher spring 事件发布器
      */
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
