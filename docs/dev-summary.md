@@ -539,6 +539,8 @@ public @interface FunValid {
   }
   
 
+
+
 ### Spring 线程池优化
 
 * 如何开启 Spring线程池? 
@@ -795,7 +797,7 @@ public @interface EnableApiVersion {
 
 
 
-### swagger添加
+
 
 
 
@@ -836,10 +838,10 @@ HINT:
 
 Spring Gateway: -> webflux-> netty 
 
-* 路由转发
-* 熔断限流
-* 日志记录
-* 安全认证
+* **路由转发**
+* **熔断限流**
+* **日志记录**
+* **安全认证**
 
 **实现用户的验证登录，解决跨域，日志拦截，权限控制，限流，熔断，负载均衡，黑名单和白名单机制等。是微服务架构不二的选择**；
 
@@ -968,7 +970,7 @@ PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
 
   * 生成路由信息 **json-> routeDefinition**
   * 发布路由信息  **ApplicationEventPublisher.publishEvent(new RefreshRoutesEvent())**
-  * gateway 更新路由信息
+  * gateway 更新路由信息 -> `RouteRefreshListener` 监听 RefreshRoutesEvent 事件, 判断是否需要重置 route 信息
 * 通过 actuator/gateway/routes 查询, 判断是否生效
 ![img_6.png](img_6.png)
 
@@ -984,6 +986,14 @@ PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
 
 * pre: 参数校验, 权限校验, 流量监控,日志输出, 协议转换-> 处理request
 * post: 响应内容,响应头修改,日志输出, 流量监控
+
+
+
+### SpringDoc 动态分组api引入
+
+* 思路: 根据动态路由的思路, 思考到, 只要监听到`RouteRefreshEvent` 事件, 就可以实现动态API生成.
+  1. user -> update gateway-route.json 文档, -> routeDefinition 数量发生变化
+  2. `SpringDocRouteRefreshListener` 监听`RouteRefreshevent` ,监听到routes数量变化, 重新生成swagger.
 
 
 

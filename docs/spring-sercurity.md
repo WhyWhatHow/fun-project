@@ -26,7 +26,7 @@
 - Saml2WebSsoAuthenticationFilter
 - **[`UsernamePasswordAuthenticationFilter`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/form.html#servlet-authentication-usernamepasswordauthenticationfilter)**-> 表单登录
 - OpenIDAuthenticationFilter
-- DefaultLoginPageGeneratingFilter
+- DefaultLoginPageGeneratingFilter 
 - DefaultLogoutPageGeneratingFilter
 - ConcurrentSessionFilter
 - [`DigestAuthenticationFilter`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/digest.html#servlet-authentication-digest)
@@ -62,11 +62,9 @@
 
 ## Servlet Authentication 架构
 
-`SecurityContextHolder` : 存放  用户认证的详细信息'  uses a `ThreadLocal` to store these detai
-
-`SecurityContext` : 
-
-`Authentication`:
+- [x] `SecurityContextHolder` : 存放  用户认证的详细信息'  uses a `ThreadLocal` to store these detai
+- [x] `SecurityContext` : 
+- [x] `Authentication`:
 
 - ​	 AuthenticationManager 输入, 判断 是否已认证 isAuthenticated()
 
@@ -172,13 +170,138 @@ CustomUserDetailsService customUserDetailsService() {
 
 ![daoauthenticationprovider](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/daoauthenticationprovider.png)
 
+> ![number 1](../../../MyInfo/BlogV2/source/images/number_1.png) The authentication `Filter` from [Reading the Username & Password](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html#servlet-authentication-unpwd-input) passes a `UsernamePasswordAuthenticationToken` to the `AuthenticationManager` which is implemented by [`ProviderManager`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-providermanager).
+>
+> ![number 2](../../../MyInfo/BlogV2/source/images/number_2.png) The `ProviderManager` is configured to use an [AuthenticationProvider](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationprovider) of type `DaoAuthenticationProvider`.
+>
+> ![number 3](../../../MyInfo/BlogV2/source/images/number_3-16474855603083.png) `DaoAuthenticationProvider` looks up the `UserDetails` from the `UserDetailsService`.
+>
+> ![number 4](../../../MyInfo/BlogV2/source/images/number_4.png) `DaoAuthenticationProvider` then uses the [`PasswordEncoder`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/password-encoder.html#servlet-authentication-password-storage) to validate the password on the `UserDetails` returned in the previous step.
+>
+> ![number 5](../../../MyInfo/BlogV2/source/images/number_5.png) When authentication is successful, the [`Authentication`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authentication) that is returned is of type `UsernamePasswordAuthenticationToken` and has a principal that is the `UserDetails` returned by the configured `UserDetailsService`. Ultimately, the returned `UsernamePasswordAuthenticationToken` will be set on the [`SecurityContextHolder`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder) by the authentication `Filter`.
+
 认证成功, 返回 `Authentication` 
 
 ## Authorization Architecture
 
 
 
+## Oauth2
 
+协议流程
+
+```
+     +--------+                               +---------------+
+     |        |--(A)- Authorization Request ->|   Resource    |
+     |        |                               |     Owner     |
+     |        |<-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant -->| Authorization |
+     | Client |                               |     Server    |
+     |        |<-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------>|    Resource   |
+     |        |                               |     Server    |
+     |        |<-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+
+                     Figure 1: Abstract Protocol Flow
+```
+
+### Oauth2 login
+
+Oauth2 配置了goolge ,Github,FaceBook, Okta login 方式
+
+```yaml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:	
+          google:	
+            client-id: google-client-id
+            client-secret: google-client-secret
+```
+
+ CommonOAuth2Provider ->用户可以自定义 Oauth2Provider , 
+
+```yaml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: okta-client-id
+            client-secret: okta-client-secret
+        provider:
+          okta:	
+            authorization-uri: https://your-subdomain.oktapreview.com/oauth2/v1/authorize
+            token-uri: https://your-subdomain.oktapreview.com/oauth2/v1/token
+            user-info-uri: https://your-subdomain.oktapreview.com/oauth2/v1/userinfo
+            user-name-attribute: sub
+            jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys
+```
+
+#### Overriding Spring Boot 2.x Auto-configuration
+
+[官方链接](https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-override-boot-autoconfig)
+
+* Registers a `ClientRegistrationRepository` `@Bean` composed of `ClientRegistration`(s) from the configured OAuth Client properties.
+
+  * configuration 配置类形式 , [参考地址](https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-register-clientregistrationrepository-bean)
+
+* Provides a `WebSecurityConfigurerAdapter` `@Configuration` and enables OAuth 2.0 Login through `httpSecurity.oauth2Login()`.
+
+  **PS:   [可以直接按照官方这个版本来写](https://docs.spring.io/spring-security/reference/servlet/oauth2/login/core.html#oauth2login-completely-override-autoconfiguration)** 
+
+  
+
+### Oauth2 Client
+
+
+
+### Oauth2 Resource Server
+
+### 授权服务器核心源码分析:
+
+`AuthorizationEndpoint`   
+
+​	提供 /oauth/authorize
+
+		* Get: authorize() 判断与用户是否已授权,  授权, 返回新的access_token ,否则,跳转到授权页面
+		* POST:  approveOrDeny() 处理用户授权页面 结果, 判断用户是否授权或者拒绝
+
+`TokenEndpoint`
+
+​	提供 /oauth/token :
+
+	*	Get: getAccessToken() ,转发给postAcceessToken()
+	*	Post: postAccessToken() : 1根据client,构建tokenRequest 2.scope 校验 3. 生成access_token.
+
+ 
+
+### 资源服务器核心源码分析:
+
+资源服务器的核心是OAuth2AuthenticationProcessingFilter过滤器
+
+主要功能是**获取请求中携带的 access_token，通过 access_token 提取OAuth2Authentication并存入Spring Security上下文**
+
+◎ TokenExtractor的默认实现类是BearerTokenExtractor
+
+​	-> http header 中 Authentication: “Bearer 字段”
+
+◎ AuthenticationManager的默认实现类是OAuth2AuthenticationManager
+
+​	tokenServices是 `ResourceServerTokenServices`具体实现类 , 
+
+​	简单写法: 继承 DefaultResourcesServerTokenServices , 并将子类注入到Spring中即可. 
+
+​	
 
 ## 个人认知
 
