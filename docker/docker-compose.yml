@@ -38,6 +38,15 @@ services:
           cpus: '0.50'
           memory: 300m
 
+  fun-redis:
+    build: redis
+    container_name: fun-redis
+    ports:
+      - "11679:11679"
+    volumes:
+      - ./redis/logs/:/home/redis/logs/
+#      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+
 #    image: fun-sentinel
 
 
