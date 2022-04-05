@@ -21,7 +21,15 @@
   
   
   
+  ### 2022.4.05
   
+  G了, 服务器被中木马了,被挖矿了,呜呜呜, 费劲!
+  
+  没想到redis还有这种漏洞, 可以用来挖矿....orz....
+  
+  [参考链接](https://www.wudi.space/2021/01/13/ExperienceOfMinerVirus/)
+  [参考方案2](https://www.cnblogs.com/xiazhenbin/p/14779569.html)
+* 解决方案: 之前有准备镜像盘, 准备重装系统从镜像盘回复. 
   
   
   
