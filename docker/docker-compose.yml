@@ -39,13 +39,20 @@ services:
           memory: 300m
 
   fun-redis:
-    build: redis
+    image: redis:6.2.6-alpine
+#    build: redis
     container_name: fun-redis
+
     ports:
-      - "11679:11679"
+      - "16379:6379"
+    user: root
+    privileged: true
+    command:
+      - redis-server /etc/conf/redis.conf
     volumes:
-      - ./redis/logs/:/home/redis/logs/
-#      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis/conf:/etc/conf
+      - ./redis/data:/data
+      - ./redis/logs:/logs #
 
 #    image: fun-sentinel
 
