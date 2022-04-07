@@ -1,15 +1,15 @@
-### 2022.2.16
+### 2022.02.16 spring.profile 不生效
 
 - 在构建项目的过程中,出现 classpath问题, 大致原因:
   - 项目问题--> rebuild项目
   - maven resources 资源配置问题(导致resources文件夹下的配置文件被排除在外了), 重新修改一下.
   
 - **在实现多环境配置开发中, 发现由于springboot 版本不同导致application.yml 不能成功应用其他application-dev.yml**
-  
   - **解决方案: spring.config.use-legacy-processing=true**
   - 官方链接
   
-### 2022.3.22
+
+### 2022.03.22 Mybatis 查询结果与mysql查询结果不一致
 
 * MySQL查询结果与Mybatis 查询结果不一致:
 
@@ -21,7 +21,7 @@
 
   
 
-### 2022.4.05
+### 2022.04.05 服务器中毒
 
 G了, 服务器被中木马了,被挖矿了,呜呜呜, 费劲!
 
@@ -36,11 +36,7 @@ G了, 服务器被中木马了,被挖矿了,呜呜呜, 费劲!
 
   * redis 具有root权限, 可读可写
   * redis-cli 可以设置 rdb 文件路径
-  * redis-cli 通过set 命令 获取脚本, rdb保存后,定时任务自动执行.
-
-​	   
-
-
+  * redis-cli 通过set 命令 获取脚本, rdb保存后,定时任务自动执行.	  
 
 >大部分redis服务都是在root权限下的，所以其实redis是有全局的读写权限的。
 >而且redis本身在客户端就可以通过`CONFIG GET/SET`指令获取或修改配置，在没有密码保护的情况下，这个是很危险的。
@@ -78,14 +74,55 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
   1. 系统命令被修改的一塌糊涂
   2. 个别指令被设置成 挖矿启动器 So Fun!
   
-* ref:
+* **ref:**
 
   * [参考链接1](https://www.wudi.space/2021/01/13/ExperienceOfMinerVirus/)
 
   * [参考连接2](https://www.cnblogs.com/xiazhenbin/p/14779569.html)
 
-  
+### 2022.04.07 Redis docker-compose 配置问题
 
-  
+* 情景
 
-  
+​	log 日志无法写入-> permission denied  
+![img_10.png](img_10.png)
+
+* **Reason:** 
+
+  redis配置文件所在的目录 缺少写权限, 无法将log 写入到日志文件 
+
+  ​	(实际上没有必要,写入后,无法通过docker logs -f fun-redis 查询日志信息)
+
+* 解决方案 (1,2 必做)
+
+  1. ```yaml
+     ### yaml 添加   privileged: true
+     version: '3.0'
+     services:
+       fun-redis:
+         image: redis:6.2.6-alpine
+     #    build: redis
+         container_name: fun-redis
+         ports:
+           - "16379:6379"
+         user: root
+         privileged: true
+         command:
+           - redis-server /etc/conf/redis.conf
+         volumes:
+           - ./redis/conf:/etc/conf
+           - ./redis/data:/data
+           - ./redis/logs:/logs # 可以去掉,添加后,无法 通过docker logs -f 查询日志信息
+     ```
+
+  2. 为redis 文件目录添加写权限 
+
+     ```shell
+     # 暴力写法 ,临时使用
+     cd redis # 进入redis 配置文件目录中
+     chmod +777 *
+     ```
+![img_11.png](img_11.png)
+* Ref:
+
+  * https://www.cxybb.com/article/u013323965/89445757
