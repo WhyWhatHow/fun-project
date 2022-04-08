@@ -1,8 +1,27 @@
 ## Easycode swagger3 的默认代码生成模板
 
+
+
+### 思路: 
+
+* 参考EasyCode 的源码, 以及案例进行修改实现.
+* Pig-codegen 代码生成模块 思考 扩展点-> 自己适用
+
+> [Easycode 源码地址](https://gitee.com/-/ide/project/makejava/EasyCode/edit/master/-/src/)
+
 Easy code 配合Swagger3(springdoc 整合) 注解生成 
 
 以fun-system为例
+
+### 添加依赖
+
+```xml
+<dependency>
+    <groupId>io.swagger.core.v3</groupId>
+    <artifactId>swagger-annotations</artifactId>
+    <version>2.1.12</version>
+</dependency>
+```
 
 - [x] ###  Entity-pk.java
 
@@ -229,35 +248,49 @@ public class $!{tableName} extends ServiceImpl<$!{tableInfo.name}Mapper, $!{tabl
 
 ```
 
-- [ ] ### Controller.java
+- [x] ### Controller.java
 
-  无权限校验
+  无权限校验 用 swagger3文档,
+  
+  ```xml
+     <dependency>
+              <groupId>io.swagger.core.v3</groupId>
+              <artifactId>swagger-annotations</artifactId>
+      </dependency>
+  ```
+  
+  
 
 ```java
 ##定义初始变量
 #set($tableName = $tool.append($tableInfo.name, "Controller"))
-##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+## classname = 首字母小写的实例
+#set($classname = $tool.firstLowerCase($tableInfo.name))
+## className 类
+#set($className = $tableInfo.name)
+#set($comments =$classname)
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
 #end
-
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+    
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}controller;
-
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import $!{tableInfo.savePackageName}.api.entity.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-
 /**
  * $!{tableInfo.comment} 
- *
  * @author  $author
  * @since $!time.currTime()
  */
@@ -269,7 +302,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("$!tool.firstLowerCase($tableInfo.name)")
 public class $!{tableName} {
     @Resource
-    private final $!{tableInfo.name}Service $!tool.firstLowerCase($tableInfo.name)Service;
+    private final $!{tableInfo.name}Service ${classname}Service;
     
      /**
      * 分页查询
@@ -286,15 +319,24 @@ public class $!{tableName} {
 
     /**
      * 通过id查询${comments}
-     * @param ${pk.lowerAttrName} id
+     * @param ${pk.name} id
      * @return R
      */
     @Operation(summary = "通过id查询", description= "通过id查询")
-    @GetMapping("/{${pk.lowerAttrName}}" )
-    public R getById(@PathVariable("${pk.lowerAttrName}" ) ${pk.attrType} ${pk.lowerAttrName}) {
-        return R.ok(${classname}Service.getById(${pk.lowerAttrName}));
+    @GetMapping("/{${pk.name}}" )
+    public R getById(@PathVariable("${pk.name}" ) ${pk.shortType} ${pk.name}) {
+        return R.ok(${classname}Service.getById(${pk.name}));
     }
-
+    /**
+     * 通过id删除${comments}
+     * @param ${pk.name} id
+     * @return R
+     */
+    @Operation(summary = "通过id删除${comments}", description= "通过id删除${comments}")
+    @DeleteMapping("/{${pk.name}}" )
+    public R removeById(@PathVariable ${pk.shortType} ${pk.name}) {
+        return R.ok(${classname}Service.removeById(${pk.name}));
+    }
     /**
      * 新增${comments}
      * @param ${classname} ${comments}
@@ -302,9 +344,8 @@ public class $!{tableName} {
      */
    @Operation(summary = "新增${comments}", description= "新增${comments}")
     @PostMapping
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_add')" )
-    public R save(@RequestBody ${className} ${classname}) {
-        return R.ok(${classname}Service.save(${classname}));
+    public R save(@RequestBody  $!{className}  $!{classname}) {
+        return R.ok(${classname}Service.save( $!{classname}));
     }
 
     /**
@@ -314,59 +355,54 @@ public class $!{tableName} {
      */
   	@Operation(summary = "修改${comments}", description= "修改${comments}")
     @PutMapping
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_edit')" )
     public R updateById(@RequestBody ${className} ${classname}) {
-        return R.ok(${classname}Service.updateById(${classname}));
+        return R.ok($!{classname}Service.updateById(${classname}));
     }
 
-    /**
-     * 通过id删除${comments}
-     * @param ${pk.lowerAttrName} id
-     * @return R
-     */
-    @Operation(summary = "通过id删除${comments}", description= "通过id删除${comments}")
-    @SysLog("通过id删除${comments}" )
-    @DeleteMapping("/{${pk.lowerAttrName}}" )
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_del')" )
-    public R removeById(@PathVariable ${pk.attrType} ${pk.lowerAttrName}) {
-        return R.ok(${classname}Service.removeById(${pk.lowerAttrName}));
-    }
-
+   
 }
 
 ```
 
 
 
+- [ ] ### controller-auth.java
+
+*  含权限校验  
+*  需要导入
 
 
-*  含权限校验 
 
 ```java
 ##定义初始变量
 #set($tableName = $tool.append($tableInfo.name, "Controller"))
-##设置回调
-$!callback.setFileName($tool.append($tableName, ".java"))
-$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+## classname = 首字母小写的实例
+#set($classname = $tool.firstLowerCase($tableInfo.name))
+## className 类
+#set($className = $tableInfo.name)
+#set($comments =$classname)
 ##拿到主键
 #if(!$tableInfo.pkColumn.isEmpty())
     #set($pk = $tableInfo.pkColumn.get(0))
 #end
-
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+$!callback.setSavePath($tool.append($tableInfo.savePath, "/controller"))
+    
 #if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}controller;
-
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import $!{tableInfo.savePackageName}.api.entity.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
 import lombok.AllArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-
 /**
  * $!{tableInfo.comment} 
- *
  * @author  $author
  * @since $!time.currTime()
  */
@@ -378,7 +414,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("$!tool.firstLowerCase($tableInfo.name)")
 public class $!{tableName} {
     @Resource
-    private final $!{tableInfo.name}Service $!tool.firstLowerCase($tableInfo.name)Service;
+    private final $!{tableInfo.name}Service ${classname}Service;
     
      /**
      * 分页查询
@@ -386,26 +422,34 @@ public class $!{tableName} {
      * @param ${classname} ${comments}
      * @return
      */
-    @ApiOperation(summary = "分页查询", description = "分页查询")
+    @Operation(summary = "分页查询", description = "分页查询")
     @GetMapping("/page" )
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_get')" )
-    public R get${className}Page(Page page, ${className} ${classname}) {
+    
+    public R Page(Page page, ${className} ${classname}) {
         return R.ok(${classname}Service.page(page, Wrappers.query(${classname})));
     }
 
 
     /**
      * 通过id查询${comments}
-     * @param ${pk.lowerAttrName} id
+     * @param ${pk.name} id
      * @return R
      */
     @Operation(summary = "通过id查询", description= "通过id查询")
-    @GetMapping("/{${pk.lowerAttrName}}" )
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_get')" )
-    public R getById(@PathVariable("${pk.lowerAttrName}" ) ${pk.attrType} ${pk.lowerAttrName}) {
-        return R.ok(${classname}Service.getById(${pk.lowerAttrName}));
+    @GetMapping("/{${pk.name}}" )
+    public R getById(@PathVariable("${pk.name}" ) ${pk.shortType} ${pk.name}) {
+        return R.ok(${classname}Service.getById(${pk.name}));
     }
-
+    /**
+     * 通过id删除${comments}
+     * @param ${pk.name} id
+     * @return R
+     */
+    @Operation(summary = "通过id删除${comments}", description= "通过id删除${comments}")
+    @DeleteMapping("/{${pk.name}}" )
+    public R removeById(@PathVariable ${pk.shortType} ${pk.name}) {
+        return R.ok(${classname}Service.removeById(${pk.name}));
+    }
     /**
      * 新增${comments}
      * @param ${classname} ${comments}
@@ -413,9 +457,8 @@ public class $!{tableName} {
      */
    @Operation(summary = "新增${comments}", description= "新增${comments}")
     @PostMapping
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_add')" )
-    public R save(@RequestBody ${className} ${classname}) {
-        return R.ok(${classname}Service.save(${classname}));
+    public R save(@RequestBody  $!{className}  $!{classname}) {
+        return R.ok(${classname}Service.save( $!{classname}));
     }
 
     /**
@@ -423,25 +466,14 @@ public class $!{tableName} {
      * @param ${classname} ${comments}
      * @return R
      */
-   @Operation(summary = "修改${comments}", description= "修改${comments}")
+  	@Operation(summary = "修改${comments}", description= "修改${comments}")
     @PutMapping
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_edit')" )
     public R updateById(@RequestBody ${className} ${classname}) {
-        return R.ok(${classname}Service.updateById(${classname}));
+        return R.ok($!{classname}Service.updateById(${classname}));
     }
 
-    /**
-     * 通过id删除${comments}
-     * @param ${pk.lowerAttrName} id
-     * @return R
-     */
-   @Operation(summary = "通过id删除${comments}", description= "通过id删除${comments}")
-    @DeleteMapping("/{${pk.lowerAttrName}}" )
-    @PreAuthorize("@pms.hasPermission('${moduleName}_${pathName}_del')" )
-    public R removeById(@PathVariable ${pk.attrType} ${pk.lowerAttrName}) {
-        return R.ok(${classname}Service.removeById(${pk.lowerAttrName}));
-    }
-
+   
 }
+
 ```
 

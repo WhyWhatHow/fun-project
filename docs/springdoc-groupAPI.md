@@ -16,7 +16,7 @@
 - `@ApiImplicitParams` → `@Parameters`
 - `@ApiModel` → `@Schema`
 - `@ApiModelProperty(hidden = true)` → `@Schema(accessMode = READ_ONLY)`
-- `@ApiModelProperty` → `@Schema`
+- **`@ApiModelProperty` → `@Schema`**
 - `@ApiOperation(value = "foo", notes = "bar")` → `@Operation(summary = "foo", description = "bar")`
 - `@ApiParam` → `@Parameter`
 - `@ApiResponse(code = 404, message = "foo")` → `@ApiResponse(responseCode = "404", description = "foo")`
