@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fun.system.api.mapper.MenuMapper">
+
+    <resultMap type="com.fun.system.api.entity.Menu" id="MenuMap">
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="permission" column="permission" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="sortOrder" column="sort_order" jdbcType="INTEGER"/>
+        <result property="keepAlive" column="keep_alive" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" keyProperty="menuId" useGeneratedKeys="true">
+        insert into fun_system.sys_menu(name, permission, path, parent_id, icon, sort_order, keep_alive, type,
+        create_time, del_flag, status, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.permission}, #{entity.path}, #{entity.parentId}, #{entity.icon},
+            #{entity.sortOrder}, #{entity.keepAlive}, #{entity.type}, #{entity.createTime}, #{entity.delFlag},
+            #{entity.status}, #{entity.updateTime})
+        </foreach>
+    </insert>
+    <!-- 批量插入或按主键更新 -->
+    <insert id="insertOrUpdateBatch" keyProperty="menuId" useGeneratedKeys="true">
+        insert into fun_system.sys_menu(name, permission, path, parent_id, icon, sort_order, keep_alive, type,
+        create_time, del_flag, status, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.permission}, #{entity.path}, #{entity.parentId}, #{entity.icon},
+            #{entity.sortOrder}, #{entity.keepAlive}, #{entity.type}, #{entity.createTime}, #{entity.delFlag},
+            #{entity.status}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        name = values(name) , permission = values(permission) , path = values(path) , parent_id = values(parent_id) ,
+        icon = values(icon) , sort_order = values(sort_order) , keep_alive = values(keep_alive) , type = values(type) ,
+        create_time = values(create_time) , del_flag = values(del_flag) , status = values(status) , update_time =
+        values(update_time)
+    </insert>
+
+</mapper>
+
