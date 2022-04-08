@@ -1,15 +1,12 @@
 package com.fun.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fun.system.entity.User;
+import com.fun.system.api.entity.User;
 
 /**
- * (User)表服务接口
- *
  * @author whywhathow
- * @since 2022-03-15 13:08:08
+ * @since 2022-04-08 21:53:15
  */
 public interface UserService extends IService<User> {
-
 }
 

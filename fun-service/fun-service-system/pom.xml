@@ -3,19 +3,29 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>fun-services</artifactId>
+        <artifactId>fun-service</artifactId>
         <groupId>io.github.whywhathow</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fun-services-system</artifactId>
+    <artifactId>fun-service-system</artifactId>
     <description>fun-project 后台管理模块</description>
     <dependencies>
+        <!--        fun-system-api 实体类 -->
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-system-api</artifactId>
+        </dependency>
         <!--          引入springboot-web 模块-->
         <dependency>
             <groupId>io.github.whywhathow</groupId>
             <artifactId>fun-common-web</artifactId>
+        </dependency>
+        <!--         springdoc-api -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
         </dependency>
 
     </dependencies>

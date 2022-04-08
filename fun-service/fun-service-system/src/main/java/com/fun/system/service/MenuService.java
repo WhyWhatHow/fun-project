@@ -1,15 +1,16 @@
 package com.fun.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fun.system.entity.Menu;
+import com.fun.system.api.entity.Menu;
+
+import java.util.List;
 
 /**
- * (Menu)表服务接口
- *
  * @author whywhathow
- * @since 2022-03-15 13:08:13
+ * @since 2022-04-08 21:53:14
  */
 public interface MenuService extends IService<Menu> {
 
+    List<Menu> getById(Integer menuId);
 }
 
