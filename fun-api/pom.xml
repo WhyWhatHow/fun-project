@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>fun-project</artifactId>
+        <groupId>io.github.whywhathow</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fun-api</artifactId>
+    <description>
+        fun-project api
+        这个模块主要用来放 entity, mapper, 以及 feign dto 等数据模型 ...
+    </description>
+    <modules>
+        <module>fun-system-api</module>
+    </modules>
+    <packaging>pom</packaging>
+</project>
