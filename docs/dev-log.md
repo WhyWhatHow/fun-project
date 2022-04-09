@@ -122,7 +122,46 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
      cd redis # 进入redis 配置文件目录中
      chmod +777 *
      ```
-![img_11.png](img_11.png)
+  ![img_11.png](img_11.png)
+
 * Ref:
 
   * https://www.cxybb.com/article/u013323965/89445757
+  
+  ### 2022.04.09
+  
+  项目在做批量插入的时候, **影响性能的因素 -> 创建的中间对象, 即 List<DataInfo> list 对象.**
+  
+  诚然 mybatis plus 有直接的method 可以直接实现批量查询, 但是 **中间 list 对象对内存占用是没有必要性的** . 
+  
+  Mybatis 最后的做法是 insert into tb(name,age) values (a,2),(c,1).... 
+  
+  **优化:** 去掉中间没用的list对象, 采用字符串凭借
+  
+  ```java
+    void test() {
+          List<String> list = new ArrayList<>();
+          list.add("a");
+          AtomicReference<StringBuilder> sb = new AtomicReference<>(new StringBuilder());
+          AtomicInteger count = new AtomicInteger(0);
+          list.forEach(val -> {
+                      if (count.get() == 0) {
+                          // insert into tb values 
+                          sb.get().append("insert into tb values");
+                      }
+                      sb.get().append("(").append(val).append(")").append(",");
+                      //save To DB
+                      if (count.get() == 1024) {
+                          saveToDb(sb.get().toString());
+                          sb.set(new StringBuilder());
+                      }
+                  }
+          );
+          sb.get().substring(0, sb.get().length() - 1);
+          saveToDb(sb.get().toString());
+      }
+  ```
+  
+  
+  
+  
