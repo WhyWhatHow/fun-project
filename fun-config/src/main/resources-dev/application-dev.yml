@@ -5,5 +5,7 @@ spring:
       - demo
       - druid
       - time
+      - springdoc
+      - mybatis-plus
 #  config:
 #    use-legacy-processing: true

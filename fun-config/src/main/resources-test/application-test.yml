@@ -5,4 +5,6 @@ spring:
       - demo
       - druid
       - time
+      - springdoc
+      - mybatis-plus
 

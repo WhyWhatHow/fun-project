@@ -5,3 +5,5 @@ spring:
       - druid
       - time
       - demo
+      - mybatis-plus
+#      - springdoc #生产环境不要配置

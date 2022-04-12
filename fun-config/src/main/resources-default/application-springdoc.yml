@@ -1,0 +1,9 @@
+springdoc:
+  api-docs:
+    enabled: true  #文档生成
+  swagger-ui:
+    enabled: true   #页面展示
+#  packages-to-scan: com.fun # 配置扫描的包
+  cache:
+    disabled: false
+  pre-loading-enabled: true

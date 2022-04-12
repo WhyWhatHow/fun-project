@@ -18,11 +18,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-common</artifactId>
-            <version>3.0.0</version>
-        </dependency>
         <!--        mybatis-annotation 注解-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -32,6 +27,11 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
