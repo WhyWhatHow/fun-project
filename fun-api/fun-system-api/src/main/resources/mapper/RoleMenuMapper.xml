@@ -25,5 +25,8 @@
         on duplicate key update
     </insert>
 
+    <delete id="delByRoleId">
+        delete  from sys_role_menu rm  where rm.role_id =#{roleId};
+    </delete>
 </mapper>
 
