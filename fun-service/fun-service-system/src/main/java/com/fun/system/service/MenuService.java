@@ -11,6 +11,15 @@ import java.util.List;
  */
 public interface MenuService extends IService<Menu> {
 
-    List<Menu> getById(Integer menuId);
+    Menu getById(Integer menuId);
+
+    /**
+     * 根据roleId 查询对应的menuIds
+     * @param roleId roleId
+     * @return
+     */
+    List selectByRoleId(Long roleId);
+
+    List menuTree(Integer parentId);
 }
 

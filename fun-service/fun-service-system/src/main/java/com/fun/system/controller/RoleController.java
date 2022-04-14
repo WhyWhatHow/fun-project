@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**done
  * @author whywhathow
@@ -58,7 +59,7 @@ public class RoleController {
      */
     @Operation(summary = "通过id查询", description = "通过id查询")
     @GetMapping("/{roleId}")
-    public R getById(@PathVariable("roleId")@NotBlank Long roleId) {
+    public R getById(@PathVariable("roleId")@NotNull Long roleId) {
         return R.ok(roleService.getById(roleId));
     }
 

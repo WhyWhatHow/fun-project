@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  * @author whywhathow
  * @since 2022-04-08 21:53:14
  */
-@Tag(name = "Menu")
+@Tag(name = "Menu", description = "权限管理模块")
 @Validated
 @RestController
 @AllArgsConstructor
@@ -29,26 +29,42 @@ public class MenuController {
     private final MenuService menuService;
 
     /**
+     * 根据roleId 查询对应的menuIds
+     * @param roleId roleId
+     * @return
+     */
+    @Operation(description = "根据roleId查询对应的menuId")
+    @GetMapping("/tree/{roleId}")
+    public R selectByRoleId(@PathVariable("roleId") Long roleId) {
+        return R.ok(menuService.selectByRoleId(roleId));
+    }
+
+    @Operation(description = "根据parentId 返回对应的menu列表")
+    @GetMapping("/tree")
+    public R menuTree( Integer parentId) {
+        return R.ok(menuService.menuTree(parentId));
+    }
+
+    /**
      * 分页查询
      *
      * @param page 分页对象
-     * @param menu menu
      * @return
      */
     @Operation(summary = "分页查询", description = "分页查询")
     @GetMapping("/page")
-    public R Page(Page page, Menu menu) {
-        return R.ok(menuService.page(page, Wrappers.query(menu)));
+    public R Page(Page page) {
+        return R.ok(menuService.page(page, Wrappers.emptyWrapper()));
     }
 
 
     /**
-     * 通过id查询menu
+     * 通过id查询menu 如果是parentId,则返回所有的menu信息
      *
      * @param menuId id
      * @return R
      */
-    @Operation(summary = "通过id查询", description = "通过id查询")
+    @Operation(summary = "通过menuId查询", description = "通过menuId查询")
     @GetMapping("/{menuId}")
     public R getById(@PathVariable("menuId") Integer menuId) {
         return R.ok(menuService.getById(menuId));
