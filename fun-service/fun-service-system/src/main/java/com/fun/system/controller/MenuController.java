@@ -13,8 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
-/**
+/**done
  * @author whywhathow
  * @since 2022-04-08 21:53:14
  */
@@ -29,9 +32,11 @@ public class MenuController {
     private final MenuService menuService;
 
     /**
+     * done
      * 根据roleId 查询对应的menuIds
+     *
      * @param roleId roleId
-     * @return
+     * @return menuIds
      */
     @Operation(description = "根据roleId查询对应的menuId")
     @GetMapping("/tree/{roleId}")
@@ -39,13 +44,20 @@ public class MenuController {
         return R.ok(menuService.selectByRoleId(roleId));
     }
 
+    /**done
+     * TODO [whywhathow] [2022/4/14] [must] 缓存添加, 懒加载设置
+     * 根据parentId 返回对饮的menuTree
+     *
+     * @param parentId parentId
+     * @return menuTree
+     */
     @Operation(description = "根据parentId 返回对应的menu列表")
     @GetMapping("/tree")
-    public R menuTree( Integer parentId) {
+    public R menuTree( @Min(-1) Integer parentId) {
         return R.ok(menuService.menuTree(parentId));
     }
 
-    /**
+    /**done
      * 分页查询
      *
      * @param page 分页对象
@@ -58,7 +70,7 @@ public class MenuController {
     }
 
 
-    /**
+    /**done
      * 通过id查询menu 如果是parentId,则返回所有的menu信息
      *
      * @param menuId id
@@ -71,15 +83,15 @@ public class MenuController {
     }
 
     /**
-     * 通过id删除menu
+     * 通过id删除menu ,update menuId =id || parentId=id 数据行
      *
      * @param menuId id
      * @return R
      */
     @Operation(summary = "通过id删除menu", description = "通过id删除menu")
     @DeleteMapping("/{menuId}")
-    public R removeById(@PathVariable Integer menuId) {
-        return R.ok(menuService.removeById(menuId));
+    public R removeById(@PathVariable @NotNull Integer menuId) {
+        return R.ok(menuService.removeByMenuId(menuId));
     }
 
     /**
@@ -90,7 +102,7 @@ public class MenuController {
      */
     @Operation(summary = "新增menu", description = "新增menu")
     @PostMapping
-    public R save(@RequestBody Menu menu) {
+    public R save(@RequestBody  @Valid  Menu menu) {
         return R.ok(menuService.save(menu));
     }
 
@@ -102,7 +114,7 @@ public class MenuController {
      */
     @Operation(summary = "修改menu", description = "修改menu")
     @PutMapping
-    public R updateById(@RequestBody Menu menu) {
+    public R updateById(@RequestBody @Valid Menu menu) {
         return R.ok(menuService.updateById(menu));
     }
 

@@ -42,7 +42,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
 
-    //TODO [whywhathow] [2022/4/14] [must] 缓存添加 hint:需要考虑缓存失效问题
+    /**
+     * 根据roleId 查询对应的menuIds
+     *
+     * @param roleId roleId
+     * @return menuIds
+     */
+    //TODO [whywhathow] [2022/4/14] [must] 缓存添加  hint:需要考虑缓存失效问题
     @Override
     public List selectByRoleId(Long roleId) {
         List<Menu> menus = mapper.selectByRoleId(roleId);
@@ -54,30 +60,40 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public List menuTree(Integer parentId) {
+        if (parentId == null) {
+            parentId = -1;
+        }
         List<Menu> menus = getBaseMapper().selectList(Wrappers.emptyWrapper());
         if (CollectionUtils.isEmpty(menus)) {
             return Collections.emptyList();
         }
-        return  buildMenuTree(menus, parentId);
+        return buildMenuTree(menus, parentId);
 
+    }
+
+    @Override
+    public Boolean removeByMenuId(Integer menuId) {
+        return mapper.updateByMenuId(menuId);
     }
 
     private List buildMenuTree(List<Menu> menus, Integer parentId) {
         List<TreeNode<Integer>> collect = new ArrayList<>(menus.size());
         menus.forEach(menu -> {
-            TreeNode node = new TreeNode<>();
-            node.setId(menu.getMenuId());
-            node.setParentId(menu.getParentId());
-            node.setName(menu.getName());
-            node.setWeight(menu.getSortOrder());
-            Map<String, Object> map = new HashMap<>();
-            map.put("permission", menu.getPermission());
-            map.put("icon", menu.getIcon());
-            map.put("keepAlive", menu.getKeepAlive());
-            map.put("path", menu.getPath());
-            map.put("type", menu.getType());
-            node.setExtra(map);
-            collect.add(node);
+            if (menu.isAlive()) {
+                TreeNode node = new TreeNode<>();
+                node.setId(menu.getMenuId());
+                node.setParentId(menu.getParentId());
+                node.setName(menu.getName());
+                node.setWeight(menu.getSortOrder());
+                Map<String, Object> map = new HashMap<>();
+                map.put("permission", menu.getPermission());
+                map.put("icon", menu.getIcon());
+                map.put("keepAlive", menu.getKeepAlive());
+                map.put("path", menu.getPath());
+                map.put("type", menu.getType());
+                node.setExtra(map);
+                collect.add(node);
+            }
         });
         return TreeUtil.build(collect, parentId);
     }
