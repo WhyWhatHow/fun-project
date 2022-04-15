@@ -1,12 +1,17 @@
 package com.fun.system.api.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.fun.common.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * (Menu)表实体类
@@ -24,12 +29,14 @@ public class Menu extends BaseEntity {
     /**
      * 权限id
      */
-    @TableId
+
+    @TableId(value = "menu_id",type = IdType.ASSIGN_ID)
     @Schema(description = "权限id")
     private Integer menuId;
     /**
      * 权限名称
      */
+    @NotBlank
     @Schema(description = "权限名称")
     private String name;
     /**
@@ -45,6 +52,7 @@ public class Menu extends BaseEntity {
     /**
      * 父类menu_id, -1 标记为根节点
      */
+    @NotNull
     @Schema(description = "父类menu_id, -1 标记为根节点")
     private Integer parentId;
     /**
@@ -55,6 +63,7 @@ public class Menu extends BaseEntity {
     /**
      * 排序值
      */
+    @NotNull
     @Schema(description = "排序值")
     private Integer sortOrder;
     /**
@@ -67,4 +76,8 @@ public class Menu extends BaseEntity {
      */
     @Schema(description = "菜单类型,0 菜单, 1 按钮")
     private String type;
+
+    public boolean isButton() {
+        return StringUtils.isBlank(this.permission) ? false : true;
+    }
 }

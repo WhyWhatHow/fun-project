@@ -3,10 +3,11 @@ package com.fun.system.api.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fun.common.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * (UserRole)表实体类
@@ -19,17 +20,19 @@ import lombok.EqualsAndHashCode;
 @TableName("sys_user_role")
 @Schema(description = "UserRole实体类")
 @SuppressWarnings("serial")
-public class UserRole extends BaseEntity {
+public class UserRole {
 
     /**
-     * $column.comment
+     * userId
      */
     @TableId
-    @Schema(description = "$column.comment")
+    @NotNull
+    @Schema(description = "userId")
     private Long userId;
     /**
-     * $column.comment
+     * roleId
      */
-    @Schema(description = "$column.comment")
+    @NotNull
+    @Schema(description = "roleId")
     private Long roleId;
 }

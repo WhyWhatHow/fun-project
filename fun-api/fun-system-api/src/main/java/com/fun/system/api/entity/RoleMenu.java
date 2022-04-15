@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * (RoleMenu)表实体类
  *
@@ -24,11 +26,13 @@ public class RoleMenu  {
      * roleId
      */
     @TableId
+    @NotNull
     @Schema(description = "roleId")
     private Long roleId;
     /**
      * menuId
      */
+    @NotNull
     @Schema(description = "menuId")
     private Long menuId;
 }
