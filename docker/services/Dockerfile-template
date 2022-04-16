@@ -1,0 +1,25 @@
+#基础镜像
+FROM openjdk:8-jdk
+MAINTAINER whywhathow(whywhathow.fun@gmail.com)
+#docker run -e PARAMS="--server.port 9090"
+# JAVA_OPT: 设置堆大小, 随机函数加载,以及文件编码方式, 垃圾收集器
+# GC 类型, UseG1GC,  UseParallelGC(default),  UseConcMarkSweepGC
+#ENV JAVA_OPTS="-Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom -Dfile.encoding=utf8"  \
+# TODO DockerFile  某一命令中间 不可以 加入注解标记, 哪怕是用 \ 换行也不行.
+# jvm 参数设置
+ENV \
+JVM_GC="+UseConcMarkSweepGC"\
+JVM_XMS="128m" \
+JVM_XMX="256m"  \
+SERVER_PORT="8080" \
+SPRING_PROFILES_ACTIVE="prod" \
+JAVA_RANDOM="-Djava.security.egd=file:/dev/./urandom"
+# 设置时区
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+COPY ./*.jar /app.jar
+#EXPOSE 8080
+#ENTRYPOINT ["/bin/sh","-c","java  ${JAVA_OPTS} -jar app.jar ${PARAMS}"]
+# test shell
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]

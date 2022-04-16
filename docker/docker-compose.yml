@@ -39,10 +39,10 @@ services:
           memory: 300m
 
   fun-redis:
+#    需要密码登录 redis-cli -hYourHost -a YourPassword
     image: redis:6.2.6-alpine
 #    build: redis
     container_name: fun-redis
-
     ports:
       - "16379:6379"
     user: root
