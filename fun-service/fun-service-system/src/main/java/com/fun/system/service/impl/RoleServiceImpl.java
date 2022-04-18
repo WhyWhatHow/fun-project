@@ -23,6 +23,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     RoleMapper roleMapper;
 
     RoleMenuService roleMenuService;
+
     @Override
     public Boolean removeById(Long roleId) {
         boolean res = super.removeById(roleId);

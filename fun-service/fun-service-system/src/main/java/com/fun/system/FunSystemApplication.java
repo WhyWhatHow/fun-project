@@ -17,5 +17,9 @@ public class FunSystemApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(FunSystemApplication.class, args);
+// TODO [whywhathow] [2022/4/15] [must] 部署时添加skywalking监控 监控平台zero-ali:8899
+// -javaagent:agent/skywalking-agent.jar
+//-Dskywalking.collector.backend_service=zero-skywalking:11800
+//-Dskywalking.agent.service_name=fun-service-system
     }
 }

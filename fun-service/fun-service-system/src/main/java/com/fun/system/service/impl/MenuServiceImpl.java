@@ -76,6 +76,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return mapper.updateByMenuId(menuId);
     }
 
+    @Override
+    public Set<Menu> listByRoleId(Long roleId) {
+        return mapper.listByRoleId(roleId);
+    }
+
     private List buildMenuTree(List<Menu> menus, Integer parentId) {
         List<TreeNode<Integer>> collect = new ArrayList<>(menus.size());
         menus.forEach(menu -> {

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fun.system.api.entity.Menu;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author whywhathow
@@ -33,5 +34,12 @@ public interface MenuService extends IService<Menu> {
      * @return  true | false
      */
     Boolean removeByMenuId(Integer menuId);
+
+    /**
+     *  通过roleId 获取所有的menu信息
+     * @param roleId roleId
+     * @return menus
+     */
+    Set<Menu> listByRoleId(Long roleId);
 }
 

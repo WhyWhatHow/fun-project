@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -83,7 +84,7 @@ public class RoleController {
      */
     @Operation(summary = "新增role", description = "新增role")
     @PostMapping
-    public R save(@RequestBody Role role) {
+    public R save(@RequestBody @Valid Role role) {
         return R.ok(roleService.save(role));
     }
 
@@ -95,7 +96,7 @@ public class RoleController {
      */
     @Operation(summary = "修改role", description = "修改role")
     @PutMapping
-    public R updateById(@RequestBody Role role) {
+    public R updateById(@RequestBody @Valid Role role) {
         return R.ok(roleService.updateById(role));
     }
 
