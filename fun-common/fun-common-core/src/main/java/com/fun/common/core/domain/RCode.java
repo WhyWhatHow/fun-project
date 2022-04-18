@@ -31,7 +31,18 @@ public enum RCode {
      */
     ERROR_LOGIN_NOT_EMPTY(510, "账号或密码不能为空"),
 
-    ERROR_LOGIN_LOCK(511, "密码输错次数过多,已被锁定30分钟");
+    ERROR_LOGIN_LOCK(511, "密码输错次数过多,已被锁定30分钟"),
+
+    ERROR_LOGIN_FAILED(512, "用户名密码错误"),
+
+    USER_NOT_EXIST(513,"用户不存在"),
+
+    ROLE_NOT_SET_YET(514,"未给当前用户分配角色"),
+
+    ROLE_NOT_EXIST(515,"角色不存在"),
+
+
+    ;
 
     RCode(Integer code, String msg) {
         this.code = code;
@@ -39,5 +50,5 @@ public enum RCode {
     }
 
     public Integer code;
-    public  String msg;
+    public String msg;
 }

@@ -1,7 +1,7 @@
 package com.fun.common.core.utils;
 
-import com.fun.common.core.domain.RCode;
 import com.fun.common.core.domain.R;
+import com.fun.common.core.domain.RCode;
 
 /**
  * @program: fun-project

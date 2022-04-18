@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public R handleConstraintViolationException(ConstraintViolationException ex) {
         log.warn("[ConstraintViolationException ]- 异常信息{}", ex);
-        return RUtils.createFail(RCode.PARAMENT_ERROR);
+        return RUtils.createFail(RCode.PARAMENT_ERROR.code,ex.getMessage());
     }
 
     /**

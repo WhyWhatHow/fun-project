@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @program: fun-project
@@ -24,7 +24,7 @@ public class BaseEntity implements Serializable {
 //    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @TableField(fill = FieldFill.INSERT)
     @Schema(description = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
     /**
      * 更新时间, insert and update 时自动更新
      */
@@ -32,7 +32,7 @@ public class BaseEntity implements Serializable {
 //    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description = "更新时间")
-    private Date updateTime ;
+    private LocalDateTime updateTime ;
     /**
      * 状态位
      */

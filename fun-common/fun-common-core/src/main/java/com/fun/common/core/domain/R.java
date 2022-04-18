@@ -25,7 +25,7 @@ public class R <T> {
     }
 
     /**
-     * 利用 Resultcodes 枚举类创建
+     * 利用 ResultCode 枚举类创建
      * @param codes
      * @param data
      */
@@ -62,5 +62,63 @@ public class R <T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    /**
+     * 创建 result 响应对象
+     *
+     * @param data 响应的数据
+     * @param msg  响应消息
+     * @param code 响应码
+     * @param <T>
+     * @return
+     */
+    public static <T> R ok(T data, String msg, Integer code) {
+        return new R(code, msg, data);
+    }
+
+    /**
+     * 请求成功, 返回一个 success  result对象
+     *
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> R ok(T data) {
+//        return new R(RCodes.SUCCESS.)
+        return new R(RCode.SUCCESS, data);
+    }
+
+    /**
+     * 请求响应失败, 创建一个失败请求的result
+     *
+     * @param code
+     * @param msg
+     * @param <T>
+     * @return
+     */
+    public static <T> R failed(Integer code, String msg) {
+        return new R(code, msg, null);
+    }
+
+    /**
+     * 利用ResultCode 构建失败 响应
+     * @param code
+     * @param <T>
+     * @return
+     */
+    public static <T> R failed(RCode code) {
+        return new R(code, null);
+    }
+
+    /**
+     * 利用ResultCode , 携带响应数据 构建失败 响应
+     * @param code
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> R failed(RCode code,T data) {
+        return new R(code, data);
     }
 }
