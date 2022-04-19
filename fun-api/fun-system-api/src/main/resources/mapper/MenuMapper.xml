@@ -46,5 +46,35 @@
         values(update_time)
     </insert>
 
+
+    <!--     通过roleId 获取所有的menu信息-->
+    <select id="listByRoleId" resultMap="MenuMap">
+        SELECT menu.*
+        FROM sys_role_menu rm
+                 LEFT JOIN sys_menu menu ON (rm.menu_id = menu.menu_id)
+        WHERE menu.del_flag = 0
+          AND rm.role_id = #{roleId}
+        ORDER BY menu.sort_order DESC
+    </select>
+
+
+
+    <select id="selectByRoleId" resultMap="MenuMap">
+        SELECT menu.*
+        FROM sys_role_menu rm
+                 LEFT JOIN sys_menu menu ON rm.`menu_id`=menu.`menu_id`
+        WHERE rm.`role_id`=#{roleId}
+          AND menu.`del_flag` =0
+        ORDER BY menu.sort_order asc;
+    </select>
+
+    <update id="updateByMenuId">
+        UPDATE sys_menu
+        SET sys_menu.del_flag=1
+        WHERE sys_menu.`menu_id`=#{menuId} OR sys_menu.`parent_id` =#{menuId}
+    </update>
+
+
+
 </mapper>
 

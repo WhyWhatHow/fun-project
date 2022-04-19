@@ -14,6 +14,7 @@ import com.fun.system.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
@@ -102,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 更新sys_user_role 关系表
      *
      * @param user user_role
-     * @param res res
+     * @param res  res
      * @return res
      */
     private boolean updateUserRoleTable(UserRequest user, boolean res) {
@@ -140,22 +141,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 更新用户信息
      * 1. 用户密码修改
-     * 2. roleIds 是否不为空
+     * 2. roleIds 是否不为空 , 不为空的话, 先删除, 后插入实现role角色更新.
+     * todo
      *
      * @param user
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean update(UserRequest user) {
-
         boolean res = false;
         String newPwd = user.getNewPwd();
         if (!ObjectUtils.isEmpty(newPwd)) {
-//             新密码加密
             user.setPassword(newPwd);
         }
-        return super.updateById(user);
+        res = super.updateById(user);
+        res = updateRoleId(user);
+        return res;
 
+    }
+
+    /**
+     * 更新 sys_user_role 表, 先del,在insert
+     * TODO [whywhathow] [2022/4/19] [opt] 缓存添加, 避免对sys_user_role表进行重复的插入删除操作.
+     *
+     * @param user user
+     * @return boolean
+     */
+    @Transactional(rollbackFor = Exception.class)
+    boolean updateRoleId(UserRequest user) {
+        if (!user.isEmptyRoleIds()) {
+            boolean res = userRoleMapper.delByUserId(user.getUserId());
+            res = res && userRoleMapper.insertBatch(user.getUserRoles()) > 0;
+            return res;
+        }
+        return true;
     }
 }
 

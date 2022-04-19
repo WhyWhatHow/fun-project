@@ -4,7 +4,6 @@ import com.fun.system.api.entity.User;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import javax.management.relation.Role;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +15,7 @@ import java.util.Set;
  **/
 @Data
 @RequiredArgsConstructor
+
 public class UserInfo {
     /**
      * 用户信息
@@ -24,7 +24,7 @@ public class UserInfo {
     /**
      * 角色信息
      */
-    List<Role> roles;
+    List<Long> rolesId;
     /**
      * 权限信息
      */

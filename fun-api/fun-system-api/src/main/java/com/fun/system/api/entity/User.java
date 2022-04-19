@@ -1,12 +1,17 @@
 package com.fun.system.api.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fun.common.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 /**
  * (User)表实体类
@@ -18,18 +23,21 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("sys_user")
 @Schema(description = "User实体类")
+@RequiredArgsConstructor
 @SuppressWarnings("serial")
 public class User extends BaseEntity {
+
 
     /**
      * 用户id
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "用户id")
     private Long userId;
     /**
      * 用户登录名
      */
+    @NotBlank
     @Schema(description = "用户登录名")
     private String username;
     /**
@@ -40,6 +48,7 @@ public class User extends BaseEntity {
     /**
      * 邮箱
      */
+    @Email
     @Schema(description = "邮箱")
     private String email;
     /**
@@ -67,4 +76,8 @@ public class User extends BaseEntity {
      */
     @Schema(description = "手机号码")
     private String phone;
+
+    public User(String username) {
+        this.username = username;
+    }
 }

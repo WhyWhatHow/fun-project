@@ -2,6 +2,7 @@ package com.fun.system.api.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.fun.system.api.entity.Role;
 import com.fun.system.api.entity.UserRole;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +32,16 @@ public interface UserRoleMapper extends BaseMapper<UserRole> {
      * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
      */
     int insertOrUpdateBatch(@Param("entities") List<UserRole> entities);
+
+    List<Role> selectRoleByUserId(@Param("userId") Long userId);
+
+    /**
+     * 通过userId 获取用户对应的roleIds
+     * @param userId userId
+     * @return roleIds
+     */
+    List<Long> selectRoleIdsByUserId(@Param("userId") Long userId);
+
+    boolean delByUserId(@Param("userId") Long userId);
 }
 

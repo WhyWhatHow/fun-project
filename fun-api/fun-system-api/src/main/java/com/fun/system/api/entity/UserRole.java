@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @TableName("sys_user_role")
 @Schema(description = "UserRole实体类")
+@RequiredArgsConstructor
 @SuppressWarnings("serial")
 public class UserRole {
 
@@ -35,4 +37,9 @@ public class UserRole {
     @NotNull
     @Schema(description = "roleId")
     private Long roleId;
+
+    public UserRole(Long userId, Long roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
 }

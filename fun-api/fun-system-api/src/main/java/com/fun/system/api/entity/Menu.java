@@ -30,7 +30,7 @@ public class Menu extends BaseEntity {
      * 权限id
      */
 
-    @TableId(value = "menu_id",type = IdType.ASSIGN_ID)
+    @TableId(value = "menu_id", type = IdType.ASSIGN_ID)
     @Schema(description = "权限id")
     private Integer menuId;
     /**
@@ -80,4 +80,11 @@ public class Menu extends BaseEntity {
     public boolean isButton() {
         return StringUtils.isBlank(this.permission) ? false : true;
     }
+
+
+    public boolean isAlive() {
+        return this.getDelFlag() == 0;
+    }
+
+
 }

@@ -1,8 +1,7 @@
 package com.fun.system.api.entity;
 
 
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fun.common.core.domain.BaseEntity;
@@ -10,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
 
 /**
  * (OauthClientDetails)表实体类
@@ -28,37 +27,43 @@ public class OauthClientDetails extends BaseEntity {
     /**
      * 客户端ID
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "客户端ID")
     private String clientId;
     /**
      * 客户端可以访问的资源服务器集合, 以,分割
      */
+    @NotBlank
     @Schema(description = "客户端可以访问的资源服务器集合, 以,分割")
     private String resourceIds;
     /**
      * 客户端密码
      */
+    @NotBlank
     @Schema(description = "客户端密码")
     private String clientSecret;
     /**
      * 权限范围
      */
+    @NotBlank
     @Schema(description = "权限范围")
     private String scope;
     /**
      * 授权码模式:authorization_code密码模式password客户端模式client_credentials隐式授权模式implicit
      */
+    @NotBlank
     @Schema(description = "授权码模式:authorization_code密码模式password客户端模式client_credentials隐式授权模式implicit")
     private String authorizedGrantTypes;
     /**
      * 重定向地址
      */
+    @NotBlank
     @Schema(description = "重定向地址")
     private String webServerRedirectUri;
     /**
      * client拥有的权限
      */
+    @NotBlank
     @Schema(description = "client拥有的权限")
     private String authorities;
     /**

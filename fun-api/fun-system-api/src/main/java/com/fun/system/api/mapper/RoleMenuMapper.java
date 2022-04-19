@@ -33,6 +33,6 @@ public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
     int insertOrUpdateBatch(@Param("entities") List<RoleMenu> entities);
 
 
-    Boolean delByRoleId(@Param("roleid") Long roleId);
+    Boolean delByRoleId(@Param("roleId") Long roleId);
 }
 

@@ -6,6 +6,7 @@ import com.fun.system.api.entity.Menu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * MenuMapper DAO层
@@ -31,5 +32,16 @@ public interface MenuMapper extends BaseMapper<Menu> {
      * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
      */
     int insertOrUpdateBatch(@Param("entities") List<Menu> entities);
+
+    /**
+     *  通过roleId 获取所有的menu信息
+     * @param roleId roleId
+     * @return menus
+     */
+    Set<Menu> listByRoleId(@Param("roleId") Long roleId);
+
+    List<Menu> selectByRoleId(Long roleId);
+
+    Boolean updateByMenuId(@Param("menuId") Integer menuId);
 }
 
