@@ -238,9 +238,13 @@ import $!{tableInfo.savePackageName}.api.mapper.$!{tableInfo.name}Mapper;
 import $!{tableInfo.savePackageName}.api.entity.$!{tableInfo.name};
 import $!{tableInfo.savePackageName}.service.$!{tableInfo.name}Service;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 ##表注释（宏定义）
 #tableComment("")
+@Slf4j
+@AllArgsConstructor
 @Service("$!tool.firstLowerCase($tableInfo.name)Service")
 public class $!{tableName} extends ServiceImpl<$!{tableInfo.name}Mapper, $!{tableInfo.name}> implements $!{tableInfo.name}Service {
 
