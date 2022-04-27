@@ -993,9 +993,7 @@ PS: gateway 连上nacos 后,会给每一个微服务注册一个路由地址 即
 
 * 思路: 根据动态路由的思路, 思考到, 只要监听到`RouteRefreshEvent` 事件, 就可以实现动态API生成.
   1. user -> update gateway-route.json 文档, -> routeDefinition 数量发生变化
-  2. `SpringDocRouteRefreshListener` 监听`RouteRefreshevent` ,监听到routes数量变化, 重新生成swagger.
-
-
+  2. `SpringDocRouteRefreshListener` 监 
 
 ###  Sentinel 引入
 
@@ -1037,7 +1035,9 @@ Gitee 接入:
 
 
 
-### 消息通知
+### 消息通知:
+
+
 
 
 
@@ -1078,8 +1078,40 @@ Gitee 接入:
 
 与服务器内存有关系??  或者网络
 
-- [ ]  docker-compose 内存限制 配置
-- [x]  在服务器内存不足的情况下, 不要用docker 配置Springboot 项目, 
+- [x]  docker-compose 内存限制 配置
+
+```yml
+version: '3.0'
+services:
+#  需要自行配置nacos-mysql的配置
+#  DONE: service 内存空间限制, cmd:
+#  docker-compose --compatibility up -d
+#  TODO [whywhathow] [2022/3/3] [must]  [nacos,sentinel] 源码配置方案
+  fun-nacos:
+    image: nacos/nacos-server
+    container_name: fun-nacos
+    environment:
+      MODE: standalone
+      JVM_XMS: 256m
+      JVM_XMX: 256m
+    volumes:
+      - ./nacos/logs/:/home/nacos/logs
+      - ./nacos/conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9555:9555"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 500m
+
+```
+
+执行  docker-compose --compatibility up -d 
+
+- [x] 在服务器内存不足的情况下, 不要用docker 配置Springboot 项目, 
   * Spring boot尽量选择 jar 运行, 节省内存.
   * 中间件, redis ,mysql(强烈推荐) docker 部署.
 
@@ -1112,7 +1144,7 @@ Gitee 接入:
 
   join 连表查询 == 小表驱动大表,  多次sql 语句查询 目的也是为了减少结果集, 说白了就是在services 层做的多表查询,  两者读性能大致相当.
 
-  ​	services 端做的话, 意味着多条网络请求, 单同时也可以加缓存, 本地缓存coffine+redis 缓存,所以读性能丢失不严重. 
+  ​	services 端做的话, 意味着多条网络请求, 单同时也可以加缓存, **本地缓存coffine+redis 缓存,所以读性能丢失不严重.** 
 
   ​	Join 多表查询缓存  会在单表数据更新后失效.  
 
@@ -1134,3 +1166,18 @@ Gitee 接入:
 
 **多次查询在读性能可能会存在损耗,但胜在方便维护.扩展,不影响mysql写性能.  **
 
+### MySQL递归查询问题处理
+
+* 思路: 
+
+  **方案一: 对MySQL 返回所有的结果, 然后service层对数据进行处理.**  **保证 表一致处于小表范围内**
+
+  ​	缺点: 如果后期这个表长得足够大, 可会会出现性能瓶颈(全表返回, 就算是内网也尽量不要用)  **but, menu菜单的修改不频繁,不同情况下可以通过缓存来保存.**
+
+  方案二: 限制menu 菜单的层数, 比如三, 然后mysql 子查询解决. 
+
+  ​	缺点: 四层结构就不行,不利于后期维护
+
+  方案三: 多次sql 查询, 保证功能实现. 
+
+  

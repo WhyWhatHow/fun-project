@@ -3,16 +3,22 @@
 ​	 主要问题:
 
 - [ ] 什么是灰度发布?
+
   - [ ] 怎么实现?
-  
+
     
-  
+
 - [ ] 登录模块
 
   - [ ] 邮件 通知, 以及  邮箱验证, 密码重置
   - [ ] 滑块验证码
 
-- [ ] 多级缓存, coffine, redis ,mysql 
+- [ ] 多级缓存, 
+
+  - [ ] coffine, 
+  - [ ] redis ,
+  - [ ] mysql 
+
 
 Security oauth2中
 
@@ -29,3 +35,14 @@ Security oauth2中
 - [x] springdoc
   - [ ] 自己去重写
   - [ ] ReactiveCompositeDiscoveryClient_fun-gateway', predicates=[PredicateDefinition{name='Path', args={pattern=/fun-gateway/**}}], filters=[FilterDefinition{name='RewritePath', args={regexp=/fun-gateway/?(?<remaining>.*), replacement=/${remaining}}}], uri=lb://fun-gateway, order=0, metadata={nacos.instanceId=192.168.80.1#9000#DEFAULT#DEFAULT_GROUP@@fun-gateway, nacos.weight=1.0, nacos.cluster=DEFAULT, nacos.ephemeral=true, nacos.healthy=true, preserved.register.source=SPRING_CLOUD}}
+
+**思路:**
+
+    1. 添加**XXXfilter(需要在discovery配置文件下生效)**,为 ReactiveCompositeDiscoveryClient_**{ServiceName}** 的路由添加 StripPrefixFilter, 过滤reqeust. 实现 
+    
+
+1. ![](https://gitee.com/dramaq/images/raw/master/md/20220412101940.png)
+
+
+
+![](https://gitee.com/dramaq/images/raw/master/md/20220412103749.png)

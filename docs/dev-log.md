@@ -164,4 +164,10 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
   
   
   
+  ```bash
+  //-javaagent:agent/skywalking-agent.jar
+  //-Dskywalking.agent.service_name=fun-gateway
+  //-Dskywalking.collector.back
+  ```
+  
   
