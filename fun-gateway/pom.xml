@@ -11,6 +11,15 @@
 
     <artifactId>fun-gateway</artifactId>
     <dependencies>
+<!--        引入验证码模块-->
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-common-captcha</artifactId>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.anji-plus</groupId>-->
+<!--            <artifactId>captcha</artifactId>-->
+<!--        </dependency>-->
         <!--         添加 spring nacos 依赖-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -80,11 +89,10 @@
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
         </dependency>
-        <!--        open api -->
+        <!--       springdoc-open-api -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
-            <version>1.6.6</version>
         </dependency>
     </dependencies>
 

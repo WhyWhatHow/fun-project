@@ -16,4 +16,7 @@ public class FunGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(FunGatewayApplication.class, args);
     }
+//-javaagent:agent/skywalking-agent.jar
+//-Dskywalking.agent.service_name=fun-gateway
+//-Dskywalking.collector.backend_service=zero-skywalking:11800
 }

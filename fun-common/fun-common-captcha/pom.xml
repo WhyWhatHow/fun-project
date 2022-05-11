@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>fun-common</artifactId>
+        <groupId>io.github.whywhathow</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fun-common-captcha</artifactId>
+    <description>spring-boot-starter-captcha 模块 内容相同,
+          但是去掉了controller包模块
+        reason: controller 模块不适配 reactive
+    </description>
+    <!--     验证码默认配置  实际内容与 spring-boot-starter-captcha 相同, 不过去掉了controller 层-->
+    <dependencies>
+        <dependency>
+            <groupId>com.anji-plus</groupId>
+            <artifactId>captcha</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-common-log</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -32,7 +32,7 @@ spring:
       filter:
         enabled: false
       transport:
-        dashboard: ${SENTINEL_IP:centos-product}:${SENTINEL_PORT:9527}
+        dashboard: ${SENTINEL_IP:zero-product}:${SENTINEL_PORT:9527}
       log:
         dir: /logs/sentinel/
       #spring.cloud.sentinel.datasource.ds2.nacos.server-addr=localhost:8848
