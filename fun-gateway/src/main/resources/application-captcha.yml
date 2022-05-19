@@ -3,7 +3,7 @@ aj:
     type: blockpuzzle
     jigsaw: classpath:images/jigsaw # 滑块验证码图片所在位置
     pic-click: classpath:images/pic-click # 文字选择图片验证码所在位置
-    cache-type: local # 缓存类型 TODO [whywhathow] [11/5/2022] [must] change to redis
+    cache-type: redis # 缓存类型 TODO [whywhathow] [11/5/2022] [must] change to redis reason: local 可能报错...
     cache-number: 1000 # 缓存数量达到1000后清理
     timing-clear: 60
     water-mark: whywhathow.fun@gmail.com
