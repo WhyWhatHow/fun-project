@@ -128,16 +128,20 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
 
   * https://www.cxybb.com/article/u013323965/89445757
   
-  ### 2022.04.09
   
+  
+### 2022.04.09  如何对mysql 进行批量插入性能优化.
+
+  
+
   项目在做批量插入的时候, **影响性能的因素 -> 创建的中间对象, 即 List<DataInfo> list 对象.**
-  
+
   诚然 mybatis plus 有直接的method 可以直接实现批量查询, 但是 **中间 list 对象对内存占用是没有必要性的** . 
-  
+
   Mybatis 最后的做法是 insert into tb(name,age) values (a,2),(c,1).... 
-  
+
   **优化:** 去掉中间没用的list对象, 采用字符串凭借
-  
+
   ```java
     void test() {
           List<String> list = new ArrayList<>();
@@ -161,13 +165,13 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
           saveToDb(sb.get().toString());
       }
   ```
-  
-  
-  
+
+###   2022.04.15 skywalking service 默认配置
+
   ```bash
   //-javaagent:agent/skywalking-agent.jar
   //-Dskywalking.agent.service_name=fun-gateway
   //-Dskywalking.collector.back
   ```
-  
-  
+
+###   2022.05.23  /oauth/token 映射不到 ,结果调到/error页面 
