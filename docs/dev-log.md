@@ -174,4 +174,72 @@ PS: 没想到redis还有这种漏洞, 可以用来挖矿....orz....
   //-Dskywalking.collector.back
   ```
 
-###   2022.05.23  /oauth/token 映射不到 ,结果调到/error页面 
+###   2022.05.23  /oauth/token 映射不到 , 403 问题 结果调到/error页面 
+
+示图![stackoverflow -error ](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205242206375.png)
+
+#### 思路:
+
+	1. /oauth/token 映射不到, 所以说明 是filter 阶段出错, 选择filter debug 处理 ( 可以是可以,不过速度过慢, 且没有对比,无法判断问题)
+	1. 
+
+```txt
+Security filter chain: [
+  WebAsyncManagerIntegrationFilter -> async
+  SecurityContextPersistenceFilter  -> 
+  HeaderWriterFilter -> 
+  LogoutFilter -> logout 
+  ClientCredentialsTokenEndpointFilter ->   ClientCredentialsTokenEndpoint
+  BasicAuthenticationFilter -> httpbasic 认证  request header中的 basic 信息 
+  RequestCacheAwareFilter
+  
+  SecurityContextHolderAwareRequestFilter
+  AnonymousAuthenticationFilter
+  SessionManagementFilter
+  ExceptionTranslationFilter
+  FilterSecurityInterceptor
+]
+```
+
+
+
+pig /oauth/token/
+
+```txt
+Security filter chain: [
+  WebAsyncManagerIntegrationFilter  ->
+  SecurityContextPersistenceFilter ->
+  HeaderWriterFilter -> 
+  LogoutFilter ->
+  ClientCredentialsTokenEndpointFilter-> 
+  BasicAuthenticationFilter ->
+  RequestCacheAwareFilter
+  
+  SecurityContextHolderAwareRequestFilter
+  
+  AnonymousAuthenticationFilter
+  SessionManagementFilter
+  ExceptionTranslationFilter
+  FilterSecurityInterceptor
+]
+```
+
+#### reason: 
+
+1.`SecurityConfiguration` 类中 AuthenticationManager 配置 出错, 若**配置 super.authenticationManager() -> StackOverflow error** , 需要配成 **super.authenticationManagerBean();**
+
+2. `ClientDetailsService` , 以及`UserDetailsService` 可能存在错误,-> 降级, 从 db-> memory 配置
+3. 对spring security 以及 spring-oauth  执行顺序 不够了解 ==>  **filter->controller("/oauth/token)"**
+
+```java
+@Bean
+    @Override
+    @SneakyThrows
+    protected AuthenticationManager authenticationManager()  {
+//    ISSUE [whywhathow] [24/5/2022] [must]  这个会导致 stackoverflow error
+        //        return super.authenticationManager();
+        return super.authenticationManagerBean();
+    }
+```
+
+#### 
