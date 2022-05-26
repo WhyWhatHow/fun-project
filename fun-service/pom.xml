@@ -9,13 +9,20 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fun-services</artifactId>
+    <artifactId>fun-service</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>fun-service-demo</module>
+        <module>fun-service-demo-security</module>
+        <module>fun-services-auth-server</module>
+        <module>fun-services-demo-oauth</module>
+        <module>fun-service-system</module>
+        <module>fun-service-demo-mybatis</module>
+
     </modules>
     <dependencies>
         <!--         数据库依赖添加-->
+        <!--        TODO [whywhathow] [2022/3/5] [must]  [github 登录测试, 需要重新放开,以及整理mybatis 包路径]-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -24,11 +31,10 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!--       引入  druid starter-->
+        <!--       引入  druid starter -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-
         </dependency>
     </dependencies>
 
