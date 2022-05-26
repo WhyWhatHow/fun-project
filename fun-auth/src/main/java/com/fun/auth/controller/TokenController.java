@@ -5,18 +5,23 @@ import com.fun.common.core.domain.R;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
 
 /**
+ * TODO [whywhathow] [24/5/2022] [must]  第三方应用配置
+ *
  * @program: fun-project
  * @description: 用户登录信息 已token返回给第三方应用, 应用可以凭借token获取用户权限,访问用户数据
  * @author: WhyWhatHow
  * @create: 2022-03-04 14:18
  **/
 @RestController
+@RequestMapping("/token")
 @Validated
+@Deprecated
 public class TokenController {
 
 //    @Autowired
@@ -31,6 +36,7 @@ public class TokenController {
 
     @PostMapping("/login")
     public R login(@NotBlank String username, @NotBlank String password) {
+
         return tokenService.login(username, password);
     }
 
