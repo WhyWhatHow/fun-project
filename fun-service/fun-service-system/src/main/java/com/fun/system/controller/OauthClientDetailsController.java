@@ -25,7 +25,7 @@ import javax.validation.constraints.NotBlank;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping("oauthClientDetails")
+@RequestMapping("client")
 public class OauthClientDetailsController {
     @Resource
     private final OauthClientDetailsService oauthClientDetailsService;

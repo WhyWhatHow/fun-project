@@ -13,6 +13,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -22,17 +25,40 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author: WhyWhatHow
  * @create: 2022-03-20 23:43
  **/
+@Deprecated
 public class StatementTest {
     public static void main(String[] args) {
-        testArrayList();
+//        testArrayList();
 //        treeNodeTest();
-
+        testCompleteFuture();
 //        System.out.println(Integer.MAX_VALUE>>20);
 //        sqlTest();
 //        String name = "fun-service-demo-mybatis";
 //        int i = name.lastIndexOf("fun-service-");
 //        System.out.println(name.replace("fun-service-", ""));
 //        System.out.println(name.substring(i));
+    }
+
+    private static void testCompleteFuture() {
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        CompletableFuture<String> cf1 = CompletableFuture.supplyAsync(() -> {
+            System.out.println(Thread.currentThread().getName());
+            System.out.println("执行step 1");
+            return "step1 result";
+        }, executor);
+        CompletableFuture<String> cf2 = CompletableFuture.supplyAsync(() -> {
+            System.out.println(Thread.currentThread().getName());
+            System.out.println("执行step 2");
+            return "step2 result";
+        });
+        cf1.thenCombine(cf2, (result1, result2) -> {
+            System.out.println(Thread.currentThread().getName());
+            System.out.println(result1 + " , " + result2);
+            System.out.println("执行step 3");
+            return "step3 result";
+        }).thenAccept(result3 -> System.out.println(result3));
     }
 
     private static void testArrayList() {
@@ -99,7 +125,7 @@ public class StatementTest {
         dataSource.setUsername("root");
         dataSource.setPassword("aa12321.");
 
-        dataSource.setUrl("jdbc:mysql://centos-product:3306/fun_system?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true");
+        dataSource.setUrl("jdbc:mysql://zero-product:3306/fun_system?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true");
         return dataSource;
     }
 

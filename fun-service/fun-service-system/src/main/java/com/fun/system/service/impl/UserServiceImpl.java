@@ -115,7 +115,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Object getUserDetailsByUsername(String username) {
+    public UserInfo getUserDetailsByUsername(String username) {
         return this.getUserInfoByUsername(username);
     }
 

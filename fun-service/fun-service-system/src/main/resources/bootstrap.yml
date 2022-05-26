@@ -1,9 +1,9 @@
 NACOS_HOST: @nacos.ip@
 server:
-  port: 10000
+  port: 11000
 spring:
   application:
-    name: fun-services-system
+    name: fun-service-system
   profiles:
     active: @profile.active@
   # 配置是有使用传统的配置方案 即是否需要导入application-dev.yml||application-prod.yml

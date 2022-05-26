@@ -3,6 +3,7 @@ package com.fun.system.controller;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fun.common.core.domain.R;
+import com.fun.system.api.dto.UserInfo;
 import com.fun.system.api.dto.UserRequest;
 import com.fun.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +31,10 @@ import javax.validation.constraints.NotNull;
 public class UserController {
     @Resource
     private final UserService userService;
+
     @GetMapping("/details/{username}")
-    @Operation(summary = "通过用户名获取用户所有信息" ,description = "通过用户名获取用户所有信息")
-    public R getUserDetailsByUsername(@PathVariable("username")@NotBlank String username){
+    @Operation(summary = "通过用户名获取用户所有信息", description = "通过用户名获取用户所有信息")
+    public R<UserInfo> getUserDetailsByUsername(@PathVariable("username") @NotBlank String username) {
         return R.ok(userService.getUserDetailsByUsername(username));
     }
 
