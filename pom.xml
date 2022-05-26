@@ -9,10 +9,12 @@
     <version>1.0</version>
     <modules>
         <module>fun-common</module>
-        <module>fun-services</module>
+        <module>fun-service</module>
         <module>fun-config</module>
         <module>fun-gateway</module>
         <module>fun-auth</module>
+        <module>fun-api</module>
+        <!--        <module>fun-service-demo-mybatis</module>-->
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -25,9 +27,13 @@
         <spring-boot.version>2.6.3</spring-boot.version>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
         <spring-cloud-ablibaba.version>2021.1</spring-cloud-ablibaba.version>
+        <spring-cloud-feign.version>1.4.7.RELEASE</spring-cloud-feign.version>
+        <!--        mybatis 相关配置 -->
         <mybatis.version>2.0.6</mybatis.version>
-        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <mybatis-plus.version>3.5.1</mybatis-plus.version>
         <mysql-driver.version>8.0.26</mysql-driver.version>
+        <!--         mybatis xml 文件映射-->
+        <jackson-annotations.version>2.13.1</jackson-annotations.version>
         <!--      druid version  -->
         <druid.version>1.2.8</druid.version>
 
@@ -41,13 +47,27 @@
         <fastjson.version>1.2.78</fastjson.version>
         <okhttp.version>4.9.2</okhttp.version>
         <guava.version>31.0.1-jre</guava.version>
+        <captcha.version>1.3.0</captcha.version>
         <!--         项目的版本号-->
         <basic.version>1.0</basic.version>
-
+        <!--        spring doc 版本-->
+        <springdoc.version>1.6.6</springdoc.version>
+        <swagger-annotations.version>2.1.12</swagger-annotations.version>
+        <!--        spring-boot-redis -->
+        <spring-boot-redis.version>1.4.7.RELEASE</spring-boot-redis.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- OpenAPI 3 -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi</artifactId>
+                <version>${springdoc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!--             导入spring cloud 依赖-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -65,6 +85,13 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <!--         引入 openFeign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-feign</artifactId>
+                <version>${spring-cloud-feign.version}</version>
+            </dependency>
+
 
             <!--             管理 spring-boot 依赖 -->
             <dependency>
@@ -94,6 +121,12 @@
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${spring-boot.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-redis</artifactId>
+                <version>${spring-boot-redis.version}</version>
+            </dependency>
+
             <!--             mysql 相关依赖-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -110,6 +143,18 @@
                 <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-core</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!--             mybatis xml 文件映射 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-annotations.version}</version>
+            </dependency>
+
 
             <!--       引入  druid-spring-boot-starter-->
             <dependency>
@@ -123,7 +168,7 @@
                 <artifactId>spring-boot-starter-log4j2</artifactId>
                 <version>${spring-boot-log4j.version}</version>
             </dependency>
-            <!--            自己的包模块版本管理-->
+            <!--            自己的包模块版本管理   -->
             <dependency>
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-common-web</artifactId>
@@ -141,23 +186,34 @@
                 <artifactId>fun-common-core</artifactId>
                 <version>${basic.version}</version>
             </dependency>
+            <!--         fun-common-captcha -->
+            <dependency>
+                <groupId>io.github.whywhathow</groupId>
+                <artifactId>fun-common-captcha</artifactId>
+                <version>${basic.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.github.whywhathow</groupId>
                 <artifactId>fun-common-log</artifactId>
                 <version>${basic.version}</version>
             </dependency>
-
-            <!--      swagger 配置项      -->
+            <!--         引入fun-data-system-->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>io.github.whywhathow</groupId>
+                <artifactId>fun-system-api</artifactId>
+                <version>${basic.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-webflux-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
             </dependency>
 
             <!--             工具类       -->
@@ -187,6 +243,12 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
+            <!--            滑块验证码 -->
+            <dependency>
+                <groupId>com.anji-plus</groupId>
+                <artifactId>captcha</artifactId>
+                <version>${captcha.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -202,7 +264,7 @@
             <properties>
                 <!--profile.active对应application.yml中的@profile.active@-->
                 <profile.active>dev</profile.active>
-                <nacos.ip>centos-product</nacos.ip>
+                <nacos.ip>zero-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
@@ -212,7 +274,7 @@
             <id>test</id>
             <properties>
                 <profile.active>test</profile.active>
-                <nacos.ip>centos-product</nacos.ip>
+                <nacos.ip>zero-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
@@ -222,7 +284,7 @@
             <id>prod</id>
             <properties>
                 <profile.active>prod</profile.active>
-                <nacos.ip>centos-product</nacos.ip>
+                <nacos.ip>zero-product</nacos.ip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
         </profile>
