@@ -1,6 +1,7 @@
+zero-product: 172.24.100.5 #fake ip=> zerotier ip
 spring:
   redis:
-    host: ${REDIS_HOST:centos-product}
-    port: ${REDIS_PORT:6379} # 公网环境最好修改端口号.
-    password:  # TODO [whywhathow] [2022/4/5] [must]  公网环境下,一定要设置密码
+    host: ${REDIS_HOST:${zero-product}}
+    port: ${REDIS_PORT:16379} # 公网环境最好修改端口号.
+    password: fun-redis # TODO [whywhathow] [2022/4/5] [must]  公网环境下,一定要设置密码
     database: 0

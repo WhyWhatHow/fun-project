@@ -33,8 +33,9 @@ spring:
         login-username: druid
         #后台监控系统密码，默认不需要
         login-password: druid
-        #允许访问 - 白名单ip(只能是ip地址)（逗号分隔）不可以是:  centos-product(x)->192.168.132.150(✔)
-        allow: 127.0.0.1,192.168.132.150
+        #        TODO [whywhathow] [7/5/2022] [must] 修改 ip 地址 when pc changed
+        #允许访问 - 白名单ip(只能是ip地址)（逗号分隔）不可以是:centos-product(x)->192.168.132.150(✔) patch: centos-product-> zero-product
+        allow: 127.0.0.1,192.168.132.150,172.24.100.5,
         #不允许访问 - 黑名单ip（逗号分隔）
         #deny:
       #开启web端监控
