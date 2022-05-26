@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * @create: 2022-02-16 21:56
  **/
 @ComponentScan("com.fun")
+
 @Configuration
 @EnableApiVersion
 @EnableDiscoveryClient // 开启服务注册 TODO [whywhathow] [2022/3/9] [must]  放开

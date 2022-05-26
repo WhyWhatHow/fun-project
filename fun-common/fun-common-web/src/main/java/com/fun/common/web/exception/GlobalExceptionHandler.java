@@ -28,6 +28,11 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    public static final String SERVICE_EXCEPTION = "Service-Exception";
+    public static final String GLOBAL_EXCEPTION = "Global-Exception";
+    public static final String CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolation-Exception";
+
     /**
      * validation exception
      * 处理request  get 请求
@@ -38,21 +43,26 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public R handleConstraintViolationException(ConstraintViolationException ex) {
-        log.warn("[ConstraintViolationException ]- 异常信息{}", ex);
-        return RUtils.createFail(RCode.PARAMENT_ERROR.code,ex.getMessage());
+        LogError(CONSTRAINT_VIOLATION_EXCEPTION, ex);
+        log.warn("[" + CONSTRAINT_VIOLATION_EXCEPTION + " ]- 异常信息{}", ex);
+        return RUtils.createFail(RCode.PARAMENT_ERROR.code, ex.getMessage());
     }
 
     /**
      * 参数校验异常处理
      * post ,put  request 异常处理
      * 触发条件:  post method  中parameter 添加 @validated||@valid 注解 并对DTO对象添加约束条件
+     *
      * @param ex
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.warn("[Method Argument Not Valid Exception] - 捕获到异常信息{}", ex);
+
         List<String> list = ex.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
+
+
         return RUtils.createFail(RCode.PARAMENT_ERROR, list);
     }
 
@@ -67,7 +77,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public R handleBindException(BindException e) {
-        log.warn("[BindException]- 捕获到参数校验异常信息 ->{}", e);
+        log.warn("[Bind-Exception]- 捕获到参数校验异常信息 ->{}", e);
         List<String> list = e.getBindingResult().getAllErrors().stream().map(objectError -> objectError.getDefaultMessage()).collect(Collectors.toList());
         return RUtils.createFail(RCode.PARAMENT_ERROR, list);
     }
@@ -82,8 +92,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public R handleServiceException(ServiceException e) {
-        log.error("[Service-Exception]-- 捕获到业务模块异常信息!");
-        log.error("[service-exception]-- 异常信息{}", e);
+
+        LogError(SERVICE_EXCEPTION, e);
+//        log.error("[Service-Exception]-- 捕获到业务模块异常信息!");
+//        log.error("[service-exception]-- 异常信息{}", e);
         return RUtils.createFail(e.getCode(), e.getMsg());
     }
 
@@ -103,7 +115,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.OK)
     public R handleIllegalArgumentException(IllegalArgumentException ex) {
-        log.error("[Service-Exception]--非法参数,ex = {}", ex.getMessage(), ex);
+//        log.error("[Service-Exception]--非法参数,ex = {}", ex.getMessage(), ex);
+        LogError(SERVICE_EXCEPTION, ex);
         return RUtils.createFail(RCode.SERVER_EXCEPTION.code, ex.getMessage());
     }
 
@@ -117,15 +130,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public R handleThrowable(Throwable ex) {
         //1. 获取request
+        LogError(GLOBAL_EXCEPTION, ex);
+        return RUtils.createFail(RCode.SERVER_EXCEPTION);
+    }
+
+    /**
+     * 记录 异常信息, 包含 url,request parameter , ex info
+     *
+     * @param exName 异常类型
+     * @param ex     exception
+     */
+    private void LogError(String exName, Throwable ex) {
         HttpServletRequest request = HTTPUtils.getHttpServletRequest();
         //2. 将当前request的url 记录到日志中
         String url = request.getRequestURI().toString();
         Map<String, String[]> parameterMap = request.getParameterMap();
-        log.error("[Global-Exception]--捕获到异常信息");
-        log.error("[Global-Exception]-- 请求URL为 {}", url);
-        log.error("[Global-Exception]-- 请求参数为{}", parameterMap);
-        log.error("[Global-Exception]-- 异常信息->{}", ex);
-        return RUtils.createFail(RCode.SERVER_EXCEPTION);
+        log.error("[" + exName + "]--捕获到异常信息");
+        log.error("[" + exName + "]-- 请求URL为 {}", url);
+        log.error("[" + exName + "]-- 请求参数为{}", parameterMap);
+        log.error("[" + exName + "]-- 异常信息->{}", ex);
     }
 
 }
