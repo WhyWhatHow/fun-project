@@ -2,17 +2,24 @@ server:
   port: 9000
 spring:
   cloud:
-    gateway:  #            Gateway 网关默认配置
+    gateway: #            Gateway 网关默认配置
       globalcors: # gateway 跨域问题
         cors-configurations:
           '[/**]':
-            allowedOrigins: "*"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
+            allowedOriginPatterns: "*"           #注意这个设置只对 spring boot 2.4+ 有效，低版本 使用  allowedOrigins: "*" 属性
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            exposedHeaders: "Content-Disposition,Content-Type,Cache-Control"
+      #            allowed-origin-patterns:
+      #              - "*"
+      #            allowedMethods:
+      #              - GET
+      #              - POST
+      #              - PUT
+      #              - DELETE
+      #              - OPTIONS
+      #        add-to-simple-url-handler-mapping: true #
       discovery:
         locator:
           lower-case-service-id: true #服务小写名称匹配
@@ -24,8 +31,8 @@ spring:
           predicates:
             - Path=/v3/api-docs/**
           filters:
-            - RewritePath=/v3/api-docs/(?<path>.*),/$\{path}/v3/api-docs/
-# TODO [whywhathow] [2022/3/25] [must]   测试 rewritePath 格式
+            - RewritePath=/v3/api-docs/(?<path>.*),/$\{path}/v3/api-docs/ # DONE [whywhathow] [2022/3/25] [must]   测试 rewritePath 格式
+
     # 引入sentinel 配置 , 避免sentinel处理uri级别的用户请求
     #            rule-type: gw-flow
     sentinel:
