@@ -6,4 +6,6 @@ spring:
       - time
       - demo
       - mybatis-plus
+  banner:
+    location: banner-larry3d.txt
 #      - springdoc #生产环境不要配置

@@ -7,4 +7,5 @@ spring:
       - time
       - springdoc
       - mybatis-plus
-
+  banner:
+    location: banner-larry3d.txt

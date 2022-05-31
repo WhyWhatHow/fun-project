@@ -7,5 +7,8 @@ spring:
       - time
       - springdoc
       - mybatis-plus
+      - redis
+  banner:
+    location: banner-larry3d.txt
 #  config:
 #    use-legacy-processing: true
