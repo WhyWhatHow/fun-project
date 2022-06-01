@@ -14,7 +14,7 @@
 
 - [ ] 监控模块
 
-    - [ ] sql监控 ->druid
+    - [ ] sql监控 ->druid 默认位置:
 
     - [ ] service 运行监控 -> skywalking
 
@@ -24,21 +24,28 @@
 
     - [ ] coffine,
     - [ ] redis ,
-    - [ ] mysql
+    - [x] mysql
 
-Security oauth2中
+## Security oauth2中
 
-**access_token 什么时候进行jwt 加密, 什么时候做的jwt 解密**
+**access_token 什么时候进行jwt 加密, 什么时候做的jwt 解密 -- 不配置不会用的.**
 
 - [ ] controller 层生成 + 参数校验+ 权限校验 + 自动生成. -> 参考pig-codegen
 - [x] spring-cloud swagger 配置 , maven 配置
 - [ ] maven配置包整理, mysql ->  多数据源 (没有意义)
+- [ ] 添加 JWT 验证 JWTTokenStore,JWTTokenEnhancer .
+- [ ] /oauth/token 返回数据 ?
 
 ### swagger 迁移到springdocs
 
 - [x] springdoc
-  - [ ] 自己去重写
-  - [ ] ReactiveCompositeDiscoveryClient_fun-gateway', predicates=[PredicateDefinition{name='Path', args={pattern=/fun-gateway/**}}], filters=[FilterDefinition{name='RewritePath', args={regexp=/fun-gateway/?(?<remaining>.*), replacement=/${remaining}}}], uri=lb://fun-gateway, order=0, metadata={nacos.instanceId=192.168.80.1#9000#DEFAULT#DEFAULT_GROUP@@fun-gateway, nacos.weight=1.0, nacos.cluster=DEFAULT, nacos.ephemeral=true, nacos.healthy=true, preserved.register.source=SPRING_CLOUD}}
+    - [ ] 自己去重写
+    - [ ] ReactiveCompositeDiscoveryClient_fun-gateway',
+      predicates=[PredicateDefinition{name='Path', args={pattern=/fun-gateway/**}}],
+      filters=[FilterDefinition{name='RewritePath', args={regexp=/fun-gateway/?(?<remaining>.*), replacement=/${remaining}}}]
+      , uri=lb://fun-gateway, order=0, metadata={nacos.instanceId=192.168.80.1#9000#DEFAULT#DEFAULT_GROUP@@fun-gateway,
+      nacos.weight=1.0, nacos.cluster=DEFAULT, nacos.ephemeral=true, nacos.healthy=true,
+      preserved.register.source=SPRING_CLOUD}}
 
 **思路:**
 

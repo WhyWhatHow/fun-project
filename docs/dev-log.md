@@ -14,9 +14,9 @@
 
   Reason:
 
-  ​ Druid select 查询语句 **结果集返回行数限制,**
+  Druid select 查询语句 **结果集返回行数限制,**
 
-  ​	 **stupid ! ! !**
+  ​     **stupid ! ! !**
 
 ### 2022.04.05 服务器中毒
 
@@ -359,24 +359,24 @@ eg:
 
 #### 1. mysql 端密码进行了加密, 然而,前端传过来的数据并没有进行加密处理,sry.
 
-​ * 准确来说, 是在fun-auth认证模块中,没有配置密码加密工具. `BcryptPasswordEncoder`.
+* 准确来说, 是在fun-auth认证模块中,没有配置密码加密工具. `BcryptPasswordEncoder`.
 
 #### 扩展点:
 
 1. 前端密码 明文传输? {username:admin , password:123456} 传输, 还是Encode({username,password}) 加密传输呢 ?
 
-​ 若选择加密传输, 那么,在后端项目中, 需要在网关处进行解密处理,使密码回归原文 在认证模块中通过配置`PasswordEncoder` 即可.
+若选择加密传输, 那么,在后端项目中, 需要在网关处进行解密处理,使密码回归原文 在认证模块中通过配置`PasswordEncoder` 即可.
 
 2. Mysql 数据库中,用户密码 存在 用 明文保存的密码,以及用BcryptPasswordEncoder 保存的密码, 要如何处理 呢,要如何保证前后密码保持一致呢?
 
-​ 思路一: 删除旧有 的明文保存的用户信息 --> 测试账户无法使用,需要重新进行测试.
+思路一: 删除旧有 的明文保存的用户信息 --> 测试账户无法使用,需要重新进行测试.
 
-​ 思路二:**增量更新(在明文密码用户密码校验成功后,将密码进行加密,重新写回mysql) :**  自定义PasswordEncoder, 用户传来的密码是明文, 判断是否与mysql密码匹配,
+思路二:**增量更新(在明文密码用户密码校验成功后,将密码进行加密,重新写回mysql) :**  自定义PasswordEncoder, 用户传来的密码是明文, 判断是否与mysql密码匹配,
 匹配的话,更新密码信息,重新写会mysql.
 
 ​    **思路三: 允许明文密码用户登录,但是提醒用户密码过弱,需要修改密码在登陆.(很常见的一种方案)**
 
-​ 示图:
+示图:
 
 ​    ![前后密码不一致问题](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205261052380.png)
 
@@ -387,4 +387,122 @@ eg:
 
 ### 2022.05.26 NPE
 
-![](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205261140154.png)
+`RedisTokenStore` 创建过程出错,
+
+reason: redisConnectionFactory 没有注入.
+
+```java
+// 成功注入 
+private final  RedisConnectionFactory connectionFactory;
+ 
+```
+
+### 2022.05.27 /oauth/check_token 是否有必要返回如此多的userInfo
+
+```txt
+/oauth/token 可以返回过多的数据
+/oauth/check_token 返回数据需要少, -> 存在平凡调用这个问题
+```
+
+![](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205270918175.png)
+
+### 2022.05.28  如何解决feign调用其他服务之间的权限授权流程.
+
+![ a-b-c](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205291403430.png)
+
+A,B,C 均为资源服务器.
+
+#### 思路:
+
+1. authorization 传递, 如果A 已经获取用户授权信息后, user请求A服务的request header 头中的 authorization 传递下去.
+
+* **
+  Ref: [Spring_Bearer_token_propagation](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/bearer-tokens.html#_bearer_token_propagation)**
+
+* 问题: A 服务在未授权的情况(eg: 用户登录 )下, 不可以访问B服务 即 A调用B接口方法
+    * 解决方案:暴露 B服务端口, 在整个微服务架构中, 保证api网关模块 对外开放, 以及前端ui页面对公网开放, 必要条件: 保证内网环境的安全.
+        * 缺点:
+            *
+                1. 无法保证内网环境的安全.
+                2. B服务的这个接口会永久开放,其他服务可以不需要权限校验即可进行访问.
+                3. 不利于扩展, 当consumer端即A服务 发生变化时, provider端B也要跟着变化.
+
+2. [Pig](https://www.yuque.com/pig4cloud/pig/fnxmvq)解决方案: 本质 在resource-server 端添加url(放行 即**permitAll()**) ,
+   将url访问控制通过AOP进行过滤.
+
+    * 优势: 只需要在consumer端发生变化, 不需要修改provider端.
+
+Eg: /oauth/token , 没有access_token , 要怎么添加呢?
+
+问题分析:
+
+1. **ui->fun-gateway-> fun-service-XXX : 外部连接调用**, 检查 http request header 中是否有 authorization "Bearer XX" , 没有直接返回未授权.
+
+![bearerauthenticationentrypoint](https://docs.spring.io/spring-security/reference/_images/servlet/oauth2/bearerauthenticationentrypoint.png)
+
+2. 微服务间 接口调用
+
+   ![ a-b-c](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205291403430.png)
+
+    1. 用户未登录: ui->fun-gateway->fun-auth->fun-sevice-XXX:
+
+
+2. 用户已登录: ui->fun-gateway(header filter 过滤, 添加authorization)
+
+​
+
+#### ref:
+
+> [Pig- Inner](https://www.yuque.com/pig4cloud/pig/hz5ppn)
+
+### 2022.05.30 Invalid access token
+
+#### reason:
+
+Resource-server端没有设置TokenStore, 默认访问`InMemoryTokenStore` ,访问出错.
+
+![Invalid_access_Token](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205301235529.png)
+
+#### solution:
+
+配置redistokenstore.
+
+### 2022.05.30 tokenInfoUri,userInfoUri is null
+
+![](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205301449248.png)
+
+#### reason:
+
+没有配置 security.oauth.resource.tokenInfouri (**配置的话, 会远程调用 fun-auth 服务, 也就是说, 会多一次 http请求)**.
+
+没有配置 jwt verify 验证模式.
+
+#### solution:
+
+1. 配置tokenInfoUri -> pig解决方案.
+
+   简述:
+
+    	1. 首先，Token 可以保存在数据库或 Redis 中，资源服务器和授权服务器共享底层的 TokenStore 来验证；
+    	
+    	2. 然后，资源服务器可以使用 RemoteTokenServices，来从授权服务器的 /oauth/check_token 端点进行 Token 校验。
+
+   step:
+
+   ​ 1.在resources-server下 application.yml 配置 security.oauth.resource.tokenInfoUri=http://fun-auth/oauth/check_token
+
+   ​ 2.在resources-server 配置文件中注入remoteTokenServices.
+
+   缺点:
+
+   	1. 网络问题 `RestTemplate` 远程调用时 包**UnknownUrlError** 
+
+       ![ ](https://cdn.jsdelivr.net/gh/whywhathow/image-hosting@main/img/202205301530253.png)
+
+       solution: 没有注入 loadbalancer ,**@loadbalance 不代表你不需要注入 spring-cloud-starter-loadbalancer** 
+
+
+2. JWT 配置, 也就是说授权服务器配置私钥, resource-server 端配置公钥. 公私钥 验证的方案可以少一次request请求.
+
+- [ ] 修改成JWT格式.
+

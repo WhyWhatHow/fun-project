@@ -1,7 +1,6 @@
 
 
-![multi securityfilterchain](../../../MyInfo/BlogV2/source/images/multi-securityfilterchain.png)
-
+![multi securityfilterchain](img_13.png)
 **SecurityFilterChain  -> Spring Security 核心filter**
 
  最长前缀匹配原则 /app/hello/**  > /app/**
@@ -49,21 +48,28 @@
 
 ## SpringSecurity 异常处理
 
-![exceptiontranslationfilter](../../../MyInfo/BlogV2/source/images/exceptiontranslationfilter.png)
+![exceptiontranslationfilter](exceptiontranslationfilter.png)
 
 
 
 - ![number 1](https://docs.spring.io/spring-security/reference/_images/icons/number_1.png) First, the `ExceptionTranslationFilter` invokes `FilterChain.doFilter(request, response)` to invoke the rest of the application.
-- ![number 2](https://docs.spring.io/spring-security/reference/_images/icons/number_2.png) If the user is not authenticated or it is an `AuthenticationException`, then *Start Authentication*.
-  - The [SecurityContextHolder](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder) is cleared out
-  - The `HttpServletRequest` is saved in the [`RequestCache`](https://docs.spring.io/spring-security/site/docs/5.6.2/api/org/springframework/security/web/savedrequest/RequestCache.html). When the user successfully authenticates, the `RequestCache` is used to replay the original request.
-  - The `AuthenticationEntryPoint` is used to request credentials from the client. For example, it might redirect to a log in page or send a `WWW-Authenticate` header.
-- ![number 3](../../../MyInfo/BlogV2/source/images/number_3.png) Otherwise if it is an `AccessDeniedException`, then *Access Denied*. The `AccessDeniedHandler` is invoked to handle access denied.
+- ![number 2](https://docs.spring.io/spring-security/reference/_images/icons/number_2.png) If the user is not
+  authenticated or it is an `AuthenticationException`, then *Start Authentication*.
+    -
+    The [SecurityContextHolder](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder)
+    is cleared out
+    - The `HttpServletRequest` is saved in
+      the [`RequestCache`](https://docs.spring.io/spring-security/site/docs/5.6.2/api/org/springframework/security/web/savedrequest/RequestCache.html)
+      . When the user successfully authenticates, the `RequestCache` is used to replay the original request.
+    - The `AuthenticationEntryPoint` is used to request credentials from the client. For example, it might redirect to a
+      log in page or send a `WWW-Authenticate` header.
+- ![number 3](https://docs.spring.io/spring-security/reference/_images/icons/number_3.png) Otherwise if it is
+  an `AccessDeniedException`, then *Access Denied*. The `AccessDeniedHandler` is invoked to handle access denied.
 
 ## Servlet Authentication 架构
 
-- [x] `SecurityContextHolder` : 存放  用户认证的详细信息'  uses a `ThreadLocal` to store these detai
-- [x] `SecurityContext` : 
+- [x] `SecurityContextHolder` : 存放 用户认证的详细信息' uses a `ThreadLocal` to store these detail
+- [x] `SecurityContext` :
 - [x] `Authentication`:
 
 - ​	 AuthenticationManager 输入, 判断 是否已认证 isAuthenticated()
@@ -119,7 +125,7 @@
 
 未授权用户重定向到 /login 页面 流程.
 
-![loginurlauthenticationentrypoint](../../../MyInfo/BlogV2/source/images/loginurlauthenticationentrypoint.png)
+![loginurlauthenticationentrypoint](loginurlauthenticationentrypoint.png)
 
 **Filter 执行具体流程**
 
@@ -170,15 +176,32 @@ CustomUserDetailsService customUserDetailsService() {
 
 ![daoauthenticationprovider](https://docs.spring.io/spring-security/reference/_images/servlet/authentication/unpwd/daoauthenticationprovider.png)
 
-> ![number 1](../../../MyInfo/BlogV2/source/images/number_1.png) The authentication `Filter` from [Reading the Username & Password](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html#servlet-authentication-unpwd-input) passes a `UsernamePasswordAuthenticationToken` to the `AuthenticationManager` which is implemented by [`ProviderManager`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-providermanager).
+> ![number 1](https://docs.spring.io/spring-security/reference/_images/icons/number_1.png) The authentication `Filter`
+> from [Reading the Username & Password](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/index.html#servlet-authentication-unpwd-input)
+> passes a `UsernamePasswordAuthenticationToken` to the `AuthenticationManager` which is implemented
+> by [`ProviderManager`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-providermanager)
+> .
 >
-> ![number 2](../../../MyInfo/BlogV2/source/images/number_2.png) The `ProviderManager` is configured to use an [AuthenticationProvider](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationprovider) of type `DaoAuthenticationProvider`.
+> ![number 2](https://docs.spring.io/spring-security/reference/_images/icons/number_2.png) The `ProviderManager` is
+> configured to use
+> an [AuthenticationProvider](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authenticationprovider)
+> of type `DaoAuthenticationProvider`.
 >
-> ![number 3](../../../MyInfo/BlogV2/source/images/number_3-16474855603083.png) `DaoAuthenticationProvider` looks up the `UserDetails` from the `UserDetailsService`.
+> ![number 3](https://docs.spring.io/spring-security/reference/_images/icons/number_3.png) `DaoAuthenticationProvider`
+> looks up the `UserDetails` from the `UserDetailsService`.
 >
-> ![number 4](../../../MyInfo/BlogV2/source/images/number_4.png) `DaoAuthenticationProvider` then uses the [`PasswordEncoder`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/password-encoder.html#servlet-authentication-password-storage) to validate the password on the `UserDetails` returned in the previous step.
+> ![number 4](https://docs.spring.io/spring-security/reference/_images/icons/number_4.png) `DaoAuthenticationProvider`
+> then uses
+> the [`PasswordEncoder`](https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/password-encoder.html#servlet-authentication-password-storage)
+> to validate the password on the `UserDetails` returned in the previous step.
 >
-> ![number 5](../../../MyInfo/BlogV2/source/images/number_5.png) When authentication is successful, the [`Authentication`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authentication) that is returned is of type `UsernamePasswordAuthenticationToken` and has a principal that is the `UserDetails` returned by the configured `UserDetailsService`. Ultimately, the returned `UsernamePasswordAuthenticationToken` will be set on the [`SecurityContextHolder`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder) by the authentication `Filter`.
+> ![number 5](https://docs.spring.io/spring-security/reference/_images/icons/number_5.png) When authentication is
+> successful,
+> the [`Authentication`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-authentication)
+> that is returned is of type `UsernamePasswordAuthenticationToken` and has a principal that is the `UserDetails` returned
+> by the configured `UserDetailsService`. Ultimately, the returned `UsernamePasswordAuthenticationToken` will be set on
+> the [`SecurityContextHolder`](https://docs.spring.io/spring-security/reference/servlet/authentication/architecture.html#servlet-authentication-securitycontextholder)
+> by the authentication `Filter`.
 
 认证成功, 返回 `Authentication` 
 
@@ -283,8 +306,6 @@ spring:
 	*	Get: getAccessToken() ,转发给postAcceessToken()
 	*	Post: postAccessToken() : 1根据client,构建tokenRequest 2.scope 校验 3. 生成access_token.
 
- 
-
 ### 资源服务器核心源码分析:
 
 资源服务器的核心是OAuth2AuthenticationProcessingFilter过滤器
@@ -309,11 +330,9 @@ spring:
 
 > 引用: [原文链接](https://blog.nowcoder.net/n/071a106a735a49cc813972a05aaa219c)
 
-![img](../../../MyInfo/BlogV2/source/images/6097269_1587133036561_13E1273EA079E95F91C22049052258D1.png)
+![img](6097269_1587133036561_13E1273EA079E95F91C22049052258D1.png)
 
-
-
-Filter : 
+Filter :
 
 ​	处于最外层，**能拿到请求（request）和响应（response)**
 
@@ -454,13 +473,13 @@ ExceptionTranslationFilter
 
 
 
-答: UserDetailsService.loadusername() 指定 用户名的校验方案. 
+答: UserDetailsService.loadusername() 指定 用户名的校验方案.
 
 Spring-Boot-autoconfiguration 配置类
 
-UserDetailServices 加载时间?
+UserDetailServices 加载 [springdoc-groupAPI.md](springdoc-groupAPI.md) 时间?
 
--> 用户自定义加载 
+-> 用户自定义加载
 
 ### Spring Security 什么时候注入的filter,自定义filter 要如何注入?
 
