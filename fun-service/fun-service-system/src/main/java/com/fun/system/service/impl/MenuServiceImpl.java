@@ -2,6 +2,7 @@ package com.fun.system.service.impl;
 
 import cn.hutool.core.lang.tree.TreeNode;
 import cn.hutool.core.lang.tree.TreeUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fun.system.api.entity.Menu;
@@ -31,14 +32,27 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     /**
      * TODO [whywhathow] [2022/4/14]  [opt] mysql 递归查询, 需要添加缓存来处理
      * <p>
-     * 通过MenuId查询当前分类下的所有menu
      *
      * @param menuId 菜单id
      * @return
      */
     @Override
     public Menu getById(Integer menuId) {
-        return null;
+        Menu menu = mapper.selectById(menuId);
+        return menu;
+    }
+
+    /**
+     * 获取当前roleId的menus
+     *
+     * @param roleId
+     * @param parentId
+     * @return
+     */
+    @Override
+    public List getUserMenusByRoleId(long roleId, Integer parentId) {
+        List<Menu> menus = mapper.selectByRoleId(roleId);
+        return buildMenuTree(menus, parentId);
     }
 
 
@@ -79,6 +93,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public Set<Menu> listByRoleId(Long roleId) {
         return mapper.listByRoleId(roleId);
+    }
+
+    @Override
+    public List<Menu> batchSelectByRoleIds(Integer parentId, Long[] roleIds) {
+        if (parentId == null) {
+            parentId = -1;
+        }
+        HashSet<Menu> resList = new HashSet<>();
+        for (Long roleId : roleIds) {
+            resList.addAll(mapper.selectByRoleId(roleId));
+        }
+
+        List<Menu> collect = resList.stream()
+//                只保留索引页面即可.
+                .filter(menu -> StrUtil.isNotBlank(menu.getPath()))
+                .collect(Collectors.toList());
+        return buildMenuTree(collect, parentId);
     }
 
     private List buildMenuTree(List<Menu> menus, Integer parentId) {
