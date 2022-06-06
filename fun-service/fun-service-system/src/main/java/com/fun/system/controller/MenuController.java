@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,7 @@ import javax.validation.constraints.NotNull;
 @Slf4j
 @RequestMapping("menu")
 public class MenuController {
+    public static final String MENU_TREE = "menu_tree";
     @Resource
     private final MenuService menuService;
 
@@ -55,7 +58,7 @@ public class MenuController {
      * @return
      */
     @Operation(description = "根据roleIds查询对应的menuId")
-    @GetMapping()
+    @GetMapping
     public R selectByRoleIds(Integer parentId, Long[] roles) {
         return R.ok(menuService.batchSelectByRoleIds(parentId, roles));
     }
@@ -70,8 +73,16 @@ public class MenuController {
      */
     @Operation(description = "根据parentId 返回对应的menu列表")
     @GetMapping("/tree")
+    @Cacheable(value = MENU_TREE, key = "#parentId")
     public R menuTree(@Min(-1) Integer parentId) {
         return R.ok(menuService.menuTree(parentId));
+    }
+
+    @Operation(description = "清除Menu_tree缓存")
+    @GetMapping("/clear")
+    @CacheEvict(value = MENU_TREE, allEntries = true)
+    public R clearMenuTree() {
+        return R.ok();
     }
 
     /**
@@ -100,19 +111,6 @@ public class MenuController {
     public R getById(@PathVariable("menuId") Integer menuId) {
         return R.ok(menuService.getById(menuId));
     }
-//
-//    /**
-//     * 获取  当前用户的menu
-//     *
-//     * @param parentId
-//     * @return
-//     */
-//    @Operation(summary = "通过menuId查询", description = "通过menuId查询")
-//    @GetMapping("")
-//    public R<List<Tree<Long>>> getUserMenus(@NotNull Integer parentId) {
-//        UserInfo user = SecurityUtils.getUser();
-//        return R.ok(user.getPermissions());
-//    }
 
 
     /**
@@ -123,8 +121,10 @@ public class MenuController {
      */
     @Operation(summary = "通过id删除menu", description = "通过id删除menu")
     @DeleteMapping("/{menuId}")
+    @CacheEvict(value = "menu_details", key = "menuId", allEntries = true)
+
     public R removeById(@PathVariable @NotNull Integer menuId) {
-        return R.ok(menuService.removeByMenuId(menuId));
+        return R.ok(menuService.removeById(menuId));
     }
 
     /**
@@ -147,36 +147,9 @@ public class MenuController {
      */
     @Operation(summary = "修改menu", description = "修改menu")
     @PutMapping
+    @CacheEvict(value = "menu_details", key = "#menu.menuId")
     public R updateById(@RequestBody @Valid Menu menu) {
         return R.ok(menuService.updateById(menu));
     }
-
-    /**
-     * 获取当前用户的menus
-     * 无法实现, 不想将roleIds 放在authentication中
-     * @param parentId
-     * @return
-     */
-//    @Deprecated
-//    @GetMapping
-//    @Operation(summary = "获取当前登录用户的menus", description = "获取当前登录用户的menus")
-//    public R getUserMenuInfo(Integer parentId) {
-////        TODO [whywhathow] [31/5/2022] [must] change , 不重要
-//        List<Long> roles = SecurityUtils.getRoles();
-//        if (CollectionUtils.isEmpty(roles)) {
-//            return R.ok(Collections.emptyList());
-//        }
-//        if (ObjectUtils.isEmpty(parentId)) {
-//            parentId = -1;
-//        }
-//        Integer finalParentId = parentId;
-//        List<Menu> collect = roles.stream()
-//                .map(roleId -> {
-//                    return menuService.getUserMenusByRoleId(roleId, finalParentId);
-//                })
-//                .flatMap(Collection::stream)
-//                .collect(Collectors.toList());
-//        return R.ok(collect);
-//    }
 }
 

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +64,7 @@ public class OauthClientDetailsController {
      */
     @Operation(summary = "通过id删除oauthClientDetails", description = "通过id删除oauthClientDetails")
     @DeleteMapping("/{clientId}")
+    @CacheEvict(value = "clientDetails", key = "#clientId")
     public R removeById(@PathVariable @NotBlank String clientId) {
         return R.ok(oauthClientDetailsService.removeById(clientId));
     }

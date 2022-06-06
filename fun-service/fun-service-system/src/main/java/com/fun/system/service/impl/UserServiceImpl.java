@@ -35,12 +35,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     final UserMapper userMapper;
     final MenuService menuService;
-    //TODO [whywhathow] [2022/4/18]  [opt]  think 是否需要 创建 userRoleService 用来实现
+    //Done [whywhathow] [2022/4/18]  [opt]  think 是否需要 创建 userRoleService 用来实现,  -->简单处理了
     final UserRoleMapper userRoleMapper;
 
 
     /**
-     * TODO [whywhathow] [2022/4/11] [must] 添加缓存
+     * TODO [whywhathow] [2022/4/11] [must] 添加缓存 , 以及用户名是手机号,邮箱的处理情况.
      * 根据用户名获取用户基本信息, 权限信息, 角色信息</br>
      * 1. 根据用户名获取用户信息</br>
      * 2. 根据用户名获取roleIds</br>
@@ -51,11 +51,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 2.扩展性: 多表查询不利于后期维护,此项目中可以忽略掉</br>
      * 3.读性能: 多表查询读性能+缓存与join查询大致相当
      *
-     * @param username 用户名, 也可以是手机号
+     * @param username 用户名.
      * @return UserInfo
      */
 ////
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UserInfo getUserInfoByUsername(String username) {
 
         User user = userMapper.selectOne(new QueryWrapper(new User(username)));

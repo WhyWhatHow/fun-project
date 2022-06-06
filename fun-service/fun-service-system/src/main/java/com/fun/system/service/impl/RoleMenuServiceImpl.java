@@ -7,6 +7,7 @@ import com.fun.system.api.vo.RoleVo;
 import com.fun.system.service.RoleMenuService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -27,21 +28,21 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean saveRoleMenus(RoleVo roleVo) {
 
-        if (ObjectUtils.isEmpty(roleVo.getMenuIds())) {
+        Boolean aBoolean = mapper.delByRoleId(roleVo.getRoleId());
+        if (!aBoolean || ObjectUtils.isEmpty(roleVo.getMenuIds())) {
             return true;
         }
-
-        List<RoleMenu> roleMenus =new ArrayList<>(16);
-        roleVo.split().forEach(val->{
-            RoleMenu roleMenu =new RoleMenu();
+        List<RoleMenu> roleMenus = new ArrayList<>(16);
+        roleVo.split().forEach(val -> {
+            RoleMenu roleMenu = new RoleMenu();
             roleMenu.setRoleId(roleVo.getRoleId());
             roleMenu.setMenuId(val);
+            roleMenus.add(roleMenu);
         });
-
         return this.saveBatch(roleMenus);
-
     }
 
     @Override

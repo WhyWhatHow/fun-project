@@ -1,12 +1,14 @@
 package com.fun.common.core.domain;
 
+import java.io.Serializable;
+
 /**
  * @program: fun-project
  * @description: service统一返回对象 Result ->R
  * @author: WhyWhatHow
  * @create: 2022-02-17 12:58
  **/
-public class R <T> {
+public class R<T> implements Serializable {
 
     /**
      * 响应码
@@ -21,19 +23,22 @@ public class R <T> {
      */
     private T data;
 
+
     public R() {
     }
 
     /**
      * 利用 ResultCode 枚举类创建
+     *
      * @param codes
      * @param data
      */
-    public R(RCode codes, T data){
+    public R(RCode codes, T data) {
         this.code = codes.code;
         this.msg = codes.msg;
         this.data = data;
     }
+
     public R(Integer code, String msg, T data) {
         this.code = code;
         this.msg = msg;
@@ -80,6 +85,17 @@ public class R <T> {
     /**
      * 请求成功, 返回一个 success  result对象
      *
+     * @param <T>
+     * @return
+     */
+    public static <T> R ok() {
+//        return new R(RCodes.SUCCESS.)
+        return new R(RCode.SUCCESS, null);
+    }
+
+    /**
+     * 请求成功, 返回一个 success  result对象
+     *
      * @param data
      * @param <T>
      * @return
@@ -103,6 +119,7 @@ public class R <T> {
 
     /**
      * 利用ResultCode 构建失败 响应
+     *
      * @param code
      * @param <T>
      * @return
@@ -113,12 +130,13 @@ public class R <T> {
 
     /**
      * 利用ResultCode , 携带响应数据 构建失败 响应
+     *
      * @param code
      * @param data
      * @param <T>
      * @return
      */
-    public static <T> R failed(RCode code,T data) {
+    public static <T> R failed(RCode code, T data) {
         return new R(code, data);
     }
 }

@@ -1,8 +1,10 @@
 package com.fun.system;
 
+import com.fun.common.security.annotation.EnableFunResourceServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
@@ -13,7 +15,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  **/
 @MapperScan({"com.fun.system.api.mapper", "com.fun.system.mapper"})
 @EnableFeignClients(value = "com.fun")
+@EnableFunResourceServer
 @SpringBootApplication
+@EnableCaching
 public class FunSystemApplication {
 
     public static void main(String[] args) {

@@ -3,8 +3,6 @@ package com.fun.system.controller;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fun.common.core.domain.R;
-import com.fun.common.core.domain.RCode;
-import com.fun.common.web.exception.ServiceException;
 import com.fun.system.api.entity.Role;
 import com.fun.system.api.vo.RoleVo;
 import com.fun.system.service.RoleMenuService;
@@ -13,13 +11,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**done
@@ -67,12 +63,13 @@ public class RoleController {
     /**
      * 通过id删除role ,以及 sys_role_menu
      * done
+     *
      * @param roleId id
      * @return R
      */
     @Operation(summary = "通过id删除role", description = "通过id删除role")
     @DeleteMapping("/{roleId}")
-    public R removeById(@PathVariable @NotBlank Long roleId) {
+    public R removeById(@PathVariable @NotNull Long roleId) {
         return R.ok(roleService.removeById(roleId));
     }
 
@@ -101,19 +98,17 @@ public class RoleController {
     }
 
     /**
+     * TODO [whywhathow] [2/6/2022] [must] cache clear point
      * 为角色添加权限
+     * 思路 : 先删后建立
      *  done
+     *
      * @param roleVo role
      * @return true or false
      */
     @Operation(summary = "修改role", description = "修改role")
     @PutMapping("/menu")
     public R saveRoleMenus(@RequestBody @Validated RoleVo roleVo) {
-        Role role = roleService.getById(roleVo.getRoleId());
-        if (ObjectUtils.isEmpty(role)) {
-            log.error("[update-role-menu]-Error: role 不存在");
-            throw new ServiceException(RCode.ROLE_NOT_EXIST);
-        }
         return R.ok(roleMenuService.saveRoleMenus(roleVo));
     }
 }

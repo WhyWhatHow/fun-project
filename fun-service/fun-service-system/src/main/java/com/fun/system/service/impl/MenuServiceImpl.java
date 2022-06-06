@@ -5,11 +5,13 @@ import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fun.common.core.constants.CacheConstants;
 import com.fun.system.api.entity.Menu;
 import com.fun.system.api.mapper.MenuMapper;
 import com.fun.system.service.MenuService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +39,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      * @return
      */
     @Override
+    @Cacheable(value = CacheConstants.MENU_DETAILS + "#2000", key = "#menuId")
     public Menu getById(Integer menuId) {
         Menu menu = mapper.selectById(menuId);
         return menu;
@@ -64,6 +67,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     //TODO [whywhathow] [2022/4/14] [must] 缓存添加  hint:需要考虑缓存失效问题
     @Override
+    @Cacheable(cacheNames = CacheConstants.MENU_DETAILS + "#2000", key = "#roleId")
     public List selectByRoleId(Long roleId) {
         List<Menu> menus = mapper.selectByRoleId(roleId);
         if (CollectionUtils.isEmpty(menus)) {

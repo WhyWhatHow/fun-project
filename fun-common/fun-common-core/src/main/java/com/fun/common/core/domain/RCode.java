@@ -31,15 +31,20 @@ public enum RCode {
      */
     ERROR_LOGIN_NOT_EMPTY(510, "账号或密码不能为空"),
 
+    ERROR_LOGIN_FEIGN(500, "用户登陆失败,请校验日志-feign"),
+
+    CLIENT_INFO_NOT_FOUND(500, "客户端信息不存在||未注册"),
+    ERROR_CAPTCHA(510, "验证码校验失败,请重新登录"),
+
     ERROR_LOGIN_LOCK(511, "密码输错次数过多,已被锁定30分钟"),
 
     ERROR_LOGIN_FAILED(512, "用户名密码错误"),
 
-    USER_NOT_EXIST(513,"用户不存在"),
+    USER_NOT_EXIST(513, "用户不存在"),
 
-    ROLE_NOT_SET_YET(514,"未给当前用户分配角色"),
+    ROLE_NOT_SET_YET(514, "未给当前用户分配角色"),
 
-    ROLE_NOT_EXIST(515,"角色不存在"),
+    ROLE_NOT_EXIST(515, "角色不存在"),
 
 
     ;
