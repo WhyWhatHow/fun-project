@@ -43,7 +43,6 @@ fun-project
 
 - Email:
   - whywhathow.fun@gmail.com
-  - nash.whywhathow@gmail.com
   - 1246389103@qq.com
 
 
