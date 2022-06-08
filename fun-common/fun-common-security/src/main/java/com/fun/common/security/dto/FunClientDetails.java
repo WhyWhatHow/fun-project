@@ -1,4 +1,4 @@
-package com.fun.auth.dto;
+package com.fun.common.security.dto;
 
 import com.fun.system.api.entity.OauthClientDetails;
 

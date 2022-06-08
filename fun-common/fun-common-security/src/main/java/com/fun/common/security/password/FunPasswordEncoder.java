@@ -1,4 +1,4 @@
-package com.fun.auth.password;
+package com.fun.common.security.password;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

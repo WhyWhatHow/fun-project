@@ -5,16 +5,26 @@
     <parent>
         <artifactId>fun-common</artifactId>
         <groupId>io.github.whywhathow</groupId>
-        <version>1.0</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fun-common-security</artifactId>
 
     <description>
-        security 公共 包
+        security 公共包
     </description>
     <dependencies>
+        <!--         yaml 配置提示  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.github.whywhathow</groupId>
+            <artifactId>fun-system-api</artifactId>
+        </dependency>
         <!--         引入 spring-security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -26,5 +36,23 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--         引入资源服务器-->
+        <dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-redis</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+
     </dependencies>
 </project>

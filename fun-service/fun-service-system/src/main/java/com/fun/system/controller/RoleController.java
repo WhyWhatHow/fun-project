@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +70,8 @@ public class RoleController {
      */
     @Operation(summary = "通过id删除role", description = "通过id删除role")
     @DeleteMapping("/{roleId}")
+
+    @PreAuthorize("hasAuthority('sys_role_del')")
     public R removeById(@PathVariable @NotNull Long roleId) {
         return R.ok(roleService.removeById(roleId));
     }
@@ -81,6 +84,7 @@ public class RoleController {
      */
     @Operation(summary = "新增role", description = "新增role")
     @PostMapping
+    @PreAuthorize("hasAuthority('sys_role_add')")
     public R save(@RequestBody @Valid Role role) {
         return R.ok(roleService.save(role));
     }
@@ -93,6 +97,7 @@ public class RoleController {
      */
     @Operation(summary = "修改role", description = "修改role")
     @PutMapping
+    @PreAuthorize("hasAuthority('sys_role_edit')")
     public R updateById(@RequestBody @Valid Role role) {
         return R.ok(roleService.updateById(role));
     }
@@ -108,6 +113,7 @@ public class RoleController {
      */
     @Operation(summary = "修改role", description = "修改role")
     @PutMapping("/menu")
+    @PreAuthorize("hasAuthority('sys_role_perm')")
     public R saveRoleMenus(@RequestBody @Validated RoleVo roleVo) {
         return R.ok(roleMenuService.saveRoleMenus(roleVo));
     }

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -123,6 +124,7 @@ public class MenuController {
     @DeleteMapping("/{menuId}")
     @CacheEvict(value = "menu_details", key = "menuId", allEntries = true)
 
+    @PreAuthorize("hasAuthority('sys_menu_del')")
     public R removeById(@PathVariable @NotNull Integer menuId) {
         return R.ok(menuService.removeById(menuId));
     }
@@ -135,6 +137,8 @@ public class MenuController {
      */
     @Operation(summary = "新增menu", description = "新增menu")
     @PostMapping
+
+    @PreAuthorize("hasAuthority('sys_menu_add')")
     public R save(@RequestBody @Valid Menu menu) {
         return R.ok(menuService.save(menu));
     }
@@ -148,6 +152,7 @@ public class MenuController {
     @Operation(summary = "修改menu", description = "修改menu")
     @PutMapping
     @CacheEvict(value = "menu_details", key = "#menu.menuId")
+    @PreAuthorize("hasAuthority('sys_menu_edit')")
     public R updateById(@RequestBody @Valid Menu menu) {
         return R.ok(menuService.updateById(menu));
     }

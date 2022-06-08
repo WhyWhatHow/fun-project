@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Deprecated
 public class StatementTest {
     public static void main(String[] args) {
+
 //        testArrayList();
 //        treeNodeTest();
         testCompleteFuture();

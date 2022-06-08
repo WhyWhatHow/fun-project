@@ -1,9 +1,10 @@
-package com.fun.auth.dto;
+package com.fun.common.security.dto;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @program: fun-project
@@ -28,6 +29,19 @@ public class FunUserDetails extends User {
      */
     private String email;
 
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
+    }
+
+    /**
+     * roleIds
+     */
+    private List<Long> roleIds;
+
     public String getEmail() {
         return email;
     }
@@ -37,11 +51,12 @@ public class FunUserDetails extends User {
     }
 
     public FunUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities,
-                          Long userId, String email, String phone) {
+                          Long userId, String email, String phone, List<Long> rolesId) {
         super(username, password, authorities);
         this.email = email;
         this.id = id;
         this.phone = this.phone;
+        this.roleIds = rolesId;
     }
 
     public FunUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, Long id, String phone) {

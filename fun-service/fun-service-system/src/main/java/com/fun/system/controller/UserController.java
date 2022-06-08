@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,6 +82,7 @@ public class UserController {
     @Operation(summary = "通过id删除user", description = "通过id删除user")
     @DeleteMapping("/{userId}")
     @CacheEvict(value = CacheConstants.USER_INFO, allEntries = true)
+    @PreAuthorize("hashAuthority('sys_user_del')")
     public R removeById(@PathVariable @NotNull Long userId) {
         return R.ok(userService.removeByUserId(userId));
     }
@@ -93,6 +95,7 @@ public class UserController {
      */
     @Operation(summary = "新增user", description = "新增user")
     @PostMapping
+    @PreAuthorize("hasAuthority('sys_user_add')")
     public R save(@RequestBody @Valid UserRequest user) {
         return R.ok(userService.saveUser(user));
     }
@@ -106,6 +109,7 @@ public class UserController {
     @Operation(summary = "修改user", description = "修改user")
     @PutMapping
     @CacheEvict(value = CacheConstants.USER_INFO, key = "#user.username")
+    @PreAuthorize("hasAuthority('sys_user_edit')")
     public R update(@RequestBody @Valid UserRequest user) {
         return R.ok(userService.update(user));
     }
