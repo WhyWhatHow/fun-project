@@ -38,20 +38,20 @@ RBAC permission management system based on Spring Boot, Spring-cloud and Spring-
 
 ```
 fun-project
-|- fun-api 服务模块api(包含entity,dto,vo,feign...)
-	|- fun-system-api      -- system 模块api
-|- fun-auth   -- 授权服务 [10000] 
-|_ fun-common   -- 公共模块  
-	|- fun-common-cache    -- 多级缓存配置 (todo, 待实现)
-	|- fun-common-captcha  -- 滑块验证码配置模块(适配webflux)
-	|- fun-common-core     -- 基类以及utils 
-	|- fun-common-log      -- log日志配置
-    |- fun-common-security -- 资源服务通用配置
-    |_ fun-common-web      -- spring-boot-web 通用模块配置
-|- fun-config  -- 通用配置模块(包含prod,test,dev等多种环境,后期可以自行替换,也可以直接保存nacos中)
-|- fun-gateway -- 网关模块 [9000]
-|- fun-service -- 微服务模块
-	|- fun-service-system -- 系统管理模块 [11000]
+|- fun-api  services-api(include entity,dto,vo,feign...)
+	|- fun-system-api      -- service-system-api
+|- fun-auth   -- auth-server [10000] 
+|_ fun-common     
+	|- fun-common-cache    
+	|- fun-common-captcha  
+	|- fun-common-core      
+	|- fun-common-log      
+    |- fun-common-security  -- resource-server 
+    |_ fun-common-web     
+|- fun-config  -- common-config in application.yml
+|- fun-gateway --  Gatway  [9000]
+|- fun-service --
+	|- fun-service-system -- service-system (RBAC)  [11000]
     
 ```
 ---
