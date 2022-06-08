@@ -60,7 +60,7 @@ public class MenuController {
      */
     @Operation(description = "根据roleIds查询对应的menuId")
     @GetMapping
-    public R selectByRoleIds(Integer parentId, Long[] roles) {
+    public R selectByRoleIds(Long parentId, Long[] roles) {
         return R.ok(menuService.batchSelectByRoleIds(parentId, roles));
     }
 
@@ -75,7 +75,7 @@ public class MenuController {
     @Operation(description = "根据parentId 返回对应的menu列表")
     @GetMapping("/tree")
     @Cacheable(value = MENU_TREE, key = "#parentId")
-    public R menuTree(@Min(-1) Integer parentId) {
+    public R menuTree(@Min(-1) Long parentId) {
         return R.ok(menuService.menuTree(parentId));
     }
 
@@ -109,7 +109,7 @@ public class MenuController {
      */
     @Operation(summary = "通过menuId查询", description = "通过menuId查询")
     @GetMapping("/{menuId}")
-    public R getById(@PathVariable("menuId") Integer menuId) {
+    public R getById(@PathVariable("menuId") Long menuId) {
         return R.ok(menuService.getById(menuId));
     }
 
@@ -125,7 +125,7 @@ public class MenuController {
     @CacheEvict(value = "menu_details", key = "menuId", allEntries = true)
 
     @PreAuthorize("hasAuthority('sys_menu_del')")
-    public R removeById(@PathVariable @NotNull Integer menuId) {
+    public R removeById(@PathVariable @NotNull Long menuId) {
         return R.ok(menuService.removeById(menuId));
     }
 

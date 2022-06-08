@@ -32,7 +32,7 @@ public class Menu extends BaseEntity {
 
     @TableId(value = "menu_id", type = IdType.ASSIGN_ID)
     @Schema(description = "权限id")
-    private Integer menuId;
+    private Long menuId;
     /**
      * 权限名称
      */
@@ -54,7 +54,7 @@ public class Menu extends BaseEntity {
      */
     @NotNull
     @Schema(description = "父类menu_id, -1 标记为根节点")
-    private Integer parentId;
+    private Long parentId;
     /**
      * 图标
      */
@@ -83,7 +83,7 @@ public class Menu extends BaseEntity {
 
 
     public boolean isAlive() {
-        return this.getDelFlag() == 0;
+        return super.getDelFlag() == 0;
     }
 
 

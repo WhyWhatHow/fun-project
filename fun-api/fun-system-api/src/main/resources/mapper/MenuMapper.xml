@@ -3,11 +3,11 @@
 <mapper namespace="com.fun.system.api.mapper.MenuMapper">
 
     <resultMap type="com.fun.system.api.entity.Menu" id="MenuMap">
-        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="menuId" column="menu_id" jdbcType="BIGINT"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="permission" column="permission" jdbcType="VARCHAR"/>
         <result property="path" column="path" jdbcType="VARCHAR"/>
-        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="parentId" column="parent_id" jdbcType="BIGINT"/>
         <result property="icon" column="icon" jdbcType="VARCHAR"/>
         <result property="sortOrder" column="sort_order" jdbcType="INTEGER"/>
         <result property="keepAlive" column="keep_alive" jdbcType="VARCHAR"/>

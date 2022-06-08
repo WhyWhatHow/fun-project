@@ -42,6 +42,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
 
     List<Menu> selectByRoleId(Long roleId);
 
-    Boolean updateByMenuId(@Param("menuId") Integer menuId);
+    Boolean updateByMenuId(@Param("menuId") Long menuId);
 }
 

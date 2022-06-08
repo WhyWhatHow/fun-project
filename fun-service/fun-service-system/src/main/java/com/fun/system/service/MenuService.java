@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public interface MenuService extends IService<Menu> {
 
-    Menu getById(Integer menuId);
+    Menu getById(Long menuId);
 
     /**
      * 获取当前用户的menus
@@ -20,7 +20,7 @@ public interface MenuService extends IService<Menu> {
      * @param roleId
      * @return
      */
-    List<Menu> getUserMenusByRoleId(long roleId, Integer parentId);
+    List<Menu> getUserMenusByRoleId(long roleId, Long parentId);
 
     /**
      * 根据roleId 查询对应的menuIds
@@ -32,17 +32,19 @@ public interface MenuService extends IService<Menu> {
 
     /**
      * 查询menu ,返回parentId对应的menus
+     *
      * @param parentId 父类id
      * @return menu
      */
-    List menuTree(Integer parentId);
+    List menuTree(Long parentId);
 
     /**
      * 假删除, update 操作 修改 menu_id ,以及parent_id= menuId 数据行
+     *
      * @param menuId menuId
      * @return true | false
      */
-    Boolean removeByMenuId(Integer menuId);
+    Boolean removeByMenuId(Long menuId);
 
     /**
      * 通过roleId 获取所有的menu信息
@@ -59,6 +61,6 @@ public interface MenuService extends IService<Menu> {
      * @param roleId
      * @return List<menu>
      */
-    List<Menu> batchSelectByRoleIds(Integer parentId, Long[] roleId);
+    List<Menu> batchSelectByRoleIds(Long parentId, Long[] roleId);
 }
 

@@ -4,6 +4,7 @@ import com.fun.system.api.entity.User;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 @Data
 @RequiredArgsConstructor
 
-public class UserInfo {
+public class UserInfo implements Serializable {
     /**
      * 用户信息
      */

@@ -40,7 +40,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      */
     @Override
     @Cacheable(value = CacheConstants.MENU_DETAILS + "#2000", key = "#menuId")
-    public Menu getById(Integer menuId) {
+    public Menu getById(Long menuId) {
         Menu menu = mapper.selectById(menuId);
         return menu;
     }
@@ -53,7 +53,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
      * @return
      */
     @Override
-    public List getUserMenusByRoleId(long roleId, Integer parentId) {
+    public List getUserMenusByRoleId(long roleId, Long parentId) {
         List<Menu> menus = mapper.selectByRoleId(roleId);
         return buildMenuTree(menus, parentId);
     }
@@ -77,9 +77,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List menuTree(Integer parentId) {
+    public List menuTree(Long parentId) {
         if (parentId == null) {
-            parentId = -1;
+            parentId = -1L;
         }
         List<Menu> menus = getBaseMapper().selectList(Wrappers.emptyWrapper());
         if (CollectionUtils.isEmpty(menus)) {
@@ -90,7 +90,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public Boolean removeByMenuId(Integer menuId) {
+    public Boolean removeByMenuId(Long menuId) {
         return mapper.updateByMenuId(menuId);
     }
 
@@ -100,9 +100,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     }
 
     @Override
-    public List<Menu> batchSelectByRoleIds(Integer parentId, Long[] roleIds) {
+    public List<Menu> batchSelectByRoleIds(Long parentId, Long[] roleIds) {
         if (parentId == null) {
-            parentId = -1;
+            parentId = -1L;
         }
         HashSet<Menu> resList = new HashSet<>();
         for (Long roleId : roleIds) {
@@ -116,8 +116,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return buildMenuTree(collect, parentId);
     }
 
-    private List buildMenuTree(List<Menu> menus, Integer parentId) {
-        List<TreeNode<Integer>> collect = new ArrayList<>(menus.size());
+    private List buildMenuTree(List<Menu> menus, Long parentId) {
+        List<TreeNode<Long>> collect = new ArrayList<>(menus.size());
         menus.forEach(menu -> {
             if (menu.isAlive()) {
                 TreeNode node = new TreeNode<>();

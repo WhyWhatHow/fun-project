@@ -47,7 +47,7 @@ public class UserRequest extends User {
      * @return userRoles
      */
     public List<UserRole> getUserRoles() {
-        Long userId = getUserId();
+        Long userId = super.getUserId();
         if (CollectionUtil.isNotEmpty(rolesId)) {
             List<UserRole> collect = rolesId.stream()
                     .map(roleId -> {
